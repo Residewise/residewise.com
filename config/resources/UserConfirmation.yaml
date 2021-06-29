@@ -1,0 +1,10 @@
+App\Entity\UserConfirmation:
+  properties: 
+    id: 
+      identifier: false
+    iso_code:
+      identifier: true 
+  collectionOperations:
+    post:
+      path: 'user/confirm'
+  itemOperations: {}
