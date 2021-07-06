@@ -1,0 +1,19 @@
+{
+  "first-name" : "first name",
+  "last-name" : "last name",
+  "login" : "Login",
+  "register" : "Register",
+  "name" : "Name",
+  "email": "E-mail address",
+  "password" : "Password",
+  "welcome": "Welcome to Roofind. It's <strong>Free</strong> to post or find properties.",
+  "flat" : "flat",
+  "house" : "house",
+  "land" : "land",
+  "rent": "rent",
+  "buy": "buy",
+  "search" : "search",
+  "continue" : "continue",
+  "min-price": "min price",
+  "max-price": "max price"
+}

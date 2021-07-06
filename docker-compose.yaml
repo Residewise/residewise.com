@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+    mysql:
+      image: mysql:8.0
+      restart: on-failure
+      ports: 
+        - 3600:3600
+      environment:
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+    
+    php:
+      build:
+        context: .
+        dockerfile: docker/php/Dockerfile
+      ports: 
+        - 8000:8000
+      restart: on-failure
+      user: ${LOCAL_USER}
+       
+    encore:
+      image: node:14.10-alpine
+      volumes:
+        - .:/var/www/app:consistent
+      working_dir: /var/www/app
+      # for webpack-encore v1, "--disable-host-check" is replaced with "--firewall false"
+      command: >
+        sh -c "yarn install && yarn encore dev-server --hot --port 9999 --host 0.0.0.0 --disable-host-check"
+      ports:
+        - 8080:8080
+    
+    nginx:
+       image: nginx:1.19.0-alpine
+       restart: on-failure
+       depends_on:
+         - php
+    
+    adminer:
+      ports: 
+        - 8081:8081
+      image: adminer
+      restart: on-failure

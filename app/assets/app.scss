@@ -1,0 +1,27 @@
+// Define variable defaults
+$body-bg: rgba(0,0,0,0.05);
+
+/*! `Custom` Bootstrap 4 theme */
+@import url(https://fonts.googleapis.com/css?family=Muli:200,300,400,700);
+$headings-font-family:Muli;
+
+$enable-grid-classes:true;
+$primary:#167958;
+$secondary:#CACACA;
+$success:#39A882;
+$danger:#CC330D;
+$info:#A2D5F2;
+$warning:#0DE2EA;
+$light:#ececec;
+$dark:#4E4E4E;
+$enable-gradients:false;
+$spacer:1.3rem;
+$border-width:0;
+$btn-border-radius:1rem;
+$input-bg: rgba(0,0,0, 0.05);
+$input-border-radius: 0.2rem;
+$input-placeholder-color: #4E4E4E;
+
+// Then import Bootstrap an BootstrapVue SCSS files (order is important)
+@import 'node_modules/bootstrap/scss/bootstrap.scss';
+@import 'node_modules/bootstrap-vue/src/index.scss';

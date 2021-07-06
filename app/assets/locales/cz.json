@@ -1,0 +1,19 @@
+{
+    "first-name" : "křestní jméno",
+    "last-name" : "příjmení",
+    "login" : "Přihlásit se",
+    "register" : "Registrovat",
+    "name" : "Název",
+    "email": "E-mailová adresa",
+    "password" : "Heslo",
+    "welcome" : "Ahoj! Vítejte v Residewise. Nabízejte a hledejte nemovitosti zdarma.",
+    "flat" : "byt",
+    "house" : "dom",
+    "land" : "přistát",
+    "rent": "nájemné",
+    "buy": "koupit",
+    "search" : "vyhledávání",
+    "continue" : "pokračovat",
+    "min-price": "minimální cena",
+    "max-price": "maximální cena"
+}
