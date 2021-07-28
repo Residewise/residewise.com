@@ -159,12 +159,12 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
         $this->media = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -188,7 +188,7 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
         return $this;
     }
 
-    public function getType(): ?string
+    public function getType(): string
     {
         return $this->type;
     }
@@ -200,7 +200,7 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
         return $this;
     }
 
-    public function getContract(): ?string
+    public function getContract(): string
     {
         return $this->contract;
     }
@@ -236,7 +236,7 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
         return $this;
     }
 
-    public function getTerm(): ?string
+    public function getTerm(): string
     {
         return $this->term;
     }
@@ -248,7 +248,7 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -260,7 +260,7 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
         return $this;
     }
 
-    public function getPluscode(): ?string
+    public function getPluscode(): string
     {
         return $this->pluscode;
     }
@@ -272,7 +272,7 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
         return $this;
     }
 
-    public function getLongitude(): ?float
+    public function getLongitude(): float
     {
         return $this->longitude;
     }
@@ -284,7 +284,7 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
         return $this;
     }
 
-    public function getLatitude(): ?float
+    public function getLatitude(): float
     {
         return $this->latitude;
     }
@@ -296,7 +296,7 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
         return $this;
     }
 
-    public function getSqm(): ?int
+    public function getSqm(): int
     {
         return $this->sqm;
     }

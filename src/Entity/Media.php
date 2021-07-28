@@ -75,7 +75,7 @@ class Media
         $this->createdAt = new DateTimeImmutable();
     }
 
-    public function getId(): ?Uuid
+    public function getId(): \Symfony\Component\Uid\Uuid
     {
         return $this->id;
     }
@@ -97,6 +97,9 @@ class Media
         return $this->file;
     }
 
+    /**
+     * @param \Symfony\Component\HttpFoundation\File\File|null $file
+     */
     public function setFile(\Symfony\Component\HttpFoundation\File\File | \Symfony\Component\HttpFoundation\File\UploadedFile | null $file = null): void
     {
         $this->imageFile = $file;
@@ -108,7 +111,7 @@ class Media
         }
     }
 
-    public function getPath(): ?string
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -120,7 +123,7 @@ class Media
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }

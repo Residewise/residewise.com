@@ -40,7 +40,7 @@ class Subscription
      */
     private DateTimeImmutable $finishedAt;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -69,7 +69,7 @@ class Subscription
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -81,7 +81,7 @@ class Subscription
         return $this;
     }
 
-    public function getFinishedAt(): ?\DateTimeImmutable
+    public function getFinishedAt(): \DateTimeImmutable
     {
         return $this->finishedAt;
     }

@@ -52,12 +52,12 @@ class PropertyOwner
      */
     private ?DateTimeInterface $updatedAt;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getPurchasedAt(): ?\DateTimeImmutable
+    public function getPurchasedAt(): \DateTimeImmutable
     {
         return $this->purchasedAt;
     }
@@ -74,7 +74,7 @@ class PropertyOwner
         return $this->owner;
     }
 
-    public function setOwner(?User $user): ?self
+    public function setOwner(?User $user): static
     {
         $this->owner = $user;
 
@@ -93,7 +93,7 @@ class PropertyOwner
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }

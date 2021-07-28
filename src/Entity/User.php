@@ -122,12 +122,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
         $this->subscriptions = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -159,6 +159,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
 
     /**
      * @see UserInterface
+     * @return string[]
      */
     public function getRoles(): array
     {
@@ -213,7 +214,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
         // $this->plainPassword = null;
     }
 
-    public function getToken(): ?string
+    public function getToken(): string
     {
         return $this->token;
     }
@@ -237,7 +238,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
         return $this;
     }
 
-    public function getIsEnabled(): ?bool
+    public function getIsEnabled(): bool
     {
         return $this->isEnabled;
     }
@@ -249,7 +250,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -261,7 +262,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
         return $this;
     }
 
-    public function getFirstName(): ?string
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
@@ -273,7 +274,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
         return $this;
     }
 
-    public function getLastName(): ?string
+    public function getLastName(): string
     {
         return $this->lastName;
     }
@@ -285,7 +286,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
         return $this;
     }
 
-    public function getFullName(): ?string
+    public function getFullName(): string
     {
         return $this->firstName . ' ' . $this->lastName;
     }
