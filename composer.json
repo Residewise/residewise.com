@@ -1,5 +1,6 @@
 {
     "name": "kerrialn/residewise.com",
+    "description": "Residewise project",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "dev",
