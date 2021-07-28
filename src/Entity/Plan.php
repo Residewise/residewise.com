@@ -24,22 +24,22 @@ class Plan
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\OneToMany(targetEntity=Subscription::class, mappedBy="plan")
      */
-    private $subscriptions;
+    private Collection $subscriptions;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $title;
+    private string $title;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
      */
-    private $fee;
+    private ?string $fee;
 
     public function __construct()
     {

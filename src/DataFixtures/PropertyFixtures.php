@@ -11,7 +11,7 @@ use Faker\Factory;
 
 class PropertyFixtures extends Fixture
 {
-    private $faker;
+    private mixed $faker;
 
     public function __construct()
     {

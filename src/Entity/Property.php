@@ -74,82 +74,82 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $title;
+    private string $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $description;
+    private ?string $description;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $type;
+    private string $type;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $contract;
+    private string $contract;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
      */
-    private $fee;
+    private ?string $fee;
 
     /**
      * @ORM\Column(type="string", length=3)
      */
-    private $currency;
+    private string $currency;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $term;
+    private string $term;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    private $createdAt;
+    private DateTimeImmutable $createdAt;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $pluscode;
+    private string $pluscode;
 
     /**
      * @ORM\Column(type="float")
      */
-    private $longitude;
+    private float $longitude;
 
     /**
      * @ORM\Column(type="float")
      */
-    private $latitude;
+    private float $latitude;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $sqm;
+    private int $sqm;
 
     /**
      * @ORM\OneToMany(targetEntity=PropertyOwner::class, mappedBy="property")
      */
-    private $propertyOwners;
+    private Collection $propertyOwners;
 
     /**
      * @ORM\OneToMany(targetEntity=Amenity::class, mappedBy="property")
      */
-    private $amenities;
+    private Collection $amenities;
 
     /**
      * @ORM\OneToMany(targetEntity=Media::class, mappedBy="property")
      */
-    private $media;
+    private Collection $media;
 
     public function __construct()
     {

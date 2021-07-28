@@ -8,6 +8,9 @@ use App\Entity\User;
 
 interface EmailInterface
 {
+    /**
+     * @param array<mixed> $context
+     */
     public function send(
         User $user,
         string $subject,

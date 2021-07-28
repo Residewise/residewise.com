@@ -6,8 +6,10 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PropertyOwnerRepository;
+use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=PropertyOwnerRepository::class)
@@ -23,32 +25,32 @@ class PropertyOwner
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    private $purchasedAt;
+    private DateTimeImmutable $purchasedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
      */
-    private $owner;
+    private ?User $owner;
 
     /**
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="propertyOwners")
      */
-    private $property;
+    private ?Property $property;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    private $createdAt;
+    private DateTimeImmutable $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $updatedAt;
+    private ?DateTimeInterface $updatedAt;
 
     public function getId(): ?int
     {
@@ -72,7 +74,7 @@ class PropertyOwner
         return $this->owner;
     }
 
-    public function setOwner(?UserInterface $user): ?self
+    public function setOwner(?User $user): ?self
     {
         $this->owner = $user;
 

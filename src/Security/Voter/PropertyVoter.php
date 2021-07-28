@@ -45,7 +45,8 @@ class PropertyVoter extends Voter
         return match ($attribute) {
             self::PROPERTY_VIEW => $this->canViewProperty(),
             self::PROPERTY_EDIT => $this->canEditProperty(),
-            self::PROPERTY_DELETE => $this->canDeleteProperty()
+            self::PROPERTY_DELETE => $this->canDeleteProperty(),
+            default => false
         };
     }
 

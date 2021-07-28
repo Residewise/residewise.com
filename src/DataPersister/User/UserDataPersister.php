@@ -18,13 +18,17 @@ final class UserDataPersister implements ContextAwareDataPersisterInterface
     ) {
     }
 
-    public function supports($data, array $context = []): bool
+    /**
+     * @param array<mixed> $context
+     */
+    public function supports(mixed $data, array $context = []): bool
     {
         return $data instanceof User;
     }
 
     /**
-     * @param User $data
+     * @param User         $data
+     * @param array<mixed> $context
      */
     public function persist($data, array $context = [])
     {
@@ -44,6 +48,10 @@ final class UserDataPersister implements ContextAwareDataPersisterInterface
         return $data;
     }
 
+    /**
+     * @param User         $data
+     * @param array<mixed> $context
+     */
     public function remove($data, array $context = []): void
     {
         // call your persistence layer to delete $data

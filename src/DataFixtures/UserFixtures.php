@@ -13,7 +13,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
-    private $faker;
+    private mixed $faker;
 
     public function __construct(
         private UserPasswordHasherInterface $hasher,

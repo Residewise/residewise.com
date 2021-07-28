@@ -7,6 +7,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Contract\CreatedAtEntityInterface;
 use App\Repository\UserRepository;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -58,58 +59,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $email;
+    private string $email;
 
     /**
      * @ORM\Column(type="json")
+     *
+     * @var array<string>
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
-    private $password;
+    private string $password;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $token;
+    private string $token;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    private $verifiedAt;
+    private ?DateTimeImmutable $verifiedAt;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isEnabled;
+    private bool $isEnabled;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    private $createdAt;
+    private DateTimeImmutable $createdAt;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $firstName;
+    private string $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $lastName;
+    private string $lastName;
 
     /**
      * @ORM\OneToMany(targetEntity=Subscription::class, mappedBy="user")
      */
-    private $subscriptions;
+    private Collection $subscriptions;
 
     public function __construct()
     {
@@ -143,7 +146,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return $this->email;
     }
 
     /**
@@ -151,7 +154,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return $this->email;
     }
 
     /**
@@ -165,6 +168,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
         return array_unique($roles);
     }
 
+    /**
+     * @param array<string> $roles
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;

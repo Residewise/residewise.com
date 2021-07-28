@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EventSubscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
+use App\Entity\User;
 use App\Entity\UserConfirmation;
 use App\Repository\UserRepository;
 use App\Security\TokenGenerator;
@@ -18,6 +19,9 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class UserConfirmationSubscriber implements EventSubscriberInterface
 {
+    /**
+     * __construct.
+     */
     public function __construct(
         private UserRepository $userRepository,
         private EntityManagerInterface $entityManager,
@@ -42,13 +46,18 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
         $method = $viewEvent->getRequest()->getMethod();
         $request = $viewEvent->getRequest();
 
+        /** @var User $user */
         $user = $this->userRepository->findOneBy(
             [
                 'token' => $entity->getToken(),
             ]
         );
 
-        if (! $user && Request::METHOD_POST !== $method && 'api_user_confirmations_post_collection' !== $request->get('route_')) {
+        if (Request::METHOD_POST !== $method) {
+            return;
+        }
+
+        if ('api_user_confirmations_post_collection' !== $request->get('route_')) {
             return;
         }
 

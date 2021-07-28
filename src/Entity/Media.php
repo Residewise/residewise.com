@@ -42,34 +42,32 @@ class Media
      * @ORM\GeneratedValue
      * @ORM\Column(type="uuid", unique=true)
      */
-    private $id;
+    private Uuid $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $path;
+    private string $path;
 
     /**
      * @ORM\Column(type="integer")
-     *
-     * @var int|null
      */
-    private $size;
+    private int $size;
 
     /**
      * @Vich\UploadableField(mapping="media", fileNameProperty="path", size="size")
      */
-    private $file;
+    private ?string $file;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    private $createdAt;
+    private DateTimeImmutable $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="media")
      */
-    private $property;
+    private ?Property $property;
 
     public function __construct()
     {

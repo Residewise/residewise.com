@@ -18,15 +18,21 @@ class EmailService implements EmailInterface
     ) {
     }
 
+    /**
+     * @param array<mixed> $context
+     */
     public function send(
         User $user,
         string $subject,
         string $template,
         array $context
     ): void {
+        $sender = new Address('no-reply@residewise.com', 'Residewise');
+        $recipient = new Address('kerrialbeckettnewham@gmail.com', 'Someone');
+
         $email = new Email();
-        $email->from(new Address('no-reply@residewise.com'));
-        $email->to(new Address('kerrialbeckettnewham@gmail.com', $user->getFullName()));
+        $email->from($sender);
+        $email->to($recipient);
         $email->subject($subject);
         $email->html('<p>Lorem ipsum...</p>');
 
