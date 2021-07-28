@@ -35,7 +35,7 @@ class OwnedEntitySubscriber implements EventSubscriberInterface
         $entity = $viewEvent->getControllerResult();
         $method = $viewEvent->getRequest()->getMethod();
 
-        if (! $entity instanceof OwnerEntityInterface || Request::METHOD_POST !== $method) {
+        if (! $entity instanceof OwnerEntityInterface || $method !== Request::METHOD_POST) {
             return;
         }
 

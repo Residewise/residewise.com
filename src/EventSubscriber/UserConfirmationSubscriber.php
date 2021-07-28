@@ -53,11 +53,11 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
             ]
         );
 
-        if (Request::METHOD_POST !== $method) {
+        if ($method !== Request::METHOD_POST) {
             return;
         }
 
-        if ('api_user_confirmations_post_collection' !== $request->get('route_')) {
+        if ($request->get('route_') !== 'api_user_confirmations_post_collection') {
             return;
         }
 

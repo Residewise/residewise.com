@@ -32,7 +32,7 @@ final class UserDataPersister implements ContextAwareDataPersisterInterface
      */
     public function persist($data, array $context = []): \App\Entity\User
     {
-        if (Request::METHOD_POST === strtoupper($context['collection_operation_name'])) {
+        if (strtoupper($context['collection_operation_name']) === Request::METHOD_POST) {
             $this->emailService->send(
                 $data,
                 EmailTemplate::VERIFY_EMAIL['subject'],

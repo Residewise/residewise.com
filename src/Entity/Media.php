@@ -33,7 +33,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class Media
 {
-    public ?\Symfony\Component\HttpFoundation\File\File $imageFile;
+    public ?File $imageFile;
 
     public \DateTimeImmutable $updatedAt;
 
@@ -97,6 +97,7 @@ class Media
         return $this->file;
     }
 
+
     /**
      * @param \Symfony\Component\HttpFoundation\File\File|null $file
      */
@@ -104,7 +105,7 @@ class Media
     {
         $this->imageFile = $file;
 
-        if (null !== $file) {
+        if ($file !== null) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new \DateTimeImmutable();

@@ -34,7 +34,7 @@ class PasswordHashSubscriber implements EventSubscriberInterface
         $user = $viewEvent->getControllerResult();
         $method = $viewEvent->getRequest()->getMethod();
 
-        if (! $user instanceof User || Request::METHOD_POST !== $method) {
+        if (! $user instanceof User || $method !== Request::METHOD_POST) {
             return;
         }
 

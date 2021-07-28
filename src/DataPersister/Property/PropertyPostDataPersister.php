@@ -36,7 +36,7 @@ final class PropertyPostDataPersister implements ContextAwareDataPersisterInterf
      */
     public function persist(mixed $data, array $context = [])
     {
-        if (Request::METHOD_POST === strtoupper($context['collection_operation_name'])) {
+        if (strtoupper($context['collection_operation_name']) === Request::METHOD_POST) {
             /** @var User $user */
             $user = $this->security->getUser();
 

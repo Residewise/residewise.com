@@ -29,7 +29,7 @@ class CreatedAtEntitySubscriber implements EventSubscriberInterface
         $entity = $viewEvent->getControllerResult();
         $method = $viewEvent->getRequest()->getMethod();
 
-        if (! $entity instanceof CreatedAtEntityInterface || Request::METHOD_POST !== $method) {
+        if (! $entity instanceof CreatedAtEntityInterface || $method !== Request::METHOD_POST) {
             return;
         }
 

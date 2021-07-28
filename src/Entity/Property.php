@@ -243,7 +243,7 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
 
     public function setTerm(string $term): self
     {
-        $this->term = self::CONTRACT_RENT !== $this->contract ? self::TERM_ONE_TIME : $term;
+        $this->term = $this->contract !== self::CONTRACT_RENT ? self::TERM_ONE_TIME : $term;
 
         return $this;
     }

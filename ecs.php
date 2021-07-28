@@ -14,6 +14,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         __DIR__ . '/tests',
     ]);
 
+    $parameters->set(Option::SKIP, [
+        'PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer',
+        'PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer'
+    ]);
+
     $services = $containerConfigurator->services();
     $services->set(ArraySyntaxFixer::class)
         ->call('configure', [[
@@ -21,11 +26,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ]]);
 
     $containerConfigurator->import(SetList::COMMON);
-    $containerConfigurator->import(SetList::CONTROL_STRUCTURES);
-    $containerConfigurator->import(SetList::STRICT);
-    $containerConfigurator->import(SetList::SYMFONY);
-    $containerConfigurator->import(SetList::SPACES);
-    $containerConfigurator->import(SetList::ARRAY);
-    $containerConfigurator->import(SetList::DOCBLOCK);
-    $containerConfigurator->import(SetList::PSR_12);
+
+
 };
