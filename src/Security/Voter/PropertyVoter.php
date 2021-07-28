@@ -42,13 +42,13 @@ class PropertyVoter extends Voter
     {
         $user = $token->getUser();
 
-        $isAccessGranted = match($attribute) {
+        $isAccessGranted = match ($attribute) {
             self::PROPERTY_VIEW => $this->canViewProperty($subject, $user),
             self::PROPERTY_EDIT => $this->canEditProperty($subject, $user),
             self::PROPERTY_DELETE => $this->canDeleteProperty($subject, $user)
         };
 
-        return $isAccessGranted ;
+        return $isAccessGranted;
     }
 
     private function canViewProperty(Property $property, User $user): bool
