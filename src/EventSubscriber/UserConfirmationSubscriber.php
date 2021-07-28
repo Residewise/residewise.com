@@ -18,20 +18,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class UserConfirmationSubscriber implements EventSubscriberInterface
 {
-    private $userRepository;
-
-    private $entityManager;
-
-    private $tokenGenerator;
-
-    public function __construct(
-        UserRepository $userRepository,
-        EntityManagerInterface $entityManager,
-        TokenGenerator $tokenGenerator
-    ) {
-        $this->userRepository = $userRepository;
-        $this->entityManager = $entityManager;
-        $this->tokenGenerator = $tokenGenerator;
+    public function __construct(private UserRepository $userRepository, private EntityManagerInterface $entityManager, private TokenGenerator $tokenGenerator)
+    {
     }
 
     /**
@@ -44,16 +32,12 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function confirmUser(ViewEvent $viewEvent)
+    public function confirmUser(ViewEvent $viewEvent): void
     {
         /** @var UserConfirmation $entity */
         $entity = $viewEvent->getControllerResult();
         $method = $viewEvent->getRequest()->getMethod();
         $request = $viewEvent->getRequest();
-
-        if (! $entity instanceof UserConfirmation) {
-            return;
-        }
 
         $user = $this->userRepository->findOneBy(
             [

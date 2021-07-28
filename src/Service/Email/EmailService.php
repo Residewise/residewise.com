@@ -13,12 +13,8 @@ use Symfony\Component\Mime\Email;
 
 class EmailService implements EmailInterface
 {
-    private $mailer;
-
-    public function __construct(
-        MailerInterface $mailer
-    ) {
-        $this->mailer = $mailer;
+    public function __construct(private MailerInterface $mailer)
+    {
     }
 
     public function send(
@@ -35,7 +31,7 @@ class EmailService implements EmailInterface
 
         try {
             $this->mailer->send($email);
-        } catch (TransportExceptionInterface $e) {
+        } catch (TransportExceptionInterface) {
         }
     }
 }

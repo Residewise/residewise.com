@@ -22,14 +22,14 @@ class UserFixtures extends Fixture
         $this->faker = Factory::create();
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         for ($i = 0; $i < 50; ++$i) {
             $this->loadUsers($manager);
         }
     }
 
-    public function loadUsers(ObjectManager $manager)
+    public function loadUsers(ObjectManager $manager): void
     {
         $user = new User();
         $user->setFirstName($this->faker->firstName());

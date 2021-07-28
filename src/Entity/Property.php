@@ -243,11 +243,7 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
 
     public function setTerm(string $term): self
     {
-        if (self::CONTRACT_RENT !== $this->contract) {
-            $this->term = self::TERM_ONE_TIME;
-        } else {
-            $this->term = $term;
-        }
+        $this->term = self::CONTRACT_RENT !== $this->contract ? self::TERM_ONE_TIME : $term;
 
         return $this;
     }
@@ -332,11 +328,9 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
 
     public function removePropertyOwner(PropertyOwner $propertyOwner): self
     {
-        if ($this->propertyOwners->removeElement($propertyOwner)) {
-            // set the owning side to null (unless already changed)
-            if ($propertyOwner->getProperty() === $this) {
-                $propertyOwner->setProperty(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->propertyOwners->removeElement($propertyOwner) && $propertyOwner->getProperty() === $this) {
+            $propertyOwner->setProperty(null);
         }
 
         return $this;
@@ -362,11 +356,9 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
 
     public function removeAmenity(Amenity $amenity): self
     {
-        if ($this->amenities->removeElement($amenity)) {
-            // set the owning side to null (unless already changed)
-            if ($amenity->getProperty() === $this) {
-                $amenity->setProperty(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->amenities->removeElement($amenity) && $amenity->getProperty() === $this) {
+            $amenity->setProperty(null);
         }
 
         return $this;
@@ -392,11 +384,9 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
 
     public function removeMedium(Media $medium): self
     {
-        if ($this->media->removeElement($medium)) {
-            // set the owning side to null (unless already changed)
-            if ($medium->getProperty() === $this) {
-                $medium->setProperty(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->media->removeElement($medium) && $medium->getProperty() === $this) {
+            $medium->setProperty(null);
         }
 
         return $this;

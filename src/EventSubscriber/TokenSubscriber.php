@@ -16,7 +16,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class TokenSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private UserPasswordHasherInterface $passwordEncoder,
         private TokenGenerator $tokenGenerator
     ) {
     }
@@ -31,7 +30,7 @@ class TokenSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function generateToken(ViewEvent $viewEvent)
+    public function generateToken(ViewEvent $viewEvent): void
     {
         $user = $viewEvent->getControllerResult();
         $method = $viewEvent->getRequest()->getMethod();

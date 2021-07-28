@@ -13,20 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class UploadImageAction
 {
-    private $formFactory;
-
-    private $entityManager;
-
-    private $validator;
-
-    public function __construct(
-        FormFactoryInterface $formFactory,
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator
-    ) {
-        $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
-        $this->validator = $validator;
+    public function __construct(private FormFactoryInterface $formFactory, private EntityManagerInterface $entityManager, private ValidatorInterface $validator)
+    {
     }
 
     public function __invoke(Request $request)

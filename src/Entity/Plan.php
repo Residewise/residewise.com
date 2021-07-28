@@ -71,11 +71,9 @@ class Plan
 
     public function removeSubscription(Subscription $subscription): self
     {
-        if ($this->subscriptions->removeElement($subscription)) {
-            // set the owning side to null (unless already changed)
-            if ($subscription->getPlan() === $this) {
-                $subscription->setPlan(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->subscriptions->removeElement($subscription) && $subscription->getPlan() === $this) {
+            $subscription->setPlan(null);
         }
 
         return $this;

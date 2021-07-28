@@ -14,16 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class UserDataPersister implements ContextAwareDataPersisterInterface
 {
-    private $logger;
-
-    private $emailService;
-
-    public function __construct(
-        LoggerInterface $logger,
-        EmailService $emailService
-    ) {
-        $this->logger = $logger;
-        $this->emailService = $emailService;
+    public function __construct(private EmailService $emailService)
+    {
     }
 
     public function supports($data, array $context = []): bool
@@ -52,7 +44,7 @@ final class UserDataPersister implements ContextAwareDataPersisterInterface
         return $data;
     }
 
-    public function remove($data, array $context = [])
+    public function remove($data, array $context = []): void
     {
         // call your persistence layer to delete $data
     }

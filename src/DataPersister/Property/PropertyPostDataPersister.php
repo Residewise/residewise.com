@@ -16,16 +16,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final class PropertyPostDataPersister implements ContextAwareDataPersisterInterface
 {
-    private $tokenStorage;
-
-    private $entityManager;
-
-    public function __construct(
-        TokenStorageInterface $tokenStorage,
-        EntityManagerInterface $entityManager
-    ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->entityManager = $entityManager;
+    public function __construct(private TokenStorageInterface $tokenStorage, private EntityManagerInterface $entityManager)
+    {
     }
 
     public function supports($data, array $context = []): bool
@@ -57,7 +49,7 @@ final class PropertyPostDataPersister implements ContextAwareDataPersisterInterf
         return $data;
     }
 
-    public function remove($data, array $context = [])
+    public function remove($data, array $context = []): void
     {
         // call your persistence layer to delete $data
     }

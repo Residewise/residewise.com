@@ -40,28 +40,26 @@ class PropertyVoter extends Voter
      */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
-        $user = $token->getUser();
+        $token->getUser();
 
-        $isAccessGranted = match ($attribute) {
-            self::PROPERTY_VIEW => $this->canViewProperty($subject, $user),
-            self::PROPERTY_EDIT => $this->canEditProperty($subject, $user),
-            self::PROPERTY_DELETE => $this->canDeleteProperty($subject, $user)
+        return match ($attribute) {
+            self::PROPERTY_VIEW => $this->canViewProperty(),
+            self::PROPERTY_EDIT => $this->canEditProperty(),
+            self::PROPERTY_DELETE => $this->canDeleteProperty()
         };
-
-        return $isAccessGranted;
     }
 
-    private function canViewProperty(Property $property, User $user): bool
+    private function canViewProperty(): bool
     {
         return $this->security->isGranted(User::ROLE_USER);
     }
 
-    private function canEditProperty(Property $property, User $user): bool
+    private function canEditProperty(): bool
     {
         return $this->security->isGranted(User::ROLE_USER);
     }
 
-    private function canDeleteProperty(Property $property, User $user): bool
+    private function canDeleteProperty(): bool
     {
         return $this->security->isGranted(User::ROLE_USER);
     }

@@ -24,7 +24,7 @@ class CreatedAtEntitySubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function setCreatedAtDate(ViewEvent $viewEvent)
+    public function setCreatedAtDate(ViewEvent $viewEvent): void
     {
         $entity = $viewEvent->getControllerResult();
         $method = $viewEvent->getRequest()->getMethod();

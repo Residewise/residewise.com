@@ -27,6 +27,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, CreatedAtEntityInterface
 {
+    public \Doctrine\Common\Collections\ArrayCollection $propertyOwned;
     public const ROLE_USER = 'ROLE_USER';
 
     public const ROLE_ADMIN = 'ROLE_ADMIN';
@@ -199,7 +200,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
@@ -302,11 +303,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
 
     public function removeSubscription(Subscription $subscription): self
     {
-        if ($this->subscriptions->removeElement($subscription)) {
-            // set the owning side to null (unless already changed)
-            if ($subscription->getUser() === $this) {
-                $subscription->setUser(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->subscriptions->removeElement($subscription) && $subscription->getUser() === $this) {
+            $subscription->setUser(null);
         }
 
         return $this;

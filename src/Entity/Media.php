@@ -34,6 +34,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class Media
 {
+    public ?\Symfony\Component\HttpFoundation\File\File $imageFile;
+    public \DateTimeImmutable $updatedAt;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -96,10 +98,7 @@ class Media
         return $this->file;
     }
 
-    /**
-     * @param File|UploadedFile|null $file
-     */
-    public function setFile(?File $file = null): void
+    public function setFile(\Symfony\Component\HttpFoundation\File\File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $file = null): void
     {
         $this->imageFile = $file;
 

@@ -30,7 +30,7 @@ class OwnedEntitySubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function getAuthenticatedUser(ViewEvent $viewEvent)
+    public function getAuthenticatedUser(ViewEvent $viewEvent): void
     {
         $entity = $viewEvent->getControllerResult();
         $method = $viewEvent->getRequest()->getMethod();

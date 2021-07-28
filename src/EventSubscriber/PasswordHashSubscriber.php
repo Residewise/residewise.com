@@ -29,7 +29,7 @@ class PasswordHashSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function hashPassword(ViewEvent $viewEvent)
+    public function hashPassword(ViewEvent $viewEvent): void
     {
         $user = $viewEvent->getControllerResult();
         $method = $viewEvent->getRequest()->getMethod();

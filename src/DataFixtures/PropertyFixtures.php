@@ -18,14 +18,14 @@ class PropertyFixtures extends Fixture
         $this->faker = Factory::create();
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         for ($i = 0; $i < 50; ++$i) {
             $this->loadProperties($manager);
         }
     }
 
-    public function loadProperties(ObjectManager $manager)
+    public function loadProperties(ObjectManager $manager): void
     {
         $loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vel nunc vehicula, porta est et, dapibus arcu. Ut mi nulla, vehicula ac risus eget, finibus finibus nibh.';
         $property = new Property();

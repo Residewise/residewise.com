@@ -18,7 +18,7 @@ class UserConfirmation
 {
     private string $token;
 
-    public function getToken()
+    public function getToken(): string
     {
         return $this->token;
     }
