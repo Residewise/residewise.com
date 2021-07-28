@@ -18,8 +18,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class UserConfirmationSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private UserRepository $userRepository, private EntityManagerInterface $entityManager, private TokenGenerator $tokenGenerator)
-    {
+    public function __construct(
+        private UserRepository $userRepository,
+        private EntityManagerInterface $entityManager,
+        private TokenGenerator $tokenGenerator
+    ) {
     }
 
     /**

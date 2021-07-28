@@ -16,8 +16,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final class PropertyPostDataPersister implements ContextAwareDataPersisterInterface
 {
-    public function __construct(private TokenStorageInterface $tokenStorage, private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private TokenStorageInterface $tokenStorage,
+        private EntityManagerInterface $entityManager
+    ) {
     }
 
     public function supports($data, array $context = []): bool

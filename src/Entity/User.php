@@ -27,7 +27,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, CreatedAtEntityInterface
 {
-    public \Doctrine\Common\Collections\ArrayCollection $propertyOwned;
     public const ROLE_USER = 'ROLE_USER';
 
     public const ROLE_ADMIN = 'ROLE_ADMIN';
@@ -51,6 +50,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
     public const ROLE_MESSENGER = 'ROLE_MESSENGER';
 
     public const ROLE_RATER = 'ROLE_RATER';
+
+    public \Doctrine\Common\Collections\ArrayCollection $propertyOwned;
 
     /**
      * @ORM\Id

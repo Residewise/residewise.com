@@ -9,7 +9,6 @@ use App\Repository\MediaRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Uid\Uuid;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -35,7 +34,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 class Media
 {
     public ?\Symfony\Component\HttpFoundation\File\File $imageFile;
+
     public \DateTimeImmutable $updatedAt;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -98,7 +99,7 @@ class Media
         return $this->file;
     }
 
-    public function setFile(\Symfony\Component\HttpFoundation\File\File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $file = null): void
+    public function setFile(\Symfony\Component\HttpFoundation\File\File | \Symfony\Component\HttpFoundation\File\UploadedFile | null $file = null): void
     {
         $this->imageFile = $file;
 

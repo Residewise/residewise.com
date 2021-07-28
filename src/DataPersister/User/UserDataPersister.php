@@ -9,13 +9,13 @@ use App\Entity\User;
 use App\Service\Email\EmailService;
 use App\Service\Email\EmailTemplate;
 use DateTime;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 final class UserDataPersister implements ContextAwareDataPersisterInterface
 {
-    public function __construct(private EmailService $emailService)
-    {
+    public function __construct(
+        private EmailService $emailService
+    ) {
     }
 
     public function supports($data, array $context = []): bool
