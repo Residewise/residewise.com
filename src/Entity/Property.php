@@ -31,6 +31,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
      denormalizationContext: [
          'groups' => ['property:write'],
      ],
+     attributes:[
+         'pagination_items_per_page' => 10,
+     ]
  )]
 #[ApiFilter(SearchFilter::class, properties: [
     'type' => 'end',
@@ -82,43 +85,43 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    #[Groups(['property:read'])]
+
     private ?string $description;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['property:read'])]
+
     private string $type;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['property:read'])]
+
     private string $contract;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
      */
-    #[Groups(['property:read'])]
+
     private ?string $fee;
 
     /**
      * @ORM\Column(type="string", length=3)
      */
-    #[Groups(['property:read'])]
+
     private string $currency;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['property:read'])]
+
     private string $term;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    #[Groups(['property:read'])]
+
     private DateTimeImmutable $createdAt;
 
     /**

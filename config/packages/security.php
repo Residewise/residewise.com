@@ -59,7 +59,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY',
         ], [
             'path' => '^/api',
-            'roles' => 'IS_AUTHENTICATED_FULLY',
+            'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY',
         ]],
     ]);
 };

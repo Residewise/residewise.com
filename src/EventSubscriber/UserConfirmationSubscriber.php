@@ -26,7 +26,8 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
         private UserRepository $userRepository,
         private EntityManagerInterface $entityManager,
         private TokenGenerator $tokenGenerator
-    ) {
+    )
+    {
     }
 
     /**
@@ -46,7 +47,8 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
         $method = $viewEvent->getRequest()->getMethod();
         $request = $viewEvent->getRequest();
 
-        if(!$entity instanceof UserConfirmation){
+        if (! $entity instanceof UserConfirmation || $method !== Request::METHOD_POST || $request->get('_route') !== 'api_user_confirmations_post_collection')
+        {
             return;
         }
 
@@ -56,16 +58,6 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
                 'token' => $entity->getToken(),
             ]
         );
-
-        if ($method !== Request::METHOD_POST)
-        {
-            return;
-        }
-
-        if ($request->get('_route') !== 'api_user_confirmations_post_collection')
-        {
-            return;
-        }
 
         $newToken = $this->tokenGenerator->generateToken();
         $user->setToken($newToken);
