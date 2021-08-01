@@ -17,24 +17,21 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
  */
-#[ApiResource(
-    attributes:[
-        'security' => "is_granted('ROLE_USER')",
+ #[ApiResource(
+     collectionOperations:['get', 'post'],
+     itemOperations:['get', 'patch'],
+     normalizationContext: [
+         'groups' => ['property:read']
+     ],
+     denormalizationContext: [
+        'groups' => ['property:write']
     ],
-    collectionOperations: [
-        'post',
-        'get' => [
-            'security' => "is_granted('PROPERTY_VIEW', object)",
-        ],
-    ],
-    itemOperations: [
-        'patch', 'get',
-    ]
-)]
+ )]
 #[ApiFilter(SearchFilter::class, properties: [
     'type' => 'end',
     'contract' => 'end',
@@ -79,76 +76,91 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups(['property:read'])]
     private string $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
+    #[Groups(['property:read'])]
     private ?string $description;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups(['property:read'])]
     private string $type;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups(['property:read'])]
     private string $contract;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
      */
+    #[Groups(['property:read'])]
     private ?string $fee;
 
     /**
      * @ORM\Column(type="string", length=3)
      */
+    #[Groups(['property:read'])]
     private string $currency;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups(['property:read'])]
     private string $term;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      */
+    #[Groups(['property:read'])]
     private DateTimeImmutable $createdAt;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups(['property:read'])]
     private string $pluscode;
 
     /**
      * @ORM\Column(type="float")
      */
+    #[Groups(['property:read'])]
     private float $longitude;
 
     /**
      * @ORM\Column(type="float")
      */
+    #[Groups(['property:read'])]
     private float $latitude;
 
     /**
      * @ORM\Column(type="integer")
      */
+    #[Groups(['property:read'])]
     private int $sqm;
 
     /**
      * @ORM\OneToMany(targetEntity=PropertyOwner::class, mappedBy="property")
      */
+    #[Groups(['property:read'])]
     private Collection $propertyOwners;
 
     /**
      * @ORM\OneToMany(targetEntity=Amenity::class, mappedBy="property")
      */
+    #[Groups(['property:read'])]
     private Collection $amenities;
 
     /**
      * @ORM\OneToMany(targetEntity=Media::class, mappedBy="property")
      */
+    #[Groups(['property:read'])]
     private Collection $media;
 
     public function __construct()

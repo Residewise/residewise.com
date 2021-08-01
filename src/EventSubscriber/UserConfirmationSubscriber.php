@@ -46,6 +46,10 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
         $method = $viewEvent->getRequest()->getMethod();
         $request = $viewEvent->getRequest();
 
+        if (!$entity instanceof UserConfirmation) {
+            return;
+        }
+
         /** @var User $user */
         $user = $this->userRepository->findOneBy(
             [
@@ -53,11 +57,18 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
             ]
         );
 
-        if ($method !== Request::METHOD_POST) {
+        if (!$user instanceof User) 
+        {   
             return;
         }
 
-        if ($request->get('route_') !== 'api_user_confirmations_post_collection') {
+        if ($method !== Request::METHOD_POST) 
+        {
+            return;
+        }
+
+        if ($request->get('_route') !== 'api_user_confirmations_post_collection') 
+        {
             return;
         }
 
