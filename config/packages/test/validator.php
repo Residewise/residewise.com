@@ -8,7 +8,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension('framework', [
         'validation' => [
             'not_compromised_password' => false,
-            
         ],
     ]);
 };

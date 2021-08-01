@@ -13,8 +13,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 'uri_prefix' => '/media',
                 'upload_destination' => '%kernel.project_dir%/public/media',
                 'namer' => SmartUniqueNamer::class,
-                
-                
             ],
         ],
     ]);

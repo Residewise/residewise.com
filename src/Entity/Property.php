@@ -19,18 +19,18 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=PropertyRepository::class)
- */
+ /**
+  * @ORM\Entity(repositoryClass=PropertyRepository::class)
+  */
  #[ApiResource(
      collectionOperations:['get', 'post'],
      itemOperations:['get', 'patch'],
      normalizationContext: [
-         'groups' => ['property:read']
+         'groups' => ['property:read'],
      ],
      denormalizationContext: [
-        'groups' => ['property:write']
-    ],
+         'groups' => ['property:write'],
+     ],
  )]
 #[ApiFilter(SearchFilter::class, properties: [
     'type' => 'end',

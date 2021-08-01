@@ -19,7 +19,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'result_cache_driver' => [
                 'type' => 'pool',
                 'pool'
-                
+
                  => 'doctrine.result_cache_pool',
             ],
         ],
@@ -33,8 +33,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 ],
                 'doctrine.system_cache_pool' => [
                     'adapter' =>
-                    
-                    
+
                      'cache.system',
                 ],
             ],

@@ -9,7 +9,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'output_path' => '%kernel.project_dir%/public/build',
         'script_attributes' => [
             'defer' => true,
-            
         ],
     ]);
 };

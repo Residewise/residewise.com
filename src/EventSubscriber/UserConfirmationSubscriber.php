@@ -46,7 +46,7 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
         $method = $viewEvent->getRequest()->getMethod();
         $request = $viewEvent->getRequest();
 
-        if (!$entity instanceof UserConfirmation) {
+        if(!$entity instanceof UserConfirmation){
             return;
         }
 
@@ -57,17 +57,12 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
             ]
         );
 
-        if (!$user instanceof User) 
-        {   
-            return;
-        }
-
-        if ($method !== Request::METHOD_POST) 
+        if ($method !== Request::METHOD_POST)
         {
             return;
         }
 
-        if ($request->get('_route') !== 'api_user_confirmations_post_collection') 
+        if ($request->get('_route') !== 'api_user_confirmations_post_collection')
         {
             return;
         }

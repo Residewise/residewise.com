@@ -8,7 +8,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension('framework', [
         'mailer' => [
             'dsn' => '%env(MAILER_DSN)%',
-            
         ],
     ]);
 };

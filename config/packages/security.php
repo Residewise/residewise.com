@@ -12,7 +12,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'encoders' => [
             User::class => [
                 'algorithm' => 'auto',
-                
             ],
         ],
         'providers' => [
@@ -20,8 +19,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 'entity' => [
                     'class' => User::class,
                     'property' => 'email',
-                    
-                    
                 ],
             ],
         ],

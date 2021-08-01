@@ -21,8 +21,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                     'prefix' => 'App\Entity',
                     'alias' =>
                      'App',
-                    
-                    
                 ],
             ],
         ],
