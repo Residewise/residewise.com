@@ -1,36 +1,30 @@
-import store from './main'
 import axios from 'axios'
 
 export default {
   namespaced: true,
-  state:{
-    properties: [],
+  state: {
+    properties: []
   },
-  getters:{
-    getProperties(state){
+  getters: {
+    getProperties (state) {
       return state.properties
     }
   },
-  mutations:{
-    setProperties(state, properties){
+  mutations: {
+    setProperties (state, properties) {
       state.properties = properties
     }
   },
-  actions:{
-   async get({commit}, query ){
-    const url = new URL("http://localhost:8000/api/properties.json?fee[between]="+query.min+'..'+query.max);
-
-   let res =  await axios.get(url.href, { 
-      params: {
-        type: query.type,
-        contract: query.contract 
-      }
-    }).then((response)=>{
-      commit('setProperties', response.data)
-    })
-    
-
-      
+  actions: {
+    async get ({ commit }, params) {
+      await axios.get('/api/properties.json', {
+        params: {
+          type: params.type,
+          fee: '[between]=' + params.min + '...' + params.max
+        }
+      }).then((response) => {
+        commit('setProperties', response.data)
+      })
     }
 
   }

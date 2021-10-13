@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MediaRepository;
 use DateTimeImmutable;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Uid\Uuid;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @ORM\Entity(repositoryClass=MediaRepository::class)
- */
 #[ApiResource(
     collectionOperations: [
         'post' => [
@@ -31,42 +33,31 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         'get',
     ]
 )]
+#[Entity(repositoryClass: MediaRepository::class)]
 class Media
 {
     public ?File $imageFile;
 
     public \DateTimeImmutable $updatedAt;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="uuid", unique=true)
-     */
-    private Uuid $id;
+    #[Id]
+    #[Column(type: 'uuid', unique: true)]private readonly Uuid $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[Column(type: 'string', length: 255)]
     private string $path;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[Column(type: 'integer')]
     private int $size;
 
     /**
      * @Vich\UploadableField(mapping="media", fileNameProperty="path", size="size")
      */
-    private ?string $file;
+    private readonly ?string $file;
 
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
+    #[Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="media")
-     */
+    #[ManyToOne(targetEntity: Property::class, inversedBy: 'media')]
     private ?Property $property;
 
     public function __construct()
@@ -75,7 +66,7 @@ class Media
         $this->createdAt = new DateTimeImmutable();
     }
 
-    public function getId(): \Symfony\Component\Uid\Uuid
+    public function getId(): Uuid
     {
         return $this->id;
     }
@@ -99,9 +90,9 @@ class Media
 
 
     /**
-     * @param \Symfony\Component\HttpFoundation\File\File|null $file
+     * @param File|null $file
      */
-    public function setFile(\Symfony\Component\HttpFoundation\File\File | \Symfony\Component\HttpFoundation\File\UploadedFile | null $file = null): void
+    public function setFile(File | UploadedFile | null $file = null): void
     {
         $this->imageFile = $file;
 
@@ -141,6 +132,9 @@ class Media
         return $this->property;
     }
 
+    /**
+     * @param Property|null $property
+     */
     public function setProperty(?Property $property): self
     {
         $this->property = $property;

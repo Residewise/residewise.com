@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios' 
+import axios from 'axios'
 import property from './property'
+import auth from './auth'
 
 axios.defaults.baseURL = 'http://127.0.0.1:8000/'
 Vue.use(Vuex)
@@ -30,6 +31,7 @@ export default new Vuex.Store({
   actions:{
   },
   modules:{
+    auth,
     property
   }
 })

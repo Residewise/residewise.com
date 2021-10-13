@@ -15,7 +15,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class PasswordHashSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private UserPasswordHasherInterface $passwordEncoder
+        private readonly UserPasswordHasherInterface $passwordEncoder
     ) {
     }
 
@@ -32,9 +32,9 @@ class PasswordHashSubscriber implements EventSubscriberInterface
     public function hashPassword(ViewEvent $viewEvent): void
     {
         $user = $viewEvent->getControllerResult();
-        $method = $viewEvent->getRequest()->getMethod();
+        $request = $viewEvent->getRequest();
 
-        if (! $user instanceof User || $method !== Request::METHOD_POST) {
+        if (! $user instanceof User || ! $request->isMethod(Request::METHOD_POST)) {
             return;
         }
 

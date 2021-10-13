@@ -13,8 +13,16 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'json' => ['application/merge-patch+json'],
         ],
         'swagger' => [
-            'versions' =>
-             [3],
+            'versions' => [3],
+            'api_keys' => [
+                'apiKey' => [
+                    'name' => 'Authorization',
+                    'type' => 'header',
+                ],
+            ],
         ],
+        'title' => 'Residewise API Docs',
+        'version' => '0.0.1',
+        'show_webby' => false,
     ]);
 };

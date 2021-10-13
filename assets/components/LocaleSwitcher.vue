@@ -1,10 +1,13 @@
 <template>
   <div class="locale-switcher">
     <b-nav-item-dropdown
+        no-caret
       v-model="$i18n.locale"
-      :text="$i18n.locale.toUpperCase()"
       right
     >
+      <template #text>
+        <span class="mdi mdi-earth"></span> {{ $i18n.locale.toUpperCase() }}
+      </template>
       <b-dropdown-item @click="$i18n.locale = 'en'" href="#"
         >English</b-dropdown-item
       >

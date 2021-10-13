@@ -22,6 +22,7 @@ return static function (ContainerConfigurator $containerConfigurator): void
     ]);
 
     $containerConfigurator->extension('framework', [
+        'test' => true,
         'php_errors' => [
             'log' => true,
         ],

@@ -8,38 +8,31 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PlanRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\OneToMany;
 
-/**
- * @ORM\Entity(repositoryClass=PlanRepository::class)
- */
 #[ApiResource(
     collectionOperations: [],
     itemOperations: []
 )]
+#[Entity(repositoryClass: PlanRepository::class)]
 class Plan
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private int $id;
+    #[Id]
+    #[GeneratedValue]
+    #[Column(type: 'integer')]private readonly int $id;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Subscription::class, mappedBy="plan")
-     */
+    #[OneToMany(mappedBy: 'plan', targetEntity: Subscription::class)]
     private Collection $subscriptions;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[Column(type: 'string', length: 255)]
     private string $title;
 
-    /**
-     * @ORM\Column(type="decimal", precision=10, scale=2)
-     */
-    private ?string $fee;
+    #[Column(type: 'integer')]
+    private int $fee;
 
     public function __construct()
     {
@@ -91,12 +84,12 @@ class Plan
         return $this;
     }
 
-    public function getFee(): ?string
+    public function getFee(): int
     {
         return $this->fee;
     }
 
-    public function setFee(string $fee): self
+    public function setFee(int $fee): self
     {
         $this->fee = $fee;
 

@@ -11,11 +11,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use function dump;
 
 class TokenSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private TokenGenerator $tokenGenerator
+        private readonly TokenGenerator $tokenGenerator
     ) {
     }
 
@@ -32,13 +33,13 @@ class TokenSubscriber implements EventSubscriberInterface
     public function generateToken(ViewEvent $viewEvent): void
     {
         $user = $viewEvent->getControllerResult();
-        $method = $viewEvent->getRequest()->getMethod();
+        $request = $viewEvent->getRequest();
 
-        if (! $user instanceof User || $method !== Request::METHOD_POST) {
+        if (!$user instanceof User || !$request->isMethod(Request::METHOD_POST)) {
             return;
         }
 
-        if ($user->getToken() === '') {
+        if (!$user->getToken()) {
             $token = $this->tokenGenerator->generateToken();
             $user->setToken($token);
         }

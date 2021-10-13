@@ -1,26 +1,98 @@
 // Define variable defaults
-$body-bg: rgba(0,0,0,0.05);
+$body-bg: rgba(0,0,0,0.025);
 
 /*! `Custom` Bootstrap 4 theme */
 @import url(https://fonts.googleapis.com/css?family=Muli:200,300,400,700);
 $headings-font-family:Muli;
 
+$white: #fff;
+$gray-100: #fafafa;
+$gray-200: #F9F8FC;
+$gray-300: #EDEDED;
+$gray-400: #cbc8d0;
+$gray-500: #adb5bd;
+$gray-600: #868e96;
+$gray-700: #444;
+$gray-800: #343a40;
+$gray-900: #17141F;
+$black: #000;
+$blue: #007bff;
+$indigo: #6610f2;
+$purple: #593196;
+$pink: #e83e8c;
+$red: #FC3939;
+$orange: #fd7e14;
+$yellow: #EFA31D;
+$green: #167958;;
+$teal: #167958;
+$cyan: #009CDC;
+
 $enable-grid-classes:true;
-$primary:#167958;
-$secondary:#CACACA;
-$success:#39A882;
+$primary: $green;
+$secondary: $gray-300;
+$success:$green;
 $danger:#CC330D;
-$info:#A2D5F2;
-$warning:#0DE2EA;
+$info:$blue;
+$warning:#EFA31D;
 $light:#ececec;
-$dark:#4E4E4E;
+$dark:#000000;
 $enable-gradients:false;
 $spacer:1.3rem;
-$border-width:0;
 $btn-border-radius:1rem;
-$input-bg: rgba(0,0,0, 0.05);
-$input-border-radius: 0.2rem;
+$input-bg: rgba(0,0,0, 0.045);
+$input-border-radius: 0.5rem;
 $input-placeholder-color: #4E4E4E;
+$input-btn-focus-box-shadow: none;
+$input-border-color: rgba(0,0,0, 0.045);
+$card-border-width: 1px;
+
+
+.card-header{
+  background-color: transparent!important;
+  border-bottom: 1px solid rgba(0,0,0,0.05)!important;
+}
+
+.dashboard-option {
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-bottom: 1.25rem;
+  color: #000;
+  text-decoration: none;
+  padding: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  display: block;
+  border-radius: 4px;
+}
+
+.dashboard-option:hover {
+  transition: all 0.3s ease;
+  background-color: #167958 !important;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+  text-decoration: none;
+  border: 1px solid transparent;
+  display: block;
+}
+.dashboard-option-secondary {
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-bottom: 1.25rem;
+  color: #000;
+  text-decoration: none;
+}
+
+.dashboard-option-secondary:hover {
+  transition: all 0.3s ease;
+  background-color: #167958 !important;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+}
 
 // Then import Bootstrap an BootstrapVue SCSS files (order is important)
 @import 'node_modules/bootstrap/scss/bootstrap.scss';

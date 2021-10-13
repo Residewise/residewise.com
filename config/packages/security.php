@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Entity\User;
 use App\Security\UserEnabledChecker;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\HttpFoundation\Request;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension('security', [
@@ -32,34 +33,35 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                     'success_handler' => 'lexik_jwt_authentication.handler.authentication_success',
                     'failure_handler' => 'lexik_jwt_authentication.handler.authentication_failure',
                 ],
-                'user_checker' => UserEnabledChecker
-                ::class,
+                'user_checker' => UserEnabledChecker::class,
             ],
             'api' => [
                 'pattern' => '^/api',
                 'stateless' => true,
-                'jwt'
-                 => null,
+                'jwt' => []
             ],
         ],
-        'role_hierarchy' => [
-            'ROLE_PROPERTY_OWNER' => ['ROLE_SELLER', 'ROLL_BUYER', 'ROLE_LANDLORD', 'ROLE_COMMENTER', 'ROLE_MESSENGER', 'ROLE_RATER'],
-            'ROLE_TENANT' => ['ROLE_COMMENTER', 'ROLE_MESSENGER', 'ROLE_RATER'],
-            'ROLE_AGENT' => ['ROLE_PROXY_LANDLORD', 'ROLE_PROXY_SELLER'],
-            'ROLE_SERVICE_PROVIDER' => ['ROLE_MESSENGER', 'ROLE_MESSENGER'],
+        'access_control' => [
+            [
+                'path' => '^/api/docs',
+                'roles' => 'PUBLIC_ACCESS',
+            ],
+            [
+                'path' => '^/api/login',
+                'roles' => 'PUBLIC_ACCESS',
+            ],
+            [
+                'path' => '^/api/users',
+                'methods' => [Request::METHOD_POST],
+                'roles' => 'PUBLIC_ACCESS',
+            ],
+            [
+                'path' => '^/api/users/confirmation'
+            ],
+            [
+                'path' => '^/api',
+                'roles' => 'IS_AUTHENTICATED_FULLY',
+            ]
         ],
-        'access_control' => [[
-            'path' => '^/api/docs',
-            'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY',
-        ], [
-            'path' => '^/api/login',
-            'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY',
-        ], [
-            'path' => '^/api/users',
-            'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY',
-        ], [
-            'path' => '^/api',
-            'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY',
-        ]],
     ]);
 };

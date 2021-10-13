@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="background">
     <div v-if="isLoading">
       <div class="loading d-flex justify-content-center align-items-center ">
         <b-spinner label="Loading..."></b-spinner>
@@ -11,6 +11,9 @@
 </template>
 
 <style scoped>
+
+
+
 .loading {
   height: 100%;
   position: fixed;
@@ -20,18 +23,26 @@
   z-index: 99999;
   background-color: rgba(255, 255, 255, 0.8);
 }
+
+.background{
+  height:100vh;
+  width: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 </style>
 
 <script>
 import { mapGetters } from "vuex";
 import Navbar from "../components/Navbar.vue";
 
+
 export default {
   components: { Navbar },
   name: "App",
   computed: {
     ...mapGetters({
-      isLoading: "getLoading",
+      isLoading: "getLoading"
     }),
   },
 };

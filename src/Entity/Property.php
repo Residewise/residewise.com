@@ -11,37 +11,35 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Entity\Contract\CreatedAtEntityInterface;
 use App\Entity\Contract\PriceableInterface;
-use App\Entity\Contract\PropertyOwnerEntityInterface;
 use App\Repository\PropertyRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToMany;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
- /**
-  * @ORM\Entity(repositoryClass=PropertyRepository::class)
-  */
- #[ApiResource(
-     collectionOperations:['get', 'post'],
-     itemOperations:['get', 'patch'],
-     normalizationContext: [
-         'groups' => ['property:read'],
-     ],
-     denormalizationContext: [
-         'groups' => ['property:write'],
-     ],
-     attributes:[
-         'pagination_items_per_page' => 10,
-     ]
- )]
+#[ApiResource(collectionOperations: [
+    'post' => [],
+    'get' => []
+], denormalizationContext: [
+    'groups' => ['property.write'],
+], normalizationContext: [
+    'groups' => ['property.read'],
+])]
 #[ApiFilter(SearchFilter::class, properties: [
-    'type' => 'end',
-    'contract' => 'end',
+    'type' => 'end'
 ])]
 #[ApiFilter(RangeFilter::class, properties: ['fee'])]
 #[ApiFilter(NumericFilter::class, properties: ['sqm'])]
-class Property implements CreatedAtEntityInterface, PriceableInterface, PropertyOwnerEntityInterface
+#[Entity(repositoryClass: PropertyRepository::class)]
+class Property implements CreatedAtEntityInterface, PriceableInterface
 {
     public const TYPES = [self::TYPE_APARTMENT, self::TYPE_HOUSE, self::TYPE_LAND];
 
@@ -50,14 +48,6 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
     public const TYPE_HOUSE = 'TYPE_HOUSE';
 
     public const TYPE_LAND = 'TYPE_LAND';
-
-    public const CONTRACTS = [self::CONTRACT_SELL, self::CONTRACT_RENT];
-
-    public const CONTRACT_RENT = 'CONTRACT_RENT';
-
-    public const CONTRACT_SELL = 'CONTRACT_SELL';
-
-    public const CONTRACT_SHARE = 'CONTRACT_SHARE';
 
     public const TERMS = [self::TERM_DAILY, self::TERM_WEEKLY, self::TERM_MONTHLY, self::TERM_ONE_TIME];
 
@@ -69,114 +59,116 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
 
     public const TERM_MONTHLY = 'TERM_MONTHLY';
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private int $id;
+    #[Id]
+    #[Column(type: 'uuid', unique: true)]
+    #[Groups(['property.read', 'user.read'])]
+    private Uuid $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    #[Groups(['property:read'])]
+    #[Groups(['property.write', 'property:read', 'user.read', 'user.write'])]
+    #[Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
     private string $title;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-
+    #[Column(type: 'text', nullable: true)]
+    #[Groups(['property.write', 'property.read', 'user.read', 'user.write'])]
     private ?string $description;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-
+    #[Column(type: 'string', length: 255)]
+    #[Groups(['property.write', 'property.read', 'user.read', 'user.write'])]
+    #[Assert\Choice(self::TYPES)]
     private string $type;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[Column(type: 'integer', precision: 10, scale: 2)]
+    #[Groups(['property.write', 'property.read', 'user.read', 'user.write'])]
+    #[Assert\PositiveOrZero]
+    private int $fee = 0;
 
-    private string $contract;
+    #[Column(type: 'string', length: 3)]
+    #[Groups(['property.write', 'property.read', 'user.read', 'user.write'])]
+    #[Assert\NotBlank]
+    private string $currency = 'CZK';
 
-    /**
-     * @ORM\Column(type="decimal", precision=10, scale=2)
-     */
-
-    private ?string $fee;
-
-    /**
-     * @ORM\Column(type="string", length=3)
-     */
-
-    private string $currency;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-
+    #[Column(type: 'string', length: 255)]
+    #[Groups(['property.write', 'property.read', 'user.read', 'user.write'])]
+    #[Assert\Choice(self::TERMS)]
     private string $term;
 
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
+    #[Groups(['property.write', 'property:read', 'user.read', 'user.write'])]
+    #[Column(type: 'string')]
+    private string $address;
 
-    private DateTimeImmutable $createdAt;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    #[Groups(['property:read'])]
-    private string $pluscode;
-
-    /**
-     * @ORM\Column(type="float")
-     */
-    #[Groups(['property:read'])]
-    private float $longitude;
-
-    /**
-     * @ORM\Column(type="float")
-     */
-    #[Groups(['property:read'])]
-    private float $latitude;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    #[Groups(['property:read'])]
+    #[Groups(['property.write', 'property:read', 'user.read', 'user.write'])]
+    #[Column(type: 'integer')]
+    #[Assert\Positive]
     private int $sqm;
 
-    /**
-     * @ORM\OneToMany(targetEntity=PropertyOwner::class, mappedBy="property")
-     */
-    #[Groups(['property:read'])]
-    private Collection $propertyOwners;
+    // TODO: set up event subscriber and LocatableEntityInterface to convert address in to coordinates
+    #[Groups(['property.write', 'property:read', 'user.read', 'user.write'])]
+    #[Column(type: 'float')]
+    #[Assert\NotBlank]
+    private float $latitude;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Amenity::class, mappedBy="property")
-     */
-    #[Groups(['property:read'])]
-    private Collection $amenities;
+    #[Groups(['property.write', 'property:read', 'user.read', 'user.write'])]
+    #[Column(type: 'float')]
+    #[Assert\NotBlank]
+    private float $longitude;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Media::class, mappedBy="property")
-     */
+    // TODO figure out how to handle the property owner flow
     #[Groups(['property:read'])]
+    #[ManyToMany(targetEntity: User::class, mappedBy: 'properties')]
+    private Collection $owners;
+
+    #[Groups(['property:read'])]
+    #[ManyToOne(targetEntity: User::class)]
+    private ?User $currentOwner;
+
+    // TODO: setup image uploading use base64 / max upload of 2mb and reduce image resolution with image processor.
+    #[Groups(['property:read'])]
+    #[OneToMany(mappedBy: 'property', targetEntity: Media::class)]
     private Collection $media;
+
+    // TODO: figure out how to handle, expired contracts and contract renewal
+    // TODO: (something like if the current date is passed the endedAt date of the contract, ensure all contract parties agree.)
+    #[OneToMany(mappedBy: 'property', targetEntity: Contract::class)]
+    private Collection $contracts;
+
+    // TODO add event subscriber to reject property without some basic property info
+    #[ManyToMany(targetEntity: Feature::class, inversedBy: 'properties')]
+    private Collection $features;
+
+    #[Column(type: 'datetime_immutable')]
+    #[Groups(['property.write', 'property.read', 'user.read', 'user.write'])]
+    #[Assert\NotBlank]
+    private DateTimeImmutable $createdAt;
+
+    #[Column(type: 'boolean')]
+    #[Groups(['user.read', 'property.read',])]
+    private bool $isPublic = false;
+
+    #[Column(type: 'boolean')]
+    #[Groups(['user.read', 'property.read',])]
+    private bool $isUnderReview = true;
 
     public function __construct()
     {
+        $this->id = Uuid::v4();
         $this->createdAt = new DateTimeImmutable();
-        $this->propertyOwners = new ArrayCollection();
-        $this->amenities = new ArrayCollection();
-        $this->media = new ArrayCollection();
+        $this->features = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): Uuid
     {
         return $this->id;
+    }
+
+    public function getAddress(): string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address): void
+    {
+        $this->address = $address;
     }
 
     public function getTitle(): string
@@ -215,24 +207,12 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
         return $this;
     }
 
-    public function getContract(): string
-    {
-        return $this->contract;
-    }
-
-    public function setContract(string $contract): self
-    {
-        $this->contract = $contract;
-
-        return $this;
-    }
-
-    public function getFee(): ?string
+    public function getFee(): int
     {
         return $this->fee;
     }
 
-    public function setFee(string $fee): PriceableInterface
+    public function setFee(int $fee): PriceableInterface
     {
         $this->fee = $fee;
 
@@ -258,7 +238,7 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
 
     public function setTerm(string $term): self
     {
-        $this->term = $this->contract !== self::CONTRACT_RENT ? self::TERM_ONE_TIME : $term;
+        $this->term = $term;
 
         return $this;
     }
@@ -271,18 +251,6 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
     public function setCreatedAt(\DateTimeImmutable $createdAt): CreatedAtEntityInterface
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getPluscode(): string
-    {
-        return $this->pluscode;
-    }
-
-    public function setPluscode(string $pluscode): self
-    {
-        $this->pluscode = $pluscode;
 
         return $this;
     }
@@ -324,56 +292,29 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
     }
 
     /**
-     * @return Collection|PropertyOwner[]
+     * @return Collection
      */
-    public function getPropertyOwners(): Collection
+    public function getFeatures(): Collection
     {
-        return $this->propertyOwners;
+        return $this->features;
     }
 
-    public function addPropertyOwner(PropertyOwner $propertyOwner): self
+    public function addAmenity(Feature $amenity): self
     {
-        if (! $this->propertyOwners->contains($propertyOwner)) {
-            $this->propertyOwners[] = $propertyOwner;
-            $propertyOwner->setProperty($this);
+        if (!$this->features->contains($amenity)) {
+            $this->features[] = $amenity;
+            $amenity->addProperty($this);
         }
 
         return $this;
     }
 
-    public function removePropertyOwner(PropertyOwner $propertyOwner): self
+    public function removeAmenity(Feature $amenity): self
     {
         // set the owning side to null (unless already changed)
-        if ($this->propertyOwners->removeElement($propertyOwner) && $propertyOwner->getProperty() === $this) {
-            $propertyOwner->setProperty(null);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Amenity[]
-     */
-    public function getAmenities(): Collection
-    {
-        return $this->amenities;
-    }
-
-    public function addAmenity(Amenity $amenity): self
-    {
-        if (! $this->amenities->contains($amenity)) {
-            $this->amenities[] = $amenity;
-            $amenity->setProperty($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAmenity(Amenity $amenity): self
-    {
-        // set the owning side to null (unless already changed)
-        if ($this->amenities->removeElement($amenity) && $amenity->getProperty() === $this) {
-            $amenity->setProperty(null);
+        if ($this->features->removeElement($amenity) && $amenity->getProperties()
+                ->contains($this)) {
+            $amenity->removeProperty(null);
         }
 
         return $this;
@@ -389,7 +330,7 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
 
     public function addMedium(Media $medium): self
     {
-        if (! $this->media->contains($medium)) {
+        if (!$this->media->contains($medium)) {
             $this->media[] = $medium;
             $medium->setProperty($this);
         }
@@ -403,6 +344,69 @@ class Property implements CreatedAtEntityInterface, PriceableInterface, Property
         if ($this->media->removeElement($medium) && $medium->getProperty() === $this) {
             $medium->setProperty(null);
         }
+
+        return $this;
+    }
+
+
+    public function getCurrentOwner(): ?User
+    {
+        return $this->currentOwner;
+    }
+
+    public function setCurrentOwner(?User $currentOwner): void
+    {
+        $this->currentOwner = $currentOwner;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getContracts(): Collection
+    {
+        return $this->contracts;
+    }
+
+    public function addContract(Contract $contract): self
+    {
+        if (!$this->contracts->contains($contract)) {
+            $this->contracts[] = $contract;
+            $contract->setProperty($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContract(Contract $contract): self
+    {
+        // set the owning side to null (unless already changed)
+        if ($this->contracts->removeElement($contract) && $contract->getProperty() === $this) {
+            $contract->setProperty(null);
+        }
+
+        return $this;
+    }
+
+    public function getIsPublic(): ?bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): self
+    {
+        $this->isPublic = $isPublic;
+
+        return $this;
+    }
+
+    public function getIsUnderReview(): ?bool
+    {
+        return $this->isUnderReview;
+    }
+
+    public function setIsUnderReview(bool $isUnderReview): self
+    {
+        $this->isUnderReview = $isUnderReview;
 
         return $this;
     }

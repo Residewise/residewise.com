@@ -19,18 +19,6 @@
                     ></b-form-radio-group>
                   </b-form-group>
 
-                  <b-form-group>
-                    <b-form-radio-group
-                      id="btn-radios-2"
-                      v-model="form.contract"
-                      :options="contracts"
-                      :aria-describedby="ariaDescribedby"
-                      button-variant="outline-primary"
-                      size="lg"
-                      buttons
-                    ></b-form-radio-group>
-                  </b-form-group>
-
                   <div>
                     <b-input-group>
                       <b-form-input
@@ -71,14 +59,6 @@
                       currency: property.currency,
                     }).format(property.fee)
                   }}
-                  <div class="small">
-                    <span v-if="property.term == 'TERM_ONE_TIME'"
-                      >Purchase</span
-                    >
-                    <span v-if="property.term == 'TERM_DAILY'">Daily</span>
-                    <span v-if="property.term == 'TERM_WEEKLY'">Weekly</span>
-                    <span v-if="property.term == 'TERM_MONTHLY'">Monthly</span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -141,12 +121,6 @@ export default {
         { text: i18n.t("house"), value: "TYPE_HOUSE" },
         { text: i18n.t("land"), value: "TYPE_LAND" },
       ],
-      contracts: [
-        { text: i18n.t("any"), value: null },
-        { text: i18n.t("rent"), value: "CONTRACT_RENT" },
-        { text: i18n.t("buy"), value: "CONTRACT_SELL" },
-      ],
-
       cities: [
         "Praha",
         "Brno",
@@ -185,6 +159,7 @@ export default {
       setLoading: "setLoading",
     }),
     search() {
+
       this.setLoading(true);
       this.$store.dispatch("property/get", this.form);
       this.setLoading(false);

@@ -8,7 +8,7 @@ class TokenGenerator
 {
     private const CHARS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    public function generateToken(int $length = 50): string
+    public function generateToken(int $length = 100): string
     {
         $token = '';
         $alphabetLength = strlen(self::CHARS);

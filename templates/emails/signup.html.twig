@@ -1,12 +1,12 @@
-<h1>Hi {{ fullname }}</h1>
+{% extends 'emails/base.html.twig' %}
 
-<h3>Welcome to Residewise</h3>
+{% block content %}
+  <div class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5">
+      <h1 class="display-5 fw-bold">Hi {{ fullname }}</h1>
+      <p class="col-md-8 fs-4">Welcome to Residewise, Click below to verify that we have the right email for you.</p>
+      <a  href="{{ link }}" class="btn btn-primary btn-lg" type="button">Example button</a>
+    </div>
+  </div>
+{% endblock %}
 
-<p>
-  Click below to verify that we have the right email for you.
-</p>
-
-<p>
-  <a href="{{ link }}">Activate your account</a>
-  (this link is valid until {{ expiration_date|date('F jS') }})
-</p>

@@ -2,6 +2,6 @@
   "build/app.css": "http://localhost:8080/build/app.css",
   "build/app.js": "http://localhost:8080/build/app.js",
   "build/runtime.js": "http://localhost:8080/build/runtime.js",
-  "build/vendors-node_modules_websanova_vue-auth_dist_drivers_auth_bearer_esm_js-node_modules_websanov-6184be.js": "http://localhost:8080/build/vendors-node_modules_websanova_vue-auth_dist_drivers_auth_bearer_esm_js-node_modules_websanov-6184be.js",
+  "build/vendors-node_modules_axios_index_js-node_modules_bootstrap-vue_esm_index_js-node_modules_core-e49fb9.js": "http://localhost:8080/build/vendors-node_modules_axios_index_js-node_modules_bootstrap-vue_esm_index_js-node_modules_core-e49fb9.js",
   "build/images/logo.png": "http://localhost:8080/build/images/logo.5747413c.png"
 }

@@ -12,20 +12,20 @@ use Symfony\Component\Security\Core\Security;
 
 class PropertyVoter extends Voter
 {
-    public const PROPERTY_VIEW = 'PROPERTY_VIEW';
+    public final const PROPERTY_VIEW = 'PROPERTY_VIEW';
 
-    public const PROPERTY_EDIT = 'PROPERTY_EDIT';
+    public final const PROPERTY_EDIT = 'PROPERTY_EDIT';
 
-    public const PROPERTY_DELETE = 'PROPERTY_DELETE';
+    public final const PROPERTY_DELETE = 'PROPERTY_DELETE';
 
-    public const ACTIONS = [
+    public final const ACTIONS = [
         self::PROPERTY_VIEW,
         self::PROPERTY_EDIT,
         self::PROPERTY_DELETE,
     ];
 
     public function __construct(
-        private Security $security
+        private readonly Security $security
     ) {
     }
 
@@ -44,23 +44,23 @@ class PropertyVoter extends Voter
 
         return match ($attribute) {
             self::PROPERTY_VIEW => $this->canViewProperty(),
-            self::PROPERTY_EDIT => $this->canEditProperty(),
-            self::PROPERTY_DELETE => $this->canDeleteProperty(),
+            self::PROPERTY_EDIT => $this->canEditProperty($subject),
+            self::PROPERTY_DELETE => $this->canDeleteProperty($subject),
             default => false
         };
     }
 
     private function canViewProperty(): bool
     {
-        return $this->security->isGranted(User::ROLE_USER);
+        return true;
     }
 
-    private function canEditProperty(): bool
+    private function canEditProperty(Property $property): bool
     {
-        return $this->security->isGranted(User::ROLE_USER);
+        return $property->getPropertyOwners()->contains($user);
     }
 
-    private function canDeleteProperty(): bool
+    private function canDeleteProperty(Property $property): bool
     {
         return $this->security->isGranted(User::ROLE_USER);
     }

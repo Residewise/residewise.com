@@ -6,7 +6,7 @@ namespace App\Entity\Contract;
 
 interface PriceableInterface
 {
-    public function setFee(string $fee): self;
+    public function setFee(int $fee): self;
 
     public function setCurrency(string $fee): self;
 }

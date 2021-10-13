@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 #[ApiResource(
     collectionOperations: [
-        'post' => [
-            'path' => 'users/confirmation',
-        ],
     ],
-    itemOperations: []
+    itemOperations: [
+        'get' => [
+            'path' => '/users/confirmation/{id}'
+        ],
+    ]
 )]
 class UserConfirmation
 {
+    #[ApiProperty(identifier: true)]
     private string $token;
 
     public function getToken(): string
