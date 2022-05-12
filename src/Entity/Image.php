@@ -37,12 +37,12 @@ class Image
         $this->createdAt = new DateTimeImmutable();
     }
 
-    public function getId(): ?Uuid
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function getBase64(): ?string
+    public function getBase64(): string
     {
         return $this->base64;
     }
@@ -66,7 +66,7 @@ class Image
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }

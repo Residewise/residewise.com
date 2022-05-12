@@ -37,7 +37,7 @@ class ChatController extends AbstractController
     }
 
     #[Route(path: '/load/{id}', name: 'load_conversation')]
-    public function load_conversation(Conversation $conversation, Request $request)
+    public function load_conversation(Conversation $conversation, Request $request): Response
     {
         $message = new Message();
         $message->setConversation($conversation);

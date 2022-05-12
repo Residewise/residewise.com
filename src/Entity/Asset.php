@@ -47,6 +47,9 @@ class Asset
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
 
+    /**
+     * @var ArrayCollection|Image[]
+     */
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: Image::class)]
     private $images;
 
@@ -62,6 +65,9 @@ class Asset
     #[ORM\Column(type: 'integer')]
     private string $floor;
 
+    /**
+     * @var ArrayCollection|Review[]
+     */
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: Review::class)]
     private $reviews;
 
@@ -72,12 +78,12 @@ class Asset
         $this->reviews = new ArrayCollection();
     }
 
-    public function getId(): ?Uuid
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -101,7 +107,7 @@ class Asset
         return $this;
     }
 
-    public function getSqm(): ?int
+    public function getSqm(): int
     {
         return $this->sqm;
     }
@@ -113,7 +119,7 @@ class Asset
         return $this;
     }
 
-    public function getLongitude(): ?float
+    public function getLongitude(): float
     {
         return $this->longitude;
     }
@@ -125,7 +131,7 @@ class Asset
         return $this;
     }
 
-    public function getLatitude(): ?float
+    public function getLatitude(): float
     {
         return $this->latitude;
     }
@@ -137,7 +143,7 @@ class Asset
         return $this;
     }
 
-    public function getType(): ?string
+    public function getType(): string
     {
         return $this->type;
     }
@@ -149,7 +155,7 @@ class Asset
         return $this;
     }
 
-    public function getTerm(): ?string
+    public function getTerm(): string
     {
         return $this->term;
     }
@@ -166,6 +172,9 @@ class Asset
         return $this->owner;
     }
 
+    /**
+     * @param UserInterface|null $owner
+     */
     public function setOwner(null|User|UserInterface $owner): self
     {
         $this->owner = $owner;
@@ -173,7 +182,7 @@ class Asset
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -188,7 +197,7 @@ class Asset
     /**
      * @return Collection<int, Image>
      */
-    public function getImages(): Collection
+    public function getImages(): ArrayCollection
     {
         return $this->images;
     }
@@ -213,7 +222,7 @@ class Asset
         return $this;
     }
 
-    public function getIsPublished(): ?bool
+    public function getIsPublished(): bool
     {
         return $this->isPublished;
     }
@@ -225,7 +234,7 @@ class Asset
         return $this;
     }
 
-    public function getFee(): ?int
+    public function getFee(): int
     {
         return $this->fee;
     }
@@ -237,7 +246,7 @@ class Asset
         return $this;
     }
 
-    public function getAddress(): ?string
+    public function getAddress(): string
     {
         return $this->address;
     }
@@ -249,7 +258,7 @@ class Asset
         return $this;
     }
 
-    public function getFloor(): ?int
+    public function getFloor(): string
     {
         return $this->floor;
     }
@@ -264,7 +273,7 @@ class Asset
     /**
      * @return Collection<int, Review>
      */
-    public function getReviews(): Collection
+    public function getReviews(): ArrayCollection
     {
         return $this->reviews;
     }

@@ -36,12 +36,12 @@ class Message
         $this->createdAt = new DateTimeImmutable();
     }
 
-    public function getId(): ?Uuid
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function getContent(): ?string
+    public function getContent(): string
     {
         return $this->content;
     }
@@ -58,6 +58,9 @@ class Message
         return $this->owner;
     }
 
+    /**
+     * @param UserInterface|null $owner
+     */
     public function setOwner(null|User|UserInterface $owner): self
     {
         $this->owner = $owner;
@@ -65,7 +68,7 @@ class Message
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -82,7 +85,7 @@ class Message
         return $this->content;
     }
 
-    public function getConversation(): ?Conversation
+    public function getConversation(): Conversation
     {
         return $this->conversation;
     }

@@ -42,24 +42,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
 
+    /**
+     * @var ArrayCollection|Asset[]
+     */
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Asset::class)]
     private $assets;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $firstName;
+    private ?string $firstName = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $lastName;
+    private ?string $lastName = null;
 
+    /**
+     * @var ArrayCollection|Conversation[]
+     */
     #[ORM\ManyToMany(targetEntity: Conversation::class, mappedBy: 'users')]
     private $conversations;
 
+    /**
+     * @var ArrayCollection|Insight[]
+     */
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Insight::class)]
     private $insights;
 
+    /**
+     * @var ArrayCollection|Review[]
+     */
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Review::class)]
     private $ownedReviews;
 
+    /**
+     * @var ArrayCollection|Review[]
+     */
     #[ORM\OneToMany(mappedBy: 'reviewee', targetEntity: Review::class)]
     private $reviews;
 
@@ -74,12 +89,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->reviews = new ArrayCollection();
     }
 
-    public function getId(): ?Uuid
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -103,6 +118,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @see UserInterface
+     * @return mixed[]
      */
     public function getRoles(): array
     {
@@ -113,6 +129,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param mixed[] $roles
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -138,13 +157,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
 
-    public function getAvatar(): ?string
+    public function getAvatar(): string
     {
         return $this->avatar;
     }
@@ -184,7 +203,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -199,7 +218,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Asset>
      */
-    public function getAssets(): Collection
+    public function getAssets(): ArrayCollection
     {
         return $this->assets;
     }
@@ -224,12 +243,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getFullName(): ?string
+    public function getFullName(): string
     {
         return $this->firstName . " " . $this->lastName;
     }
 
-    public function getFirstName(): ?string
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
@@ -241,7 +260,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getLastName(): ?string
+    public function getLastName(): string
     {
         return $this->lastName;
     }
@@ -261,7 +280,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Conversation>
      */
-    public function getConversations(): Collection
+    public function getConversations(): ArrayCollection
     {
         return $this->conversations;
     }
@@ -288,7 +307,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Insight>
      */
-    public function getInsights(): Collection
+    public function getInsights(): ArrayCollection
     {
         return $this->insights;
     }
@@ -316,7 +335,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Review>
      */
-    public function getOwnedReviews(): Collection
+    public function getOwnedReviews(): ArrayCollection
     {
         return $this->ownedReviews;
     }
@@ -344,7 +363,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Review>
      */
-    public function getReviews(): Collection
+    public function getReviews(): ArrayCollection
     {
         return $this->reviews;
     }

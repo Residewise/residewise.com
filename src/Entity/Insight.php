@@ -35,12 +35,12 @@ class Insight
         $this->createdAt = new DateTimeImmutable();
     }
 
-    public function getId(): ?int
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function getAction(): ?string
+    public function getAction(): string
     {
         return $this->action;
     }
@@ -52,7 +52,7 @@ class Insight
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -76,7 +76,7 @@ class Insight
         return $this;
     }
 
-    public function getPath(): ?string
+    public function getPath(): string
     {
         return $this->path;
     }

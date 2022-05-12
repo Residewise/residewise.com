@@ -17,12 +17,13 @@ class AssetNormalizer implements ContextAwareNormalizerInterface
     }
 
 
-    /** @param Asset $asset */
+    /** @param Asset $asset
+     * @return array<string, mixed[]> */
     public function normalize(
         mixed $asset,
         string $format = null,
         array $context = []
-    ) {
+    ): array {
 
         $data = $this->objectNormalizer->normalize($asset, 'json', $context);
 
