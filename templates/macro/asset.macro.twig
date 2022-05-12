@@ -1,0 +1,72 @@
+{% macro card(
+    asset,
+    hasCarousel = true,
+    isEditable = false,
+    hasLink = false,
+    isDetailed = false
+    ) %}
+    <div class="card mb-3 shadow-sm position-relative">
+        {% if hasCarousel %}
+            <turbo-frame id="asset-images" src="{{ path('asset_images', {id: asset.id}) }}">
+                <div class="d-flex justify-content-center align-items-center img-loading-placeholder">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </turbo-frame>
+        {% endif %}
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex">
+                    <div class="me-2">
+                        {{ include('profile/_avatar-profile-link.html.twig', {
+                            user: asset.owner
+                        }) }}
+                    </div>
+                    <div>
+                        <div class="h5 m-0">{{ asset.title }}</div>
+                        <div>{{ asset.term|trans }} | {{ asset.fee|format_currency('CZK') }}</div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-2"/>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="bg-grey p-2">
+                    {{ asset.sqm }} <span class="fw-bold">m<sup>2</sup></span>
+                </div>
+            </div>
+            {% if isDetailed %}
+                <p>{{ asset.description|raw }}</p>
+            {% else %}
+            <p>{{ asset.description|slice(0,150) }}...</p>
+            {% endif %}
+            {% if hasLink %}
+                <div class="d-flex justify-content-end">
+                    <a href="{{ path('app_asset_show', {id: asset.id}) }}" target="_blank"
+                       class="btn btn-secondary">
+                        <i class="bi bi-arrow-right fs-3"></i>
+                    </a>
+                </div>
+            {% endif %}
+            {% if isEditable %}
+                <div class="d-flex justify-content-between">
+                    <div class="btn-group">
+                        <a href="{{ path('app_asset_show', {id: asset.id}) }}"
+                           class="btn btn-secondary">
+                            <i class="mdi mdi-pencil-outline fs-3"></i>
+                        </a>
+                        <a href="{{ path('app_asset_show', {id: asset.id}) }}"
+                           class="btn btn-secondary">
+                            <i class="mdi mdi-chart-box fs-3"></i>
+                        </a>
+                        <a href="{{ path('app_asset_show', {id: asset.id}) }}" target="_blank"
+                           class="btn btn-secondary">
+                            <i class="bi bi-arrow-right fs-3"></i>
+                        </a>
+                    </div>
+                    {{ include('asset/_delete_form.html.twig') }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}

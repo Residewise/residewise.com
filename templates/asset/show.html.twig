@@ -1,0 +1,20 @@
+{% import "macro/asset.macro.twig" as assetmarco %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Asset{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-4">
+                {{ include('profile/_public-profile-sidebar.html.twig', {
+                    user: asset.owner
+                }) }}
+            </div>
+            <div class="col-md-8">
+                {{ assetmarco.card(asset, true, false, false, true) }}
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{# chat/message.stream.html.twig #}
+
+{# New messages received through the Mercure connection are appended to the div with the "messages" ID. #}
+
+<turbo-stream action="append" target="conversation-{{ conversation.id }}">
+    <template>
+        <div class="mb-2">
+            {% for message in conversation.messages %}
+                {% if app.user == message.owner %}
+                    <div class="d-flex justify-content-between">
+                        <div data-bs-toggle="tooltip" data-bs-placement="right" title="{{ message.owner.fullName }}">
+                            <img class="rounded-circle shadow-sm me-2" height="40" src="{{ message.owner.avatar }}"/>
+                        </div>
+                        <div>
+                            <div class="bg-grey rounded-2 p-2">{{ message.content }}</div>
+                            <div class="xtra-small text-muted">{{ message.createdAt|format_datetime() }}</div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="bg-grey rounded-2 p-2">{{ message.content }}</div>
+                            <div class="xtra-small text-muted">{{ message.createdAt|format_datetime() }}</div>
+                        </div>
+                        <div data-bs-toggle="tooltip" data-bs-placement="right" title="{{ message.owner.fullName }}">
+                            <img class="rounded-circle shadow-sm ms-2" height="40" src="{{ message.owner.avatar }}"/>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </template>
+</turbo-stream>

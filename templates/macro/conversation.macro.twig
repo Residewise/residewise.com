@@ -1,0 +1,46 @@
+{% macro item(conversation, hasLastMessage = true) %}
+    <div class="card mb-2">
+        <div class="card-body">
+            <div class="avatars">
+                {% for user in conversation.users %}
+                    {% if user != app.user %}
+                        <img alt="{{ user.fullName }}" data-bs-toggle="tooltip"
+                             data-bs-placement="right" title="{{ user.fullName }}"
+                             class="avatars__item" src="{{ user.avatar }}" height="45"/>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% if hasLastMessage and conversation.messages|last %}
+                <div class="border-top py-1 my-1 text-muted small">{{ conversation.messages|last|slice(0,50) }}...</div>
+            {% endif %}
+            <a class="stretched-link"
+               href="{{ path('conversation', {id: conversation.id}) }}"></a>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro message(message) %}
+        {% if app.user == message.owner %}
+            <div class="d-flex justify-content-between">
+                <div data-bs-toggle="tooltip" data-bs-placement="right" title="{{ message.owner.fullName }}">
+                    <img class="rounded-circle shadow-sm me-2" height="40" src="{{ message.owner.avatar }}"/>
+                </div>
+                <div>
+                    <div class="bg-grey rounded-2 p-2">{{ message.content }}</div>
+                    <div class="xtra-small text-muted">{{ message.createdAt|format_datetime() }}</div>
+                </div>
+            </div>
+        {% else %}
+            <div class="d-flex justify-content-between">
+                <div>
+                    <div class="bg-grey rounded-2 p-2">{{ message.content }}</div>
+                    <div class="xtra-small text-muted">{{ message.createdAt|format_datetime() }}</div>
+                </div>
+                <div data-bs-toggle="tooltip" data-bs-placement="right" title="{{ message.owner.fullName }}">
+                    <img class="rounded-circle shadow-sm ms-2" height="40" src="{{ message.owner.avatar }}"/>
+                </div>
+            </div>
+        {% endif %}
+{% endmacro %}
+

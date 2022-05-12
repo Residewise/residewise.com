@@ -1,0 +1,27 @@
+messages: messages
+properties: properties
+register: register
+login: login
+logout: logout
+apartment: apartment
+house: house
+title: Title
+description: Description
+sqm: SQM
+type: Type
+land: land
+commercial: commercial
+industrial: industrial
+other: other
+rent: rent
+sale: sale
+terms: terms
+min-sqm: min m2
+max-sqm: max m2
+min-price: min price
+max-price: min price
+advertise-your-property: Advertise your property
+images: images
+save: save
+select-map-location: Drag the map marker to the correct address
+image-upload-help: Please ensure at least one image is a blueprint of the property to ensure quality listings

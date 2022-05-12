@@ -1,0 +1,9 @@
+{% import "macro/conversation.macro.twig" as convosationMacro %}
+
+<turbo-frame id="conversation_list">
+    <div class="list-group list-group-flush conversation-list">
+        {% for conversation in conversations %}
+            {{ convosationMacro.item(conversation, true) }}
+        {% endfor %}
+    </div>
+</turbo-frame>

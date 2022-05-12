@@ -1,0 +1,6 @@
+<form method="post" action="{{ path('app_asset_delete', {'id': asset.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ asset.id) }}">
+    <button class="btn btn-secondary">
+        <i class="mdi mdi-delete text-danger fs-3"></i>
+    </button>
+</form>

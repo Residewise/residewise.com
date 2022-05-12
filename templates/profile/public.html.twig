@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user.fullName }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        PUBLIC PROFILE
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                {{ include('profile/_public-profile-sidebar.html.twig', {
+                    user: user
+                }) }}
+            </div>
+            <div class="col-md-8">
+                {% for review in user.reviews %}
+                    {{ userMacro.review(review) }}
+                {% endfor %}
+
+                <div class="card">
+                    <div class="card-body">
+                        {{ form_start(reviewForm) }}
+                        {{ form_row(reviewForm.rating) }}
+                        {{ form_row(reviewForm.notes) }}
+                        {{ form_row(reviewForm.asset) }}
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">
+                                {{ 'submit'|trans }}
+                            </button>
+                        </div>
+                        {{ form_end(reviewForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

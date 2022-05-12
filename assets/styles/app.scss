@@ -1,0 +1,149 @@
+@import "./variables";
+@import "~bootstrap";
+@import "~bootstrap-icons";
+@import "~@mdi/font";
+
+.xtra-small {
+  font-size: 10px !important;
+}
+
+.preview-img {
+  display: block;
+  object-fit: cover;
+  background-size: cover;
+  background-position: top center;
+  width: 100%;
+  height: 250px !important;
+}
+
+.avatars {
+  display: flex;
+  list-style-type: none;
+  margin: auto;
+  padding: 0;
+  flex-direction: row;
+
+  &__item {
+    border-radius: 100%;
+    color: #ffffff;
+    display: block;
+    font-family: sans-serif;
+    font-size: 12px;
+    font-weight: 100;
+    height: 45px;
+    width: 45px;
+    line-height: 45px;
+    text-align: center;
+    transition: margin 0.1s ease-in-out;
+    overflow: hidden;
+    margin-left: -20px;
+    z-index: 0;
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .045) !important;
+    border: 5px solid $white;
+  }
+
+  .avatars__item:hover {
+    border: 5px solid $white;
+    z-index: 5;
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+  }
+}
+
+.avatars__item:first-child {
+  margin-left: 0 !important;
+}
+
+body {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.bg-grey {
+  background-color: #f5f5f5 !important;
+}
+
+.hidden {
+  display: none;
+}
+
+.custom-nav-link {
+  text-decoration: none;
+  color: #333333;
+}
+
+.card {
+  border: none !important;
+}
+
+.form-control:focus {
+  outline: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.btn-secondary:hover {
+  background-color: #f5f5f5;
+}
+
+.img-loading-placeholder {
+  height: 250px !important;
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125)
+}
+
+.conversation-list {
+  height: 60vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.messages {
+  height: 50vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: 10px;
+}
+
+.custom-popover {
+  background: #fff;
+  float: left;
+  width: 300px;
+  display: none;
+  position: absolute;
+  z-index: 9000;
+  padding: 10px;
+}
+
+.participant-item .remove-participant {
+  display: none;
+  position: absolute;
+  align-items: center;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: black;
+  color: white;
+}
+
+.min-vh-50 {
+  min-height: 50vh !important;
+}
+
+.participant-item:hover .remove-participant {
+  display: flex;
+}
+
+#map {
+  height: 50vh;
+}
+
+.residewise-marker {
+  height: 20px;
+  width: 20px;
+  background-color: #000000;
+  border-radius: 50%;
+}
+
+@import "./bootswatch";
+

@@ -1,0 +1,10 @@
+parameters:
+	level: max
+
+	paths:
+		- ./src
+		- ./config
+		- ./tests
+
+	reportUnmatchedIgnoredErrors: false
+	checkMissingIterableValueType: false

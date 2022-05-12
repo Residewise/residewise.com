@@ -1,0 +1,91 @@
+{% import "macro/asset.macro.twig" as asset %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Asset index{% endblock %}
+
+{% block body %}
+
+    <div class="w-100 m-0" {{ stimulus_controller('static-map', {
+        features: features
+    }) }}>
+        <div id="map"></div>
+    </div>
+
+    <div class="col-md-12">
+        <form method="get" action="{{ path('app_asset_index') }}">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <div class="input-group">
+                                <input type="text" name="min-sqm" placeholder="{{ 'min-sqm'|trans }}"
+                                       class="form-control"
+                                       value="{{ app.request.get('min-sqm') }}">
+                                <input type="text" name="max-sqm" placeholder="{{ 'max-sqm'|trans }}"
+                                       class="form-control"
+                                       value="{{ app.request.get('max-sqm') }}">
+                                <span class="input-group-text">
+                                    <i class="mdi mdi-axis-arrow"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 mb-2">
+                            <div class="input-group">
+                                <input type="text" name="min-price" placeholder="{{ 'min-price'|trans }}"
+                                       class="form-control"
+                                       value="{{ app.request.get('min-price') }}">
+                                <input type="text" name="max-price" placeholder="{{ 'max-price'|trans }}"
+                                       class="form-control"
+                                       value="{{ app.request.get('max-price') }}">
+                                <span class="input-group-text">CZK</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 mb-2">
+                            <select name="term" class="form-select">
+                                <option value="rent" {% if app.request.get('term') == 'rent' %} selected disabled {% endif %}>{{ 'rent'|trans }}</option>
+                                <option value="sale" {% if app.request.get('term') == 'sale' %} selected disabled {% endif %}>{{ 'sale'|trans }}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 mb-2">
+                            <div class="input-group">
+                                <select name="type" class="form-select me-2">
+                                    <option value="apartment" {% if app.request.get('type') == 'apartment' %} selected disabled {% endif %}>{{ 'apartment'|trans }}</option>
+                                    <option value="house" {% if app.request.get('type') == 'house' %} selected disabled {% endif %}>{{ 'house'|trans }}</option>
+                                    <option value="land" {% if app.request.get('type') == 'land' %} selected disabled {% endif %}>{{ 'land'|trans }}</option>
+                                    <option value="commercial" {% if app.request.get('type') == 'commercial' %} selected disabled {% endif %}>{{ 'commercial'|trans }}</option>
+                                    <option value="industrial" {% if app.request.get('type') == 'industrial' %} selected disabled {% endif %}>{{ 'industrial'|trans }}</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-search fs-5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+
+            <div class="col-md-12">
+                <div class="row">
+                    {% for asset in assets %}
+                        <div class="col-md-4">
+                            {{ asset.card(asset, true, false, true) }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <a href="{{ path('app_asset_new') }}">Create new</a>
+            </div>
+
+        </div>
+    </div>
+    </div>
+{% endblock %}

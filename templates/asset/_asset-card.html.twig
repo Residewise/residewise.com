@@ -1,0 +1,39 @@
+<div class="card mb-3 shadow-sm">
+    <div {{ stimulus_controller('content-loader', {
+        path: path('asset_images', { id: asset.id })
+    }) }}>
+        <div data-content-loader-target="result">
+            <div class="d-flex justify-content-center align-items-center img-loading-placeholder">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex">
+                <div class="me-2">
+                    {{ include('profile/_avatar-profile-link.html.twig', {
+                        user: asset.owner
+                    }) }}
+                </div>
+                <div>
+                    <div class="h5 m-0">{{ asset.title }}</div>
+                    <div>{{ asset.term|trans }} | {{ asset.fee|format_currency('CZK') }}</div>
+                </div>
+            </div>
+            <div class="bg-grey p-2">
+                {{ asset.sqm }} <span class="fw-bold">m<sup>2</sup></span>
+            </div>
+        </div>
+        <hr class="my-2"/>
+        <p>{{ asset.description|slice(0,150) }}...</p>
+        <div class="d-flex justify-content-end">
+            <a href="{{ path('app_asset_show', {id: asset.id}) }}" target="_blank" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-right fs-3"></i>
+            </a>
+        </div>
+    </div>
+
+</div>

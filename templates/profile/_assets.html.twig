@@ -1,0 +1,10 @@
+{% import "macro/asset.macro.twig" as asset %}
+<turbo-frame id="dashboard">
+    <div class="row">
+        {% for asset in app.user.assets %}
+            <div class="col-md-6">
+                {{ asset.card(asset, false, true) }}
+            </div>
+        {% endfor %}
+    </div>
+</turbo-frame>
