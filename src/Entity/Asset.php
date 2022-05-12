@@ -48,10 +48,10 @@ class Asset
     private DateTimeImmutable $createdAt;
 
     /**
-     * @var ArrayCollection|Image[]
+     * @var ArrayCollection<int,Image>
      */
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: Image::class)]
-    private $images;
+    private Collection $images;
 
     #[ORM\Column(type: 'boolean')]
     private bool $isPublished = false;
@@ -63,13 +63,13 @@ class Asset
     private string $address;
 
     #[ORM\Column(type: 'integer')]
-    private string $floor;
+    private int $floor;
 
     /**
-     * @var ArrayCollection|Review[]
+     * @var ArrayCollection<int,Review>
      */
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: Review::class)]
-    private $reviews;
+    private Collection $reviews;
 
     public function __construct()
     {
@@ -173,7 +173,7 @@ class Asset
     }
 
     /**
-     * @param UserInterface|null $owner
+     * @param null|User|UserInterface $owner
      */
     public function setOwner(null|User|UserInterface $owner): self
     {
@@ -195,9 +195,9 @@ class Asset
     }
 
     /**
-     * @return Collection<int, Image>
+     * @return ArrayCollection<int, Image>
      */
-    public function getImages(): ArrayCollection
+    public function getImages(): Collection
     {
         return $this->images;
     }
@@ -258,7 +258,7 @@ class Asset
         return $this;
     }
 
-    public function getFloor(): string
+    public function getFloor(): ?int
     {
         return $this->floor;
     }
@@ -271,9 +271,9 @@ class Asset
     }
 
     /**
-     * @return Collection<int, Review>
+     * @return ArrayCollection<int, Review>
      */
-    public function getReviews(): ArrayCollection
+    public function getReviews(): Collection
     {
         return $this->reviews;
     }

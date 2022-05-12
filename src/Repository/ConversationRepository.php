@@ -9,13 +9,13 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
-use function Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Conversation|null find($id, $lockMode = null, $lockVersion = null)
  * @method Conversation|null findOneBy(array $criteria, array $orderBy = null)
  * @method Conversation[]    findAll()
  * @method Conversation[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @extends ServiceEntityRepository<Conversation>
  */
 class ConversationRepository extends ServiceEntityRepository
 {
@@ -48,12 +48,20 @@ class ConversationRepository extends ServiceEntityRepository
         }
     }
 
-    public function findByUser(User|UserInterface $user)
+    /**
+     * @param null|User|UserInterface $user
+     * @return mixed
+     */
+    public function findByUser(null|User|UserInterface $user): mixed
     {
-        $qb = $this->createQueryBuilder('c')
-        ->join('c.users', 'u')
-        ->andWhere('u.id = :id')
-        ->setParameter('id', $user->getId()->toRfc4122());
+        $qb = $this->createQueryBuilder('c');
+
+        if ($user) {
+            $qb->join('c.users', 'u')->andWhere('u.id = :id')->setParameter(
+                'id',
+                $user->getId()->toRfc4122()
+            );
+        }
 
         return $qb->getQuery()->getResult();
     }

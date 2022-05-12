@@ -10,6 +10,7 @@ use App\Repository\ImageRepository;
 use App\Serializer\AssetNormalizer;
 use App\Service\Base64FileUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,14 +32,21 @@ class AssetController extends AbstractController
     }
 
     #[Route(path: '', name: 'app_asset_index', methods: ['GET'])]
-    public function index(Request $request, AssetRepository $assetRepository): Response
+    public function index(Request $request): Response
     {
+        /** @var string $type */
         $type = $request->get('type');
+        /** @var string $term */
         $term = $request->get('term');
-        $minSqm = (int)$request->get('min-sqm');
-        $maxSqm = (int)$request->get('max-sqm');
-        $minPrice = (int)$request->get('min-price');
-        $maxPrice = (int)$request->get('max-price');
+        /** @var int $minSqm */
+        $minSqm = $request->get('min-sqm');
+        /** @var int $maxSqm */
+        $maxSqm = $request->get('max-sqm');
+        /** @var int $minPrice */
+        $minPrice = $request->get('min-price');
+        /** @var int $maxPrice */
+        $maxPrice = $request->get('max-price');
+
         $assets = $this->assetRepository->findBySearch($minSqm, $maxSqm, $minPrice, $maxPrice, $type, $term);
 
         $objectNormalizer = new ObjectNormalizer();
@@ -48,12 +56,10 @@ class AssetController extends AbstractController
             new JsonEncoder()
         ]);
 
-        $features = $serializer->serialize(
-            [
-                'type' => 'FeatureCollection',
-                'features' => $assets
-            ],
-            'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['id', 'createdAt', 'images', 'owner', 'reviews']]);
+        $features = $serializer->serialize([
+            'type' => 'FeatureCollection',
+            'features' => $assets
+        ], 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['id', 'createdAt', 'images', 'owner', 'reviews']]);
 
         return $this->render('asset/index.html.twig', [
             'assets' => $assets,
@@ -71,10 +77,10 @@ class AssetController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            /** @var array<UploadedFile> $files */
             $files = $form->get('images')->getData();
 
             foreach ($files as $file) {
-
 
                 $fileContentBase64 = $this->base64FileUtil->encodeBase64($file->getContent());
                 $image = new Image($fileContentBase64, $asset);
@@ -128,7 +134,10 @@ class AssetController extends AbstractController
     #[Route('delete/{id}', name: 'app_asset_delete', methods: ['POST'])]
     public function delete(Request $request, Asset $asset, AssetRepository $assetRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $asset->getId(), $request->request->get('_token'))) {
+        if (
+            $this->isCsrfTokenValid('delete' . $asset->getId(),
+                (string) $request->request->get('_token')))
+        {
             $assetRepository->remove($asset);
         }
 

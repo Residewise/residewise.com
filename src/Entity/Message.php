@@ -28,7 +28,7 @@ class Message
     private DateTimeImmutable $createdAt;
 
     #[ORM\ManyToOne(targetEntity: Conversation::class, cascade: ['persist'], inversedBy: 'messages')]
-    private Conversation $conversation;
+    private ?Conversation $conversation;
 
     public function __construct(
     )
@@ -59,7 +59,7 @@ class Message
     }
 
     /**
-     * @param UserInterface|null $owner
+     * @param null|User|UserInterface $owner
      */
     public function setOwner(null|User|UserInterface $owner): self
     {
@@ -68,12 +68,12 @@ class Message
         return $this;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -85,7 +85,7 @@ class Message
         return $this->content;
     }
 
-    public function getConversation(): Conversation
+    public function getConversation(): ?Conversation
     {
         return $this->conversation;
     }

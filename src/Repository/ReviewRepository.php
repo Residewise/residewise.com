@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Review;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -13,6 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Review|null findOneBy(array $criteria, array $orderBy = null)
  * @method Review[]    findAll()
  * @method Review[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @extends ServiceEntityRepository<Review>
  */
 class ReviewRepository extends ServiceEntityRepository
 {

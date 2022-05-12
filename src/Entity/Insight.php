@@ -25,7 +25,7 @@ class Insight
     private DateTimeImmutable $createdAt;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'insights')]
-    private ?User $owner = null;
+    private null|User|UserInterface $owner = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $path;
@@ -64,7 +64,7 @@ class Insight
         return $this;
     }
 
-    public function getOwner(): ?User
+    public function getOwner(): null|User|UserInterface
     {
         return $this->owner;
     }

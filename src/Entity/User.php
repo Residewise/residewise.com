@@ -36,6 +36,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'text')]
     private string $avatar;
 
+    /**
+     * @var ArrayCollection<int, Message>
+     */
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Message::class)]
     private Collection $messages;
 
@@ -43,10 +46,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private DateTimeImmutable $createdAt;
 
     /**
-     * @var ArrayCollection|Asset[]
+     * @var ArrayCollection<int, Asset>
      */
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Asset::class)]
-    private $assets;
+    private Collection $assets;
 
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $firstName = null;
@@ -55,28 +58,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastName = null;
 
     /**
-     * @var ArrayCollection|Conversation[]
+     * @var ArrayCollection<int, Conversation>
      */
     #[ORM\ManyToMany(targetEntity: Conversation::class, mappedBy: 'users')]
-    private $conversations;
+    private Collection $conversations;
 
     /**
-     * @var ArrayCollection|Insight[]
+     * @var ArrayCollection<int, Insight>
      */
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Insight::class)]
-    private $insights;
+    private Collection $insights;
 
     /**
-     * @var ArrayCollection|Review[]
+     * @var ArrayCollection<int, Review>
      */
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Review::class)]
-    private $ownedReviews;
+    private Collection $ownedReviews;
 
     /**
-     * @var ArrayCollection|Review[]
+     * @var ArrayCollection<int, Review>
      */
     #[ORM\OneToMany(mappedBy: 'reviewee', targetEntity: Review::class)]
-    private $reviews;
+    private Collection $reviews;
 
     public function __construct()
     {
@@ -203,12 +206,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -216,9 +219,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Asset>
+     * @return ArrayCollection<int, Asset>
      */
-    public function getAssets(): ArrayCollection
+    public function getAssets(): Collection
     {
         return $this->assets;
     }
@@ -248,7 +251,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->firstName . " " . $this->lastName;
     }
 
-    public function getFirstName(): string
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
@@ -260,7 +263,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getLastName(): string
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
@@ -278,9 +281,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Conversation>
+     * @return ArrayCollection<int, Conversation>
      */
-    public function getConversations(): ArrayCollection
+    public function getConversations(): Collection
     {
         return $this->conversations;
     }
@@ -305,9 +308,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Insight>
+     * @return ArrayCollection<int, Insight>
      */
-    public function getInsights(): ArrayCollection
+    public function getInsights(): Collection
     {
         return $this->insights;
     }
@@ -333,9 +336,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Review>
+     * @return ArrayCollection<int, Review>
      */
-    public function getOwnedReviews(): ArrayCollection
+    public function getOwnedReviews(): Collection
     {
         return $this->ownedReviews;
     }
@@ -361,9 +364,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Review>
+     * @return ArrayCollection<int, Review>
      */
-    public function getReviews(): ArrayCollection
+    public function getReviews(): Collection
     {
         return $this->reviews;
     }

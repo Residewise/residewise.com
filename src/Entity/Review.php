@@ -5,15 +5,18 @@ namespace App\Entity;
 use App\Repository\ReviewRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 class Review
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\CustomIdGenerator(UuidGenerator::class)]
+    private Uuid $id;
 
     #[ORM\Column(type: 'integer')]
     private int $rating;
@@ -28,12 +31,12 @@ class Review
     private ?Asset $asset = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ownedReviews')]
-    private ?User $owner = null;
+    private null|User|UserInterface $owner = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reviews')]
-    private ?User $reviewee = null;
+    private null|User|UserInterface $reviewee = null;
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -86,7 +89,7 @@ class Review
         return $this;
     }
 
-    public function getOwner(): ?User
+    public function getOwner(): null|User|UserInterface
     {
         return $this->owner;
     }
@@ -98,12 +101,12 @@ class Review
         return $this;
     }
 
-    public function getReviewee(): ?User
+    public function getReviewee(): null|User|UserInterface
     {
         return $this->reviewee;
     }
 
-    public function setReviewee(?User $reviewee): self
+    public function setReviewee(null|User|UserInterface $reviewee): self
     {
         $this->reviewee = $reviewee;
 

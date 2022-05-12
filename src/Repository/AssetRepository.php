@@ -7,13 +7,13 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
-use function Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Asset|null find($id, $lockMode = null, $lockVersion = null)
  * @method Asset|null findOneBy(array $criteria, array $orderBy = null)
  * @method Asset[]    findAll()
  * @method Asset[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @extends ServiceEntityRepository<Asset>
  */
 class AssetRepository extends ServiceEntityRepository
 {
@@ -46,35 +46,7 @@ class AssetRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return Asset[] Returns an array of Asset objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Asset
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-    public function findBySearch(?int $minSqm, ?int $maxSqm, ?int $minPrice, ?int $maxPrice, ?string $type, ?string $term)
+    public function findBySearch(?int $minSqm, ?int $maxSqm, ?int $minPrice, ?int $maxPrice, ?string $type, ?string $term) : mixed
     {
         $qb = $this->createQueryBuilder('a');
 

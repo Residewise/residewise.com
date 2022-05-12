@@ -11,10 +11,10 @@ class MessageFactory
 
     public function create(string $content, null|User|UserInterface $owner) : Message
     {
-         return new Message(
-            content: $content,
-            owner: $owner
-        );
+         $message = new Message();
+         $message->setContent($content);
+         $message->setOwner($owner);
+         return $message;
     }
 
 }

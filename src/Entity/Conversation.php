@@ -22,9 +22,15 @@ class Conversation
     #[ORM\CustomIdGenerator(UuidGenerator::class)]
     private Uuid $id;
 
+    /**
+     * @var ArrayCollection<int, Message>
+     */
     #[ORM\OneToMany(mappedBy: 'conversation', targetEntity: Message::class)]
     private Collection $messages;
 
+    /**
+     * @var ArrayCollection<int, User>
+     */
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'conversations')]
     private Collection $users;
 
@@ -79,7 +85,7 @@ class Conversation
         return $this->users;
     }
 
-    public function addUser(User|UserInterface $user): self
+    public function addUser(User $user): self
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
@@ -88,7 +94,7 @@ class Conversation
         return $this;
     }
 
-    public function removeUser(User|UserInterface $user): self
+    public function removeUser(User $user): self
     {
         $this->users->removeElement($user);
 

@@ -18,7 +18,7 @@ class AssetNormalizer implements ContextAwareNormalizerInterface
 
 
     /** @param Asset $asset
-     * @return array<string, mixed[]> */
+     * @return array */
     public function normalize(
         mixed $asset,
         string $format = null,
