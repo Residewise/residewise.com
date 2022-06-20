@@ -1,0 +1,8 @@
+<turbo-frame id="asset-reaction-form-{{ asset.id }}">
+    {{ form_start(reactionForm, { action: path('asset_reaction_create', {id: asset.id }) }) }}
+    <div class="d-flex justify-content-between align-items-center">
+        {{ form_widget(reactionForm.like) }}
+        {{ form_widget(reactionForm.dislike) }}
+    </div>
+    {{ form_end(reactionForm) }}
+</turbo-frame>

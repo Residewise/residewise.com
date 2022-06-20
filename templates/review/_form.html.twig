@@ -1,0 +1,20 @@
+{{ form_start(reviewForm, {
+    action: path('new_review', {id: user.id})
+}) }}
+<div class="row">
+    <div class="col-9">
+        {{ form_widget(reviewForm.rating) }}
+    </div>
+    <div class="col-3">
+        {{ form_widget(reviewForm.amount) }}
+    </div>
+</div>
+{{ form_row(reviewForm.notes) }}
+                        {{ form_row(reviewForm.asset) }}
+                        {{ form_row(reviewForm.acknowledgement) }}
+<div class="text-end">
+    <button type="submit" class="btn btn-primary">
+        {{ 'submit'|trans }}
+    </button>
+</div>
+{{ form_end(reviewForm) }}

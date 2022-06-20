@@ -1,0 +1,15 @@
+{% extends 'emails/email-base.html.twig' %}
+
+{% block title %}
+    {{ 'email.confirmation.title'|trans }}
+{% endblock %}
+
+{% block body %}
+<h1>{{ 'email.confirmation.intro'|trans({name: user.fullName}) }}</h1>
+
+<p>{{ 'email.confirmation.path'|trans }}</p>
+
+<a target="_blank" href="{{ path }}">
+    {{ 'email.confirmation.btn'|trans }}
+</a>
+{% endblock %}

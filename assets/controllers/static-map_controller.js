@@ -4,135 +4,107 @@ import mapboxgl from 'mapbox-gl'
 export default class extends Controller {
 
   static values = {
-    features: Object
+    features: String,
+    path: String
   }
 
   static targets = ['result']
 
   connect () {
 
+    console.log('map controller connected')
+
+    let string = JSON.parse(this.featuresValue)
+    let properties = JSON.parse(string)
+
     mapboxgl.accessToken = 'pk.eyJ1Ijoia2V6MiIsImEiOiJja2ZkcHBwbnYxanlwMnFweHRwdGp6MHJ3In0.13N9E-l_nB_vGKlB9O8QTg'
     const map = new mapboxgl.Map({
       container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v10',
+      style: 'mapbox://styles/kez2/cl46unvmd000f15o0ayowykuo',
       center: [14.4378, 50.0755],
       zoom: 8
     })
 
+    map.addControl(new mapboxgl.FullscreenControl())
+    map.addControl(new mapboxgl.NavigationControl())
+
+    map.on('render', (e) => {
+      let center = map.getCenter()
+    })
+
     map.on('load', () => {
 
-      this.featuresValue.features.forEach((feature) => {
-
-        const coordinates = feature.geometry.coordinates
-        const el = document.createElement('div');
-
-        const popup = new mapboxgl.Popup()
-          .setLngLat(coordinates)
-          .setHTML(feature.properties.html)
-          .addTo(map)
-
-        new mapboxgl.Marker(el)
-          .setLngLat(coordinates)
-          .setPopup(popup)
-          .addTo(map)
-
-        el.classList.add('residewise-marker')
-        el.setAttribute('id', `map-asset-${feature.properties.id}`)
-
-        el.addEventListener('click', () => {
-          el.style.backgroundColor = '#6610f2'
-        });
-      })
-
-      map.addSource('assets', {
+      map.addSource('points', {
         type: 'geojson',
-        data: this.featuresValue,
+        data: {
+          type: 'FeatureCollection',
+          features: [...properties]
+        },
         cluster: true,
         clusterMaxZoom: 14,
         clusterRadius: 50
       })
 
       map.addLayer({
-        id: 'clusters',
-        type: 'circle',
-        source: 'assets',
-        filter: ['has', 'point_count'],
-        paint: {
-          'circle-color': '#000000',
-          'circle-radius': 15
+        'id': 'circle',
+        'type': 'circle',
+        'source': 'points',
+        'paint': {
+          'circle-radius': {
+            'base': 1.75,
+            'stops': [
+              [12, 2],
+              [22, 180]
+            ]
+          },
+          'circle-color': [
+            'match',
+            ['get', 'fee'],
+            'White',
+            '#fbb03b',
+            'Black',
+            '#223b53',
+            'Hispanic',
+            '#e55e5e',
+            'Asian',
+            '#3bb2d0',
+            /* other */ '#ccc'
+          ]
         }
       })
 
-      map.addLayer({
-        id: 'cluster-count',
-        type: 'symbol',
-        source: 'assets',
-        filter: ['has', 'point_count'],
-        layout: {
-          'text-field': '{point_count_abbreviated}',
-          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-          'text-size': 13,
-        },
-        paint:{
-          'text-color': '#ffffff'
-        }
-      })
 
-      map.on('click', 'clusters', (e) => {
-        const features = map.queryRenderedFeatures(e.point, {
-          layers: ['clusters']
+      map.on('click', 'circle', (e) => {
+        map.flyTo({
+          center: e.features[0].geometry.coordinates
         })
-        const clusterId = features[0].properties.cluster_id
-        map.getSource('assets').getClusterExpansionZoom(
-          clusterId,
-          (err, zoom) => {
-            if (err) return
 
-            map.easeTo({
-              center: features[0].geometry.coordinates,
-              zoom: zoom
-            })
-          }
-        )
-      })
-
-      map.on('click', 'unclustered-point', (e) => {
-
-        console.log(e)
-
-        const coordinates = e.features[0].geometry.coordinates
-        const title = e.features[0].properties.title
-        const path = e.features[0].properties.path
+        const coordinates = e.features[0].geometry.coordinates.slice();
         const html = e.features[0].properties.html
 
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
+          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
 
-
-        const popup = new mapboxgl.Popup()
+        new mapboxgl.Popup()
           .setLngLat(coordinates)
           .setHTML(html)
-          .addTo(map)
-
-        console.log(e.features[0].layer.paint)
-
-        e.features[0].layer.paint = {
-          'circle-color': 'rgba(255,0,0)'
-        }
-        // map.setPaintProperty(e.features[0].layer.id, 'circle-color', '#7FFF00');
+          .addTo(map);
 
       })
 
-
-      map.on('mouseenter', 'clusters', () => {
-        map.getCanvas().style.cursor = 'default'
+      map.on('mouseenter', 'circle', () => {
+        map.getCanvas().style.cursor = 'pointer'
       })
-      map.on('mouseleave', 'clusters', () => {
+
+      map.on('mouseleave', 'circle', () => {
         map.getCanvas().style.cursor = ''
       })
+
     })
   }
 
 }
+
+
 

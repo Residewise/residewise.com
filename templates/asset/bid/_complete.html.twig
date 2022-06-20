@@ -1,0 +1,15 @@
+<div>
+    {% if asset.tender.bid.owner == app.user %}
+        <div class="text-center alert alert-success">{{ 'congratulations-tender-winner'|trans }}</div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-body">
+            <div>{{ 'closing-bid'|trans }}</div>
+            <div class="h3 m-0">
+                {{ asset.tender.bid.price|format_currency(regional.currency) }}
+            </div>
+        </div>
+    </div>
+
+</div>

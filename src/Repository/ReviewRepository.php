@@ -8,6 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Review|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,32 +48,14 @@ class ReviewRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return Review[] Returns an array of Review objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getAverageUserRating(null|UserInterface|User $user)
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $qb = $this->createQueryBuilder('r');
+        $qb->leftJoin('r.user', 'u');
+        $qb->select("AVG(r.rating) as AVG_RATING, COUNT(r.id) as TOTAL_COUNT")
+            ->where('u.id = :id')
+            ->setParameter('id', $user->getId()->toRfc4122());
 
-    /*
-    public function findOneBySomeField($value): ?Review
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $qb->getQuery()->getScalarResult();
     }
-    */
 }

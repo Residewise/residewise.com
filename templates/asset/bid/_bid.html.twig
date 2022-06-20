@@ -1,0 +1,19 @@
+{% if tender.bid %}
+    <div class="d-flex align-items-center">
+        <div class="me-2">{{ 'current-bid'|trans }}</div>
+        {% if tender.bid.owner == app.user %}
+            <img src="{{ app.user.avatar }}" height="20" class="rounded-circle me-2"/>
+        {% endif %}
+    </div>
+{% endif %}
+<div class="h3 my-1"
+        {% if isNew|default(false) %}
+            {{ stimulus_controller('bid-style') }}
+        {% endif %} >
+    {% if tender.bid %}
+        {{ tender.bid.price|format_currency(regional.currency) }}
+    {% else %}
+        {{ 'no-bids-yet'|trans }}
+    {% endif %}
+</div>
+

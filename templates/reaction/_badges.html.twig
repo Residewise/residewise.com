@@ -1,0 +1,22 @@
+<div class="btn-group">
+    <a {% if app.user %}
+        {{ stimulus_controller('reaction-btn', {
+            type: 'like',
+            path: path('asset_reaction_create', {id :asset.id})
+        }) }}
+    {% endif %}
+            class="btn btn-secondary {% if not app.user %} disabled {% endif %}">
+        <span class="mdi {% if app.user and asset.isLikedByUser(app.user) %} mdi-heart text-danger {% else %} mdi-heart-outline {% endif %}"></span>
+        {{ asset.likes|compact_notation }}
+    </a>
+
+    <a {% if app.user %}
+        {{ stimulus_controller('reaction-btn', {
+            type: 'dislike',
+            path: path('asset_reaction_create', {id :asset.id})
+        }) }}
+    {% endif %} class="btn btn-secondary {% if not app.user %} disabled {% endif %}">
+        <span class="mdi {% if app.user and asset.isDislikedByUser(app.user) %} mdi-thumb-down {% else %} mdi-thumb-down-outline {% endif %}"></span>
+        {{ asset.dislikes|compact_notation }}
+    </a>
+</div>

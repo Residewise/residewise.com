@@ -74,14 +74,53 @@
     "doctrine/sql-formatter": {
         "version": "1.1.2"
     },
+    "easycorp/easyadmin-bundle": {
+        "version": "4.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "3.0",
+            "ref": "b131e6cbfe1b898a508987851963fff485986285"
+        }
+    },
     "egulias/email-validator": {
         "version": "3.1.2"
     },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.7"
     },
+    "guzzlehttp/guzzle": {
+        "version": "7.4.2"
+    },
+    "guzzlehttp/promises": {
+        "version": "1.5.1"
+    },
+    "guzzlehttp/psr7": {
+        "version": "2.2.1"
+    },
+    "intervention/image": {
+        "version": "2.7.2"
+    },
     "jdenticon/jdenticon": {
         "version": "1.0.0"
+    },
+    "knplabs/knp-components": {
+        "version": "v3.5.0"
+    },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v5.8.0"
+    },
+    "knpuniversity/oauth2-client-bundle": {
+        "version": "2.10",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.20",
+            "ref": "1ff300d8c030f55c99219cc55050b97a695af3f6"
+        },
+        "files": [
+            "config/packages/knpu_oauth2_client.yaml"
+        ]
     },
     "laminas/laminas-code": {
         "version": "4.5.1"
@@ -92,14 +131,29 @@
     "lcobucci/jwt": {
         "version": "4.1.5"
     },
+    "league/oauth2-client": {
+        "version": "2.6.1"
+    },
+    "league/oauth2-facebook": {
+        "version": "2.2.0"
+    },
+    "league/oauth2-google": {
+        "version": "4.0.0"
+    },
     "monolog/monolog": {
         "version": "2.5.0"
     },
     "myclabs/deep-copy": {
         "version": "1.11.0"
     },
+    "nesbot/carbon": {
+        "version": "2.58.0"
+    },
     "nikic/php-parser": {
         "version": "v4.13.2"
+    },
+    "paragonie/random_compat": {
+        "version": "v9.99.100"
     },
     "phar-io/manifest": {
         "version": "2.0.3"
@@ -163,11 +217,20 @@
     "psr/event-dispatcher": {
         "version": "1.0.0"
     },
+    "psr/http-client": {
+        "version": "1.0.1"
+    },
+    "psr/http-message": {
+        "version": "1.0.1"
+    },
     "psr/link": {
         "version": "2.0.1"
     },
     "psr/log": {
         "version": "3.0.0"
+    },
+    "ralouphie/getallheaders": {
+        "version": "3.0.3"
     },
     "rector/rector": {
         "version": "0.12.23"
@@ -231,6 +294,9 @@
         "files": [
             "config/packages/sensio_framework_extra.yaml"
         ]
+    },
+    "stella-maris/clock": {
+        "version": "0.1.4"
     },
     "symfony/asset": {
         "version": "v6.0.7"
@@ -458,9 +524,6 @@
     "symfony/polyfill-mbstring": {
         "version": "v1.25.0"
     },
-    "symfony/polyfill-php81": {
-        "version": "v1.25.0"
-    },
     "symfony/polyfill-uuid": {
         "version": "v1.25.0"
     },
@@ -560,6 +623,12 @@
     "symfony/uid": {
         "version": "v6.0.3"
     },
+    "symfony/ux-chartjs": {
+        "version": "v2.1.1"
+    },
+    "symfony/ux-dropzone": {
+        "version": "v2.1.1"
+    },
     "symfony/ux-turbo": {
         "version": "v2.1.0"
     },
@@ -624,6 +693,18 @@
     },
     "symplify/easy-coding-standard": {
         "version": "10.2.3"
+    },
+    "tbbc/money-bundle": {
+        "version": "5.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "4.0",
+            "ref": "e97ae40ca09c6fa35e69accec8833d1e10445a06"
+        },
+        "files": [
+            "config/packages/tbbc_money.yaml"
+        ]
     },
     "theseer/tokenizer": {
         "version": "1.2.1"

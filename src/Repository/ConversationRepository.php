@@ -8,7 +8,9 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use function dump;
 
 /**
  * @method Conversation|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,8 +21,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class ConversationRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        private readonly PaginatorInterface $paginator
+    ) {
         parent::__construct($registry, Conversation::class);
     }
 
@@ -50,20 +54,36 @@ class ConversationRepository extends ServiceEntityRepository
 
     /**
      * @param null|User|UserInterface $user
-     * @return mixed
      */
-    public function findByUser(null|User|UserInterface $user): mixed
+    public function findByUserAndKeyword(null|User|UserInterface $user, ?string $keyword, int $page = 1): mixed
     {
         $qb = $this->createQueryBuilder('c');
+        $qb->orderBy('c.createdAt', 'ASC');
 
         if ($user) {
-            $qb->join('c.users', 'u')->andWhere('u.id = :id')->setParameter(
+            $qb->join('c.users', 'u');
+
+            $qb->andWhere('u.id = :id')->setParameter(
                 'id',
                 $user->getId()->toRfc4122()
             );
         }
 
-        return $qb->getQuery()->getResult();
+        if ($keyword) {
+            $qb->join('c.messages', 'm');
+            $content = $qb->expr()->like('LOWER(m.content)', ':keyword');
+            $title = $qb->expr()->like('LOWER(c.title)', ':keyword');
+
+            $qb->andWhere(
+                $qb->expr()->orX($title, $content)
+            )->setParameter('keyword', '%' . strtolower($keyword) . '%');
+        }
+
+        return $this->paginator->paginate(
+            $qb->getQuery(),
+            $page,
+            15
+        );
     }
 
     // /**
@@ -94,4 +114,5 @@ class ConversationRepository extends ServiceEntityRepository
         ;
     }
     */
+
 }

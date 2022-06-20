@@ -1,0 +1,13 @@
+{% if app.user %}
+    <div {{ stimulus_controller('bookmark-btn', {
+        path: path('add_bookmark', { id: asset.id })
+    }) }}>
+        <div class="btn btn-secondary">
+            {% if asset.isBookmarkedByUser(app.user) %}
+                <span class="mdi mdi-bookmark"></span>
+            {% else %}
+                <span class="mdi mdi-bookmark-outline"></span>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

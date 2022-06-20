@@ -1,31 +1,55 @@
+{% import "macro/user.macro.twig" as userMacro %}
+
 {% extends 'base.html.twig' %}
 
 {% block body %}
     <div class="container">
-        <div class="row justify-content-center mt-3">
-            <div class="col-md-4">
-                <div class="mb-2">
-                    <input type="text" class="form-control bg-white" placeholder="search">
-                </div>
-                <turbo-frame id="conversation_list" src="{{ path('conversation_list') }}" target="_top">
-                    <div class="d-flex justify-content-center align-items-center min-vh-50">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                </turbo-frame>
+        <div class="row">
+            <div class="col-md-12">
+                {{ include('/user/_account-menu.html.twig') }}
             </div>
-            <div class="col-md-8">
-                <turbo-frame id="active_conversation"
-                             src="{{ path('load_conversation', {id: conversation.id }) }}" target="_top">
-                    <div class="d-flex justify-content-center align-items-center">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="list-group list-group-flush">
+                        {% for user in conversation.users %}
+                            <a href="{{ path('user_public_profile', {id: user.id }) }}" class="list-group-item d-flex align-items-center justify-content-between">
+                                <div>
+                                    <img class="rounded-circle" height="30" src="{{ user.avatar }}"/>
+                                </div>
+                                <div>
+                                    {{ user.fullName }}
+                                </div>
+                            </a>
+                        {% endfor %}
                     </div>
-                </turbo-frame>
+                </div>
+            </div>
+            <div class="col-md-6">
+                {% if conversation %}
+                    <turbo-frame id="active_conversation"
+                                 src="{{ path('load_conversation', {id: conversation.id }) }}" target="_self">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </turbo-frame>
+                {% else %}
+                    <turbo-frame id="active_conversation" target="_self">
+                        <div class="card">
+                            <div class="card-body min-vh-50 d-flex justify-content-center align-items-center">
+                                <div class="text-center">
+                                    <i class="mdi mdi-inbox fs-1"></i>
+                                    <h5>No conversation loaded</h5>
+                                    <p class="text-muted">Load ads in here</p>
+                                </div>
+                            </div>
+                        </div>
+                    </turbo-frame>
+                {% endif %}
             </div>
         </div>
     </div>
+
 {% endblock %}
 

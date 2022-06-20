@@ -16,12 +16,61 @@ other: other
 rent: rent
 sale: sale
 terms: terms
-min-sqm: min m2
-max-sqm: max m2
-min-price: min price
-max-price: min price
-advertise-your-property: Advertise your property
+min-sqm: 'min m2'
+max-sqm: 'max m2'
+min-price: 'min price'
+max-price: 'min price'
+advertise-your-property: 'Advertise your property'
 images: images
 save: save
-select-map-location: Drag the map marker to the correct address
-image-upload-help: Please ensure at least one image is a blueprint of the property to ensure quality listings
+select-map-location: 'Drag the map marker to the correct address'
+image-upload-help: 'Please ensure at least one image is a blueprint of the property to ensure quality listings'
+new: new
+fee-input-help: 'Please include all surcharges and service fees in the price. Rental price is monthly.'
+price: price
+email:
+    title: 'Email Confirmation,'
+    subject: 'Residewise - Email Confirmation,'
+    intro: 'Hi %name%,'
+    confirmation:
+        path: 'Please click on the link below to confirm your account.'
+        btn: 'confirm email address'
+        subject: __email.confirmation.subject
+        title: __email.confirmation.title
+        intro: __email.confirmation.intro
+email-address:
+    confirmed: 'your email address was confirmed'
+is-user-agent-title: 'Hello agents'
+is-user-agent: 'We welcome estate agents to use our platform for free, add your business details'
+add-business-details: 'add business details'
+no-assets-found: 'no assets found'
+floor: __floor
+address: __address
+agent: __agent
+owner: __owner
+dropzone:
+    placeholder: __dropzone.placeholder
+agency-fee: __agency-fee
+confirm-password-invalid-message: __confirm-password-invalid-message
+password: __password
+repeat-password: __repeat-password
+current-bid: current bid
+new-bid: new bid
+submit: submit
+starting-bid: starting bid
+new-tender: new auction
+bid: bid
+set-password: set password
+agency-information: agency information
+no-saves-found: no saved items found
+no-results-found: no results found
+aution-active: auction active
+term: term
+closing-bid: closing bid
+start-tender: start auction
+add-property: add property
+saved: saved
+search: search
+create: create
+no-conversations: no conversations found
+create-conversation: create conversation

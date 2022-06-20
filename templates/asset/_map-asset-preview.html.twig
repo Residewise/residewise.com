@@ -1,15 +1,14 @@
 <div class="card">
     <div class="card-body">
         <div>
-            <div class="h5 m-0">{{ asset.title }}</div>
-            <div>{{ asset.type|trans|capitalize }} | {{ asset.term|trans|capitalize }}
-                | {{ asset.fee|format_currency('CZK') }} | {{ asset.sqm }}<span
-                        class="fw-bold">m<sup>2</sup></span></div>
+            <a href="{{ path('app_asset_show', {id: asset.id}) }}" target="_blank" class="custom-link">
+                <div class="h5 m-0">{{ asset.title }}</div>
+            </a>
+            <div>
+                {{ asset.type|trans|capitalize }} | {{ asset.term|trans|capitalize }}
+                | {{ asset.price|format_currency(regional.currency) }} | {{ asset.sqm }}<span
+                        class="fw-bold">m<sup>2</sup></span>
+            </div>
         </div>
-    </div>
-    <div class="text-end">
-        <a href="{{ path('app_asset_show', {id: asset.id}) }}" target="_blank" class="btn btn-secondary">
-            <i class="bi bi-arrow-right fs-3"></i>
-        </a>
     </div>
 </div>

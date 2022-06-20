@@ -1,0 +1,9 @@
+<div class="card">
+    <div class="card-body">
+        <div>{{ 'starting-bid'|trans }}</div>
+        <div class="h3">{{ asset.price|format_currency(regional.currency) }}</div>
+        <hr/>
+        <div class="small"> {{ asset.tender.startAt|format_date('short') }}
+            - {{ asset.tender.endAt|format_date('short') }} </div>
+    </div>
+</div>

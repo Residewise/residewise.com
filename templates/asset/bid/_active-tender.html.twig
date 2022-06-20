@@ -1,0 +1,28 @@
+<div class="card sticky-top">
+    <div class="card-body">
+        <div>
+            <div id="tender-{{ asset.tender.id }}" {{ turbo_stream_listen('tender') }}>
+                {{ include('asset/bid/_bid.html.twig', {
+                    tender: asset.tender
+                }) }}
+            </div>
+        </div>
+        <div class="small text-muted">
+            {{ 'starting-bid'|trans }}
+            {{ asset.price|format_currency(regional.currency) }}
+        </div>
+        <turbo-frame id="bid-form" src="{{ path('_new_bid', {id: asset.id}) }}" target="_self">
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </turbo-frame>
+        <hr/>
+        <div {{ stimulus_controller('countdown', {
+            seconds: asset.tender.timeUntilEnd,
+        }) }} >
+            <div class="text-center fw-bold" data-countdown-target="result"></div>
+        </div>
+    </div>
+</div>

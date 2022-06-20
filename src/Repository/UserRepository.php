@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Service\NameResolver;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -11,6 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use function strtolower;
 
 /**
  * @method User|null find(mixed $id, mixed $lockMode = null, mixed $lockVersion = null)
@@ -22,13 +24,14 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
 
-    public function __construct(ManagerRegistry $registry)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        private readonly NameResolver $nameResolver
+    ) {
         parent::__construct($registry, User::class);
     }
 
     /**
-     * @return void
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -41,7 +44,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * @return void
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -59,7 +61,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
         $user->setPassword($newHashedPassword);
@@ -95,4 +97,27 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
     */
+    public function findByInput(string $keyword, ?array $ids)
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        if ($keyword) {
+
+            $firstNameCondition = $qb->expr()->like('LOWER(u.firstName)', ':keyword');
+            $lastNameCondition = $qb->expr()->like('LOWER(u.lastName)', ':keyword');
+
+            $qb->andWhere($qb->expr()->orX($firstNameCondition, $lastNameCondition))->setParameter(
+                'keyword',
+                '%' . strtolower($keyword) . '%'
+            );
+
+            if($ids){
+                $qb->andWhere(
+                    $qb->expr()->notIn('u.id', ':ids')
+                )->setParameter('ids', $ids);
+            }
+        }
+
+        return $qb->setMaxResults(5)->getQuery()->getResult();
+    }
 }

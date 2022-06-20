@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Stringable;
 use App\Repository\MessageRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
-class Message
+class Message implements Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -28,7 +29,7 @@ class Message
     private DateTimeImmutable $createdAt;
 
     #[ORM\ManyToOne(targetEntity: Conversation::class, cascade: ['persist'], inversedBy: 'messages')]
-    private ?Conversation $conversation;
+    private ?Conversation $conversation = null;
 
     public function __construct(
     )

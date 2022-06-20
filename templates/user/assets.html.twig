@@ -1,0 +1,28 @@
+{% import "macro/asset.macro.twig" as asset %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ app.user.fullName }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-md-12">
+                {{ include('/user/_account-menu.html.twig') }}
+            </div>
+            <div class="col-md-12">
+                <div class="row g-2 mb-3">
+                    {% for asset in app.user.assets %}
+                        <div class="col-md-6">
+                            {{ asset.ownerCard(asset, true) }}
+                        </div>
+                    {% else %}
+                        {{ include('asset/_no-assets-found.html.twig', {
+                            link: true
+                        }) }}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

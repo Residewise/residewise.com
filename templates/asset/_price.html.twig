@@ -1,0 +1,4 @@
+{% import "macro/component.macro.twig" as component %}
+
+<span {{ component.tooltip('top', 'current-bid'|trans ) }}
+                      class="h5 letter-spacing-1 mb-0 badge badge-pill bg-white text-black">{{ regional.currency }} {{ asset.tender.bid.price|format_currency(regional.currency) }} </span>

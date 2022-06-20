@@ -1,5 +1,10 @@
 <turbo-frame id="active_conversation">
     <div class="card shadow-sm">
+
+        {{ include('conversation/_conversation-toolbar.html.twig', {
+            conversation : conversation
+        }) }}
+
         <div class="messages" id="conversation-{{ conversation.id }}" {{ turbo_stream_listen('chat') }}>
             {{ include('/conversation/message/message.stream.html.twig', {
                 'conversation' : conversation

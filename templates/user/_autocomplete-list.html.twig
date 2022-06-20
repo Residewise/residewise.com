@@ -1,0 +1,15 @@
+{% for user in users %}
+    <a class="list-group-item" data-autocomplete-select-target="option"  >
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <img class="rounded-circle border me-2" src="{{ user.avatar }}" height="30"/>
+                {{ user.fullName }}
+            </div>
+            <div>
+                <span class="hoverable mdi mdi-checkbox-blank-circle-outline fs-3" role="option" data-action="click->autocomplete-select#toggle" data-autocomplete-select-id-param="{{ user.id }}"></span>
+            </div>
+        </div>
+    </a>
+{% else %}
+    <div class="list-group-item text-center text-muted">{{ 'no-results-found'|trans }}</div>
+{% endfor %}

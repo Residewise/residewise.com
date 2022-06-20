@@ -100,6 +100,12 @@ RUN apk add --no-cache --virtual .pgsql-deps postgresql-dev; \
 	apk del .pgsql-deps
 ###< doctrine/doctrine-bundle ###
 ###< recipes ###
+# Copy the install-php-extensions (Easily install PHP extension in official PHP Docker containers)
+COPY --from=mlocati/php-extension-installer:1.5.16 /usr/bin/install-php-extensions /usr/local/bin/
+
+# Enable all necessary PHP packages
+RUN install-php-extensions \
+   imagick
 
 COPY . .
 

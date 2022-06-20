@@ -13,81 +13,77 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Contracts\Translation\TranslatableInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Image;
 
 class AssetType extends AbstractType
 {
     public function __construct(
-        private TranslatorInterface $translator
-    )
-    {
+        private readonly TranslatorInterface $translator,
+        private readonly Security $security
+    ) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->setAttribute('data-action', 'validation#validateAll')
-            ->add('address', TextType::class)
-            ->add('floor', NumberType::class, [
-                'label' => $this->translator->trans('floor')
-            ])
-            ->add('images', FileType::class, [
-                'label' => $this->translator->trans('images'),
-                'multiple' => true,
-                'mapped' => false,
-                'help' => $this->translator->trans('image-upload-help'),
-                'attr' => [
-                    'data-action' => 'input->validation#validate',
-                    'data-target' => 'validation.field',
-                ]
-            ])
-            ->add('title', TextType::class, [
-                'label' => $this->translator->trans('title'),
-            ])
-            ->add('description', TextareaType::class, [
-                'label' => $this->translator->trans('description'),
-                'attr' => [
-                    'data-controller' =>'textarea-autogrow',
-                    'data-character-counter-target' => 'input',
-                    'style' => 'resize:none'
-                ]
-            ])
-            ->add('sqm', NumberType::class, [
-                'label' => $this->translator->trans('sqm')
-            ])
-            ->add('fee', MoneyType::class, [
+        $builder->add('address', TextType::class)->add('floor', NumberType::class, [
+            'label' => $this->translator->trans('floor')
+        ])->add('images', FileType::class, [
+            'mapped' => false,
+            'label' => false,
+            'attr' => [
+                'placeholder' => $this->translator->trans('dropzone.placeholder')
+            ],
+            'multiple' => true,
+            'help' => $this->translator->trans('image-upload-help'),
+        ])->add('title', TextType::class, [
+            'label' => $this->translator->trans('title'),
+        ])->add('description', TextareaType::class, [
+            'label' => $this->translator->trans('description'),
+            'attr' => [
+                'data-controller' => 'textarea-autogrow',
+                'data-character-counter-target' => 'input',
+                'style' => 'resize:none'
+            ]
+        ])->add('sqm', NumberType::class, [
+            'label' => $this->translator->trans('sqm')
+        ])->add('price', MoneyType::class, [
+            'help' => $this->translator->trans('fee-input-help'),
+            'currency' => 'CZK',
+            'label' => $this->translator->trans('price')
+        ])->add('type', ChoiceType::class, [
+            'label' => $this->translator->trans('type'),
+            'choices' => [
+                $this->translator->trans('apartment') => 'apartment',
+                $this->translator->trans('house') => 'house',
+                $this->translator->trans('land') => 'land',
+                $this->translator->trans('commercial') => 'commercial',
+                $this->translator->trans('industrial') => 'industrial',
+                $this->translator->trans('other') => 'other',
+            ]
+        ])->add('term', ChoiceType::class, [
+            'label' => $this->translator->trans('terms'),
+            'choices' => [
+                $this->translator->trans('rent') => 'rent',
+                $this->translator->trans('sale') => 'sale',
+            ]
+        ])->add('latitude', HiddenType::class, [
+            'attr' => [
+                'data-asset-location-target' => 'latitude'
+            ]
+        ])->add('longitude', HiddenType::class, [
+            'attr' => [
+                'data-asset-location-target' => 'longitude'
+            ]
+        ]);
+
+        if ($this->security->getUser()->getAgency()) {
+            $builder->add('agencyFee', MoneyType::class, [
                 'currency' => 'CZK',
-                'label' => $this->translator->trans('fee')
-            ])
-            ->add('type', ChoiceType::class, [
-                'label' => $this->translator->trans('type'),
-                'choices' => [
-                    $this->translator->trans('apartment') => 'apartment',
-                    $this->translator->trans('house') => 'house',
-                    $this->translator->trans('land') => 'land',
-                    $this->translator->trans('commercial') => 'commercial',
-                    $this->translator->trans('industrial') => 'industrial',
-                    $this->translator->trans('other') => 'other',
-                ]
-            ])
-            ->add('term', ChoiceType::class, [
-                'label' => $this->translator->trans('terms'),
-                'choices' => [
-                    $this->translator->trans('rent') => 'rent',
-                    $this->translator->trans('sale') => 'sale',
-                ]
-            ])
-            ->add('latitude', HiddenType::class, [
-                'attr' => [
-                    'data-asset-location-target' => 'latitude'
-                ]
-            ])
-            ->add('longitude', HiddenType::class, [
-                'attr' => [
-                    'data-asset-location-target' => 'longitude'
-                ]
-            ])
-        ;
+                'label' => $this->translator->trans('agency-fee')
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void

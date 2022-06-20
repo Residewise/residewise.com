@@ -1,31 +1,43 @@
-{% macro popovercard(user) %}
-    <div class="card">
-        <div class="card-body d-flex justify-content-between">
-            <div>
-                <img class="rounded-circle me-2" height="100" src="{{ user.avatar }}" alt="{{ user.fullName }}"/>
-            </div>
-            <div>
-                <div class="h5 m-0">{{ user.fullName }}</div>
-                {% for review in user.reviews %}
-                    <div class="">
-                        <i class="mdi mdi-star text-warning"></i>
-                        <i class="mdi mdi-star text-warning"></i>
-                        <i class="mdi mdi-star text-warning"></i>
-                        <i class="mdi mdi-star-outline"></i>
-                        <i class="mdi mdi-star-outline"></i>
-                    </div> ({{ loop.count }})
-                {% else %}
-                    no reviews
-                {% endfor %}
+{% macro reviewCard(review) %}
+    {% import "macro/user.macro.twig" as userMacro %}
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <div>
+                    {% if review.asset %}
+                        <div>{{ 'tenent-of'|trans }} {{ review.asset.title }}</div>
+                    {% endif %}
+                    <div>{{ review.notes }}</div>
+                </div>
+                <div>
+                    <span {{ userMacro.rating(review.rating) }}</span>
+                    <div class="text-end text-muted small">
+                        {{ review.createdAt|format_date(pattern='MMM yy') }}</div>
+                </div>
             </div>
         </div>
+
+
     </div>
 {% endmacro %}
 
-{% macro review(review) %}
-    <div class="card">
-        <div class="card-body">
-            <i class="mdi mdi-star"></i>
-        </div>
+{% macro rating(rating) %}
+    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ rating }}/5">
+        {% for i in range(0.5, 5) %}
+            <i class="bi {{ loop.index > rating ? 'bi-star text-muted' : 'bi-star-fill text-warning' }} fs-3"></i>
+        {% endfor %}
+    </span>
+{% endmacro %}
+
+{% macro avatar(users) %}
+    <div class="avatars">
+        {% for user in users %}
+            {% if user != app.user %}
+                <img alt="{{ user.fullName }}" data-bs-toggle="tooltip"
+                     data-bs-placement="right" title="{{ user.fullName }}"
+                     class="avatars__item" src="{{ user.avatar }}" height="45"/>
+            {% endif %}
+        {% endfor %}
     </div>
 {% endmacro %}

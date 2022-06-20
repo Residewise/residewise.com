@@ -31,10 +31,15 @@ class Review
     private ?Asset $asset = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ownedReviews')]
-    private null|User|UserInterface $owner = null;
+    private null|User|UserInterface $author = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reviews')]
-    private null|User|UserInterface $reviewee = null;
+    private null|User|UserInterface $user = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new DateTimeImmutable();
+    }
 
     public function getId(): ?Uuid
     {
@@ -89,27 +94,27 @@ class Review
         return $this;
     }
 
-    public function getOwner(): null|User|UserInterface
+    public function getAuthor(): null|User|UserInterface
     {
-        return $this->owner;
+        return $this->author;
     }
 
-    public function setOwner(null|User|UserInterface $owner): self
+    public function setAuthor(null|User|UserInterface $author): self
     {
-        $this->owner = $owner;
+        $this->author = $author;
+        return $this;
+    }
+
+    public function getUser(): null|User|UserInterface
+    {
+        return $this->user;
+    }
+
+    public function setUser(null|User|UserInterface $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getReviewee(): null|User|UserInterface
-    {
-        return $this->reviewee;
-    }
-
-    public function setReviewee(null|User|UserInterface $reviewee): self
-    {
-        $this->reviewee = $reviewee;
-
-        return $this;
-    }
 }

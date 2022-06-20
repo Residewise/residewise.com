@@ -1,10 +1,6 @@
 {% import "macro/user.macro.twig" as userMacro %}
 
-<a href="{{ path('user_public_profile', {id : user.id}) }}"
-   data-bs-toggle="popover"
-   data-bs-trigger="hover focus"
-   data-bs-content='{{ userMacro.popovercard(user) }}'
->
+<a href="{{ path('user_public_profile', {id : user.id}) }}">
     <img alt="{{ user.fullName }}"
          class="rounded-circle shadow-sm me-2"
          src="{{ user.avatar }}"

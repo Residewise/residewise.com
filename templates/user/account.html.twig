@@ -1,0 +1,39 @@
+{% import "macro/asset.macro.twig" as asset %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ app.user.fullName }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-md-12">
+                {{ include('/user/_account-menu.html.twig') }}
+            </div>
+            <div class="col-md-12">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        {{ form_start(accountForm) }}
+                        <div class="row">
+                            <div class="col-6">
+                                {{ form_row(accountForm.firstName) }}
+                            </div>
+                            <div class="col-6">
+                                {{ form_row(accountForm.lastName) }}
+                            </div>
+                        </div>
+                        {{ form_row(accountForm.email) }}
+                        {{ form_row(accountForm.avatar) }}
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">
+                                {{ 'save'|trans }}
+                            </button>
+                        </div>
+                        {{ form_end(accountForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

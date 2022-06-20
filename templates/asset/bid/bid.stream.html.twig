@@ -1,0 +1,7 @@
+<turbo-stream action="update" target="tender-{{ tender.id }}">
+    <template>
+        {{ include('asset/bid/_bid.html.twig', {
+            isNew: true
+        }) }}
+    </template>
+</turbo-stream>

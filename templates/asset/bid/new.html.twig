@@ -1,0 +1,23 @@
+{% import "macro/asset.macro.twig" as asset %}
+
+{% extends 'base.html.twig' %}
+{% block title %}{{ app.user.fullName }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row mt-3 justify-content-center">
+            <div class="col-md-4">
+                {{ asset.card(asset) }}
+            </div>
+
+            <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5>{{ 'new-tender'|trans }}</h5>
+                    {{ include('asset/tender/_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+{% endblock %}

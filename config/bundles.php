@@ -14,6 +14,12 @@ use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
 use Symfony\WebpackEncoreBundle\WebpackEncoreBundle;
 use Symfony\UX\Turbo\TurboBundle;
 use Symfony\Bundle\MercureBundle\MercureBundle;
+use EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle;
+use Symfony\UX\Dropzone\DropzoneBundle;
+use KnpU\OAuth2ClientBundle\KnpUOAuth2ClientBundle;
+use Symfony\UX\Chartjs\ChartjsBundle;
+use Knp\Bundle\PaginatorBundle\KnpPaginatorBundle;
+use Tbbc\MoneyBundle\TbbcMoneyBundle;
 return [
     FrameworkBundle::class => ['all' => true],
     SensioFrameworkExtraBundle::class => ['all' => true],
@@ -29,4 +35,10 @@ return [
     WebpackEncoreBundle::class => ['all' => true],
     TurboBundle::class => ['all' => true],
     MercureBundle::class => ['all' => true],
+    EasyAdminBundle::class => ['all' => true],
+    DropzoneBundle::class => ['all' => true],
+    KnpUOAuth2ClientBundle::class => ['all' => true],
+    ChartjsBundle::class => ['all' => true],
+    KnpPaginatorBundle::class => ['all' => true],
+    TbbcMoneyBundle::class => ['all' => true],
 ];

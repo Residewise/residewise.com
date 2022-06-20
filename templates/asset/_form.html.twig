@@ -1,37 +1,48 @@
-<div data-controller="validation">
-    {{ form_start(form) }}
+{{ form_start(form, {'action' : path|default(path('app_asset_new')) }) }}
+<div class="card">
     <div class="w-100" {{ stimulus_controller('asset-location') }}>
         <div data-asset-location-target="result" id="map"></div>
         {{ form_row(form.latitude) }}
         {{ form_row(form.longitude) }}
     </div>
-    <p>{{ 'select-map-location'|trans }}</p>
 
-    <div class="row justify-content-between">
-        <div class="col-md-8">
-            {{ form_row(form.address) }}
+    <div class="card-body">
+        <div class="row justify-content-between">
+            <div class="col-md-8">
+                {{ form_row(form.address) }}
+            </div>
+            <div class="col-md-3">
+                {{ form_row(form.floor) }}
+            </div>
         </div>
-        <div class="col-md-3">
-            {{ form_row(form.floor) }}
+
+        {{ form_row(form.images) }}
+        {{ form_row(form.title) }}
+        <div data-controller="character-counter" class="position-relative mb-3">
+            {{ form_widget(form.description) }}
+            <span data-character-counter-target="counter" class="position-absolute badge bg-dark"
+                  style="bottom: 10px; right: 10px;">0</span>
+        </div>
+        <div class="d-flex justify-content-between">
+            {{ form_row(form.sqm) }}
+            {{ form_row(form.type) }}
+            {{ form_row(form.term) }}
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.price) }}
+            </div>
+            {% if form.agencyFee is defined %}
+                <div class="col-md-6">
+                    {{ form_row(form.agencyFee) }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="text-end">
+            <button class="btn btn-primary">{{ 'submit'|trans }}</button>
         </div>
     </div>
-
-    {{ form_row(form.images) }}
-    {{ form_row(form.title) }}
-    <div data-controller="character-count" class="position-relative">
-        {{ form_widget(form.description) }}
-        <span data-character-counter-target="counter" class="position-absolute badge bg-dark" style="bottom: 10px; right: 10px;">0</span>
-    </div>
-    <div class="d-flex justify-content-between mb-3">
-        {{ form_row(form.sqm) }}
-        {{ form_row(form.type) }}
-        {{ form_row(form.term) }}
-    </div>
-
-    {{ form_row(form.fee) }}
-
-    <div class="text-end">
-        <button class="btn btn-primary">{{ 'submit'|trans }}</button>
-    </div>
-    {{ form_end(form) }}
 </div>
+{{ form_end(form) }}

@@ -18,7 +18,15 @@ services:
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
-            - '../src/Kernel.php'
+            - '../src/Kern el.php'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Service\ImageUploadService:
+        class: App\Service\ImageUploadService
+        arguments:
+            - '@assets.packages'
+    tbbc_money.ratio_provider.ecb:
+      class: Tbbc\MoneyBundle\Pair\RatioProvider\ECBRatioProvider
+      arguments:
+        - '@Symfony\Contracts\HttpClient\HttpClientInterface'

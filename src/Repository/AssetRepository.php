@@ -7,6 +7,8 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Money\Money;
+use function strtolower;
 
 /**
  * @method Asset|null find($id, $lockMode = null, $lockVersion = null)
@@ -46,23 +48,57 @@ class AssetRepository extends ServiceEntityRepository
         }
     }
 
-    public function findBySearch(?int $minSqm, ?int $maxSqm, ?int $minPrice, ?int $maxPrice, ?string $type, ?string $term) : mixed
-    {
+    public function findBySearch(
+        ?int $minSqm,
+        ?int $maxSqm,
+        ?Money $minPrice,
+        ?Money $maxPrice,
+        ?string $type,
+        ?string $term,
+        ?string $userType,
+        ?string $title,
+        ?int $floor,
+        ?Money $agencyFee,
+        ?string $address
+    ): mixed {
         $qb = $this->createQueryBuilder('a');
+        $qb->leftJoin('a.publications', 'p');
 
-        $qb->andWhere(
-            $qb->expr()->eq('a.isPublished', ':true')
-        )->setParameter('true', true)
-            ->orderBy('a.createdAt', 'ASC');
+        $qb->andWhere('p.isApproved = :true')->setParameter('true', true)->andWhere(
+            "CURRENT_TIMESTAMP() BETWEEN p.startsAt AND p.endsAt"
+        )->orderBy('a.createdAt', 'ASC');
 
+        if ($floor) {
+            $qb->andWhere(
+                $qb->expr()->lte('a.floor', ':floor')
+            )->setParameter('floor', $floor);
+        }
 
-        if ($minSqm && !$maxSqm) {
+        if ($address) {
+            $qb->andWhere(
+                $qb->expr()->like('LOWER(a.address)', ':address')
+            )->setParameter('address', '%' . strtolower($address) . '%');
+        }
+
+        if ($title) {
+            $qb->andWhere(
+                $qb->expr()->like('LOWER(a.title)', ':title')
+            )->setParameter('title', '%' . strtolower($title) . '%');
+        }
+
+        if ($agencyFee) {
+            $qb->andWhere(
+                $qb->expr()->lte('a.agencyFee', ':agencyFee')
+            )->setParameter('agencyFee', $agencyFee);
+        }
+
+        if ($minSqm && ! $maxSqm) {
             $qb->andWhere(
                 $qb->expr()->gte('a.sqm', ':minSqm')
             )->setParameter('minSqm', $minSqm);
         }
 
-        if ($maxSqm && !$minSqm) {
+        if ($maxSqm && ! $minSqm) {
             $qb->andWhere(
                 $qb->expr()->lte('a.sqm', ':maxSqm')
             )->setParameter('maxSqm', $maxSqm);
@@ -74,24 +110,22 @@ class AssetRepository extends ServiceEntityRepository
             )->setParameter('minSqm', $minSqm)->setParameter('maxSqm', $maxSqm);
         }
 
-
-        if ($minPrice && !$maxPrice) {
+        if ($minPrice && ! $maxPrice) {
             $qb->andWhere(
-                $qb->expr()->gte('a.fee', ':minPrice')
+                $qb->expr()->gte('a.price', ':minPrice')
             )->setParameter('minPrice', $minPrice);
         }
 
-        if ($maxPrice && !$minPrice) {
+        if ($maxPrice && ! $minPrice) {
             $qb->andWhere(
-                $qb->expr()->lte('a.fee', ':maxPrice')
+                $qb->expr()->lte('a.price', ':maxPrice')
             )->setParameter('maxPrice', $maxPrice);
         }
 
         if ($minPrice && $maxPrice) {
             $qb->andWhere(
-                $qb->expr()->between('a.fee', ':minPrice', ':maxPrice')
-            )->setParameter('minPrice', $minPrice)
-                ->setParameter('maxPrice', $maxPrice);
+                $qb->expr()->between('a.price', ':minPrice', ':maxPrice')
+            )->setParameter('minPrice', $minPrice)->setParameter('maxPrice', $maxPrice);
         }
 
         if ($type) {
@@ -106,7 +140,27 @@ class AssetRepository extends ServiceEntityRepository
             )->setParameter('term', $term);
         }
 
-        return $qb->getQuery()->getResult();
+        if ($userType) {
+            $qb->leftJoin('a.owner', 'o');
+            $qb->leftJoin('o.agency', 'ag');
 
+            match ($userType) {
+                'owner' => $qb->andHaving('COUNT(ag.id) = 0')->groupBy('a.id'),
+                'agent' => $qb->andHaving('COUNT(ag.id) = 1')->groupBy('a.id'),
+                'default' => null
+            };
+        }
+
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findByTitle(string $title)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->andWhere('a.title LIKE :title')
+            ->setParameter('title', '%'.$title.'%');
+
+        return $qb->getQuery()->getResult();
     }
 }

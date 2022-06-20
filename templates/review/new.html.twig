@@ -1,0 +1,19 @@
+{% import "macro/asset.macro.twig" as asset %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ app.user.fullName }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-md-6">
+                <turbo-frame id="rating-form-frame">
+                    <div class="card-body">
+                        {{ include('review/_form.html.twig') }}
+                    </div>
+                </turbo-frame>
+            </div>
+        </div>
+    </div>
+{% endblock %}

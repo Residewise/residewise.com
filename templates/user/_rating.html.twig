@@ -1,0 +1,11 @@
+{% import "macro/user.macro.twig" as userMacro %}
+
+<turbo-frame id="avg-user-rating">
+    <div class="d-flex justify-content-between">
+        <div>
+            <div class="lh-1 mb-2">{{ userMacro.rating(avgUserRating[0].AVG_RATING) }}</div>
+            <div class="small">{{ avgUserRating[0].TOTAL_COUNT|compact_notation }} reviews</div>
+        </div>
+        <div>{{ avgUserRating[0].AVG_RATING|number_format(1) }}/5</div>
+    </div>
+</turbo-frame>

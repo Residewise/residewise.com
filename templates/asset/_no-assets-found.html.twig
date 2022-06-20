@@ -1,0 +1,8 @@
+<div class="d-flex justify-content-center align-items-center text-center text-muted min-vh-50 h1">
+    <div>
+        <div class="mb-2">{{ 'no-assets-found'|trans }}</div>
+        {% if link %}
+            <a href="{{ path('new_user_asset') }}" class="btn btn-secondary">{{ 'add-asset' }}</a>
+        {% endif %}
+    </div>
+</div>

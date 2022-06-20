@@ -5,16 +5,59 @@
 
 {% block body %}
     <div class="container">
-        <div class="row justify-content-center mt-3">
+        <div class="row justify-content-between mt-3">
             <div class="col-md-4">
+                <div class="mb-3">
+                    {% if asset.tender == null %}
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="h3 m-0">{{ asset.price|format_currency( regional.currency ) }}</div>
+                            </div>
+                        </div>
+                    {% else %}
+                        {% if asset.tender.isStartPendding %}
+                            {{ include('asset/bid/_pre-start.html.twig') }}
+                        {% elseif  asset.tender.isActive %}
+                            {{ include('asset/bid/_active-tender.html.twig') }}
+                        {% elseif asset.tender.isComplete %}
+                            {{ include('asset/bid/_complete.html.twig') }}
+                        {% endif %}
+                    {% endif %}
+                </div>
+
                 {{ include('profile/_public-profile-sidebar.html.twig', {
                     user: asset.owner
                 }) }}
             </div>
             <div class="col-md-8">
-                {{ assetmarco.card(asset, true, false, false, true) }}
+                <div class="sticky-top">
+                    <div class="d-flex bg-white justify-content-between">
+                        <div id="asset-reaction-{{ asset.id }}" {{ turbo_stream_listen('reaction') }}>
+                            {{ include('reaction/_badges.html.twig', {
+                                asset: asset
+                            }) }}
+                        </div>
+                        {% if app.user != asset.owner %}
+                            <div id="asset-bookmark-{{ asset.id }}" {{ turbo_stream_listen('bookmark') }}>
+                                {{ include('bookmark/_button.html.twig', {
+                                    path: path('add_bookmark', {id: asset.id})
+                                }) }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="grid" {{ stimulus_controller('photoswipe') }}>
+                    {% for image in asset.images %}
+                        <a href="{{ image.base64 }}"
+                           data-pswp-width="{{ image.width }}"
+                           data-pswp-height="{{ image.height }}"
+                           target="_blank">
+                            <img class="p-1 grid-item img-fluid"
+                                 src="{{ image.base64 }}" alt=""/>
+                        </a>
+                    {% endfor %}
+                </div>
             </div>
         </div>
-    </div>
     </div>
 {% endblock %}

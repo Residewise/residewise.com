@@ -1,0 +1,72 @@
+messages: zprávy
+properties: vlastnosti
+register: Registrovat
+login: 'přihlásit se'
+logout: 'odhlásit se'
+apartment: byt
+house: dom
+title: titul
+description: popis
+sqm: m2
+type: type
+land: přistát
+commercial: komerční
+industrial: průmyslový
+other: jiný
+rent: 'pronajmout si'
+sale: Prodej
+terms: podmínky
+min-sqm: 'od m2'
+max-sqm: 'do m2'
+min-price: 'do cena'
+max-price: 'do cena'
+advertise-your-property: 'Inzerujte svou nemovitost'
+images: snímky
+save: uložit
+select-map-location: 'Přetáhněte značku na mapě na správnou adresu'
+image-upload-help: 'Ujistěte se, že alespoň jeden obrázek je plánem nemovitosti, abyste zajistili kvalitní výpisy'
+new: nový
+fee-input-help: 'Do ceny prosím zahrňte všechny příplatky a servisní poplatky'
+price: 'cena,'
+email:
+    title: 'potvrzení e-mailem,'
+    confirmation:
+        subject: 'Residewise - potvrzení e-mailem,'
+        path: 'Kliknutím na odkaz níže potvrďte svůj účet.'
+        btn: 'Potvrďte e-mailovou adresu'
+        title: __email.confirmation.title
+        intro: __email.confirmation.intro
+    intro: 'Ahoj %name%,'
+email-address:
+    confirmed: 'vaše e-mailová adresa byla potvrzena'
+floor: __floor
+address: __address
+agent: __agent
+owner: __owner
+dropzone:
+    placeholder: __dropzone.placeholder
+agency-fee: __agency-fee
+confirm-password-invalid-message: __confirm-password-invalid-message
+password: __password
+repeat-password: __repeat-password
+current-bid: __current-bid
+new-bid: __new-bid
+submit: __submit
+starting-bid: __starting-bid
+new-tender: __new-tender
+bid: __bid
+no-assets-found: __no-assets-found
+set-password: __set-password
+agency-information: __agency-information
+no-saves-found: __no-saves-found
+no-results-found: __no-results-found
+aution-active: __aution-active
+term: __term
+closing-bid: __closing-bid
+start-tender: __start-tender
+add-property: __add-property
+saved: __saved
+search: __search
+create: __create
+no-conversations: __no-conversations
+create-conversation: __create-conversation

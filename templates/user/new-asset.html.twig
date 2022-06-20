@@ -1,0 +1,24 @@
+{% import "macro/asset.macro.twig" as asset %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ app.user.fullName }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-md-12">
+                {{ include('/user/_account-menu.html.twig') }}
+            </div>
+            <div class="col-md-12">
+                <turbo-frame id="asset-form" src="{{ path('app_asset_new') }}">
+                    <div class="d-flex justify-content-center align-items-center min-vh-50">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </turbo-frame>
+            </div>
+        </div>
+    </div>
+{% endblock %}

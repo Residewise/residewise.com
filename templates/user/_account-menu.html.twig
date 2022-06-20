@@ -1,0 +1,35 @@
+{% import "macro/component.macro.twig" as component %}
+
+<div class="nav nav-pills nav-justified bg-white shadow-sm my-3">
+    {{ component.iconBtnLink(
+        'user_assets',
+        'mdi-home-city'
+    ) }}
+
+    {{ component.iconBtnLink(
+        'conversations',
+        'mdi-forum'
+    ) }}
+
+    {% if app.user.agency %}
+        {{ component.iconBtnLink(
+            'user_agency',
+            'mdi-sign-real-estate'
+        ) }}
+    {% endif %}
+
+    {{ component.iconBtnLink(
+        'new_user_asset',
+        'mdi-home-plus'
+    ) }}
+
+    {{ component.iconBtnLink(
+        'user_bookmarks',
+        'mdi-bookmark'
+    ) }}
+
+    {{ component.iconBtnLink(
+        'user_account',
+        'mdi-account-circle'
+    ) }}
+</div>

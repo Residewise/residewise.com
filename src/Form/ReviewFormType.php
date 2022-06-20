@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -21,23 +20,30 @@ class ReviewFormType extends AbstractType
     {
         /** @var Review $data */
         $data = $options['data'];
-        $builder->add('rating', NumberType::class, [
+        $builder->add('rating', RangeType::class, [
             'attr' => [
-                'data-controller' => 'rating',
-                'data-rating-target' => 'input',
+                'step' => 0.5,
+                'min' => 0,
+                'max' => 5,
+                'value' => 2.5,
+                'oninput' => 'review_form_amount.value=review_form_rating.value'
+            ]
+        ])->add('amount', NumberType::class, [
+            'mapped' => false,
+            'required' => false,
+            'attr' => [
+                'oninput' => 'review_form_rating.value=review_form_amount.value'
             ]
         ])->add('notes', TextareaType::class)->add('asset', EntityType::class, [
             'class' => Asset::class,
             'query_builder' => fn(EntityRepository $er) => $er->createQueryBuilder('a')
                 ->andWhere('a.owner = :user')
-                ->setParameter('user', $data->getReviewee())
-                ->andWhere('a.isPublic = :true')->setParameter('true', true),
+                ->setParameter('user', $data->getUser()),
             'choice_label' => 'title'
-        ])
-            ->add('acknowledgement', CheckboxType::class, [
-                'required' => true,
-                'mapped' => false
-            ]);
+        ])->add('acknowledgement', CheckboxType::class, [
+            'required' => true,
+            'mapped' => false
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

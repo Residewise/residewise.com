@@ -1,13 +1,18 @@
 {% macro card(
     asset,
-    hasCarousel = true,
-    isEditable = false,
-    hasLink = false,
-    isDetailed = false
+    carousel = true,
+    detailed = false
     ) %}
-    <div class="card mb-3 shadow-sm position-relative">
-        {% if hasCarousel %}
-            <turbo-frame id="asset-images" src="{{ path('asset_images', {id: asset.id}) }}">
+    {% import "macro/component.macro.twig" as component %}
+
+    <div class="card h-100 position-relative mb-3 shadow-sm">
+        {% if asset.owner.agency %}
+            <div class="asset-card-agent-logo" style="z-index: 50;">
+                <img src="{{ asset.owner.agency.logo }}" height="30" width="30"/>
+            </div>
+        {% endif %}
+        {% if carousel %}
+            <turbo-frame id="asset-images" src="{{ path('asset_images', {id: asset.id}) }}" loading="lazy">
                 <div class="d-flex justify-content-center align-items-center img-loading-placeholder">
                     <div class="spinner-border" role="status">
                         <span class="visually-hidden">Loading...</span>
@@ -15,58 +20,112 @@
                 </div>
             </turbo-frame>
         {% endif %}
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex">
-                    <div class="me-2">
-                        {{ include('profile/_avatar-profile-link.html.twig', {
-                            user: asset.owner
-                        }) }}
-                    </div>
-                    <div>
-                        <div class="h5 m-0">{{ asset.title }}</div>
-                        <div>{{ asset.term|trans }} | {{ asset.fee|format_currency('CZK') }}</div>
-                    </div>
-                </div>
+        {% if asset.tender and asset.tender.isActive %}
+            <div class="asset-new-badge">
+                <span class="badge rounded-pill bg-primary pulse letter-spacing-1">{{ 'aution-active'|trans }}</span>
             </div>
-            <hr class="my-2"/>
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="bg-grey p-2">
-                    {{ asset.sqm }} <span class="fw-bold">m<sup>2</sup></span>
+        {% endif %}
+        <div class="card-body pb-0 pt-2 position-relative">
+            <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
+                <div class="me-2">
+                    {{ include('profile/_avatar-profile-link.html.twig', {
+                        user: asset.owner
+                    }) }}
                 </div>
-            </div>
-            {% if isDetailed %}
-                <p>{{ asset.description|raw }}</p>
-            {% else %}
-            <p>{{ asset.description|slice(0,150) }}...</p>
-            {% endif %}
-            {% if hasLink %}
-                <div class="d-flex justify-content-end">
-                    <a href="{{ path('app_asset_show', {id: asset.id}) }}" target="_blank"
-                       class="btn btn-secondary">
-                        <i class="bi bi-arrow-right fs-3"></i>
+                <div>
+                    <a href="{{ path('app_asset_show', {id: asset.id}) }}" class="custom-link" target="_blank">
+                        <div class="h5 m-0">{{ asset.title|capitalize }}</div>
                     </a>
                 </div>
-            {% endif %}
-            {% if isEditable %}
-                <div class="d-flex justify-content-between">
-                    <div class="btn-group">
-                        <a href="{{ path('app_asset_show', {id: asset.id}) }}"
-                           class="btn btn-secondary">
-                            <i class="mdi mdi-pencil-outline fs-3"></i>
-                        </a>
-                        <a href="{{ path('app_asset_show', {id: asset.id}) }}"
-                           class="btn btn-secondary">
-                            <i class="mdi mdi-chart-box fs-3"></i>
-                        </a>
-                        <a href="{{ path('app_asset_show', {id: asset.id}) }}" target="_blank"
-                           class="btn btn-secondary">
-                            <i class="bi bi-arrow-right fs-3"></i>
-                        </a>
+            </div>
+            <div class="position-absolute top-0 start-0 translate-middle-y d-flex justify-content-evenly w-100"
+                 style="z-index: 100">
+                <span {{ component.tooltip('top', 'sqm'|trans ) }}
+                      class="h5 letter-spacing-1 mb-0 badge badge-pill bg-white text-black">{{ asset.sqm }} <span>m<sup>2</sup></span></span>
+                <span {{ component.tooltip('top', 'term'|trans ) }}
+                      class="h5 letter-spacing-1 mb-0 badge badge-pill bg-white text-black">{{ asset.term|trans|capitalize }}</span>
+                {% if  asset.tender and asset.tender.isActive and asset.tender.bid %}
+                    <div id="tender-price-{{ asset.tender.id }}" {{ turbo_stream_listen('tender-price') }}>
+                    {{ include('asset/_price.html.twig', {
+                        bid: asset.tender.bid
+                    }) }}
                     </div>
-                    {{ include('asset/_delete_form.html.twig') }}
-                </div>
+                {% elseif asset.tender and asset.tender.isComplete %}
+                    <span {{ component.tooltip('top', 'closing-bid'|trans ) }}
+                      class="h5 letter-spacing-1 mb-0 badge badge-pill bg-white text-black">{{ asset.tender.bid.amount }} Kč</span>
+                {% else %}
+                    <span {{ component.tooltip('top', 'price'|trans ) }}
+                      class="h5 letter-spacing-1 mb-0 badge badge-pill bg-white text-black">{{ asset.price|format_currency(regional.currency) }} Kč</span>
+                {% endif %}
+                {% if asset.owner.agency %}
+                    <span {{ component.tooltip('top', 'agency-fee'|trans ) }}
+                          class="h5 letter-spacing-1 mb-0 badge badge-pill bg-white text-black">
+                        {{ asset.agencyFee }} Kč</span>
+                {% endif %}
+            </div>
+            {% if detailed %}
+                <div class="mt-2">{{ asset.description|raw }}</div>
+            {% else %}
+                <div class="mt-2">{{ asset.description|slice(0,100) }}...</div>
             {% endif %}
+        </div>
+        <div class="card-footer bg-white">
+            <div class="d-flex justify-content-between">
+                <div id="asset-reaction-{{ asset.id }}" {{ turbo_stream_listen('reaction') }}>
+                    {{ include('reaction/_badges.html.twig', {
+                        asset: asset
+                    }) }}
+                </div>
+                {% if app.user != asset.owner %}
+                    <div id="asset-bookmark-{{ asset.id }}" {{ turbo_stream_listen('bookmark') }}>
+                        {{ include('bookmark/_button.html.twig', {
+                            path: path('add_bookmark', {id: asset.id})
+                        }) }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro ownerCard(
+    asset
+    ) %}
+    <div class="card position-relative shadow-sm">
+        <div class="card-body pt-2 position-relative">
+            <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
+                <div>
+                    <div class="h5 m-0">{{ asset.title|capitalize }}</div>
+                    <div class="mt-2">{{ asset.description|slice(0,100) }}...</div>
+                </div>
+                <div>
+                    <a href="{{ path('app_asset_edit', {id: asset.id}) }}"
+                       class="btn btn-secondary">
+                        <i class="mdi mdi-pencil-outline fs-3"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer bg-white d-flex justify-content-evenly w-100">
+                <span class="badge bg-primary rounded-pill"><span
+                            class="mdi mdi-heart-outline me-1"></span> {{ asset.likes|compact_notation }}</span>
+            <span class="badge bg-primary rounded-pill"><span
+                        class="mdi mdi-thumb-down me-1"></span>{{ asset.dislikes|compact_notation }}</span>
+            <span class="badge bg-primary rounded-pill"><span
+                        class="mdi mdi-bookmark-outline me-1"></span>{{ asset.bookmarks.count|compact_notation }}</span>
+            <span class="badge bg-primary rounded-pill"><span
+                        class="mdi mdi-eye me-1"></span>{{ asset.views.count|compact_notation }}</span>
+        </div>
+        <div class="card-footer bg-white">
+            <div class="d-flex justify-content-end">
+                {% if not asset.tender %}
+                    <a href="{{ path('new_tender', {id: asset.id}) }}"
+                       class="btn btn-primary">
+                        {{ 'start-tender'|trans }}
+                    </a>
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endmacro %}

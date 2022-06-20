@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Stringable;
 use App\Repository\ConversationRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,7 +15,7 @@ use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: ConversationRepository::class)]
 #[Broadcast]
-class Conversation
+class Conversation implements Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -31,11 +32,14 @@ class Conversation
     /**
      * @var ArrayCollection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'conversations')]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'conversations', cascade: ['persist'])]
     private Collection $users;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $title;
 
     public function __construct()
     {
@@ -78,14 +82,14 @@ class Conversation
     }
 
     /**
-     * @return Collection<int, User>
+     * @return Collection<int, User|UserInterface>
      */
     public function getUsers(): Collection
     {
         return $this->users;
     }
 
-    public function addUser(User $user): self
+    public function addUser(null|User|UserInterface $user): self
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
@@ -109,6 +113,23 @@ class Conversation
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function __toString() : string
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
 
         return $this;
     }

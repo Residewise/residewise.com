@@ -4,17 +4,17 @@
 
 {% block body %}
     <div class="container">
-        <turbo-frame id="dashboard">
+        <turbo-frame id="asset-form">
             <div class="row justify-content-center mt-3">
                 <div class="col-md-8">
-
-                    <div class="card shadow">
+                    {{ include('asset/_form.html.twig') }}
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
                         <div class="card-body">
-                            <h1>{{ 'advertise-your-property'|trans }}</h1>
-                            {{ include('asset/_form.html.twig') }}
+                        ADS
                         </div>
                     </div>
-
                 </div>
             </div>
         </turbo-frame>

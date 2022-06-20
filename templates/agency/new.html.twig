@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Agency{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <turbo-frame id="agency-form-frame">
+                    <div class="card">
+                        <div class="card-body">
+                            <h1>{{ 'agency-information'|trans }}</h1>
+                            {{ include('agency/_form.html.twig') }}
+                        </div>
+                    </div>
+                </turbo-frame>
+            </div>
+        </div>
+    </div>
+{% endblock %}

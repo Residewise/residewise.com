@@ -1,0 +1,7 @@
+<turbo-stream action="update" target="asset-reaction-{{ asset.id }}">
+    <template>
+        {{ include('reaction/_badges.html.twig', {
+            asset: asset
+        }) }}
+    </template>
+</turbo-stream>

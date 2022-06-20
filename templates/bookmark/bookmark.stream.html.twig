@@ -1,0 +1,7 @@
+<turbo-stream action="replace" target="asset-bookmark-{{ asset.id }}">
+    <template>
+        {{ include('bookmark/_button.html.twig', {
+            asset: asset
+        }) }}
+    </template>
+</turbo-stream>

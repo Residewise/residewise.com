@@ -1,0 +1,48 @@
+{% macro modal(
+    modalId,
+    frameId,
+    path,
+    title,
+    target
+    ) %}
+
+    <div class="modal fade" id="{{ modalId }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">{{ title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <turbo-frame class="" id="{{ frameId }}" src="{{ path }}" target="{{ target }}" loading="lazy">
+                    <div class="d-flex min-vh-50 justify-content-center align-items-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </turbo-frame>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
+{% macro tooltip(
+    position,
+    title,
+    ) %}
+    data-bs-toggle="tooltip" data-bs-placement="{{ position }}" title="{{ title|trans }}"
+{% endmacro %}
+
+
+{% macro iconBtnLink(
+    route,
+    icon
+    ) %}
+    <a
+            class="nav-link {% if app.request.attributes.get('_route') == route %}active{% endif %}"
+            href="{{ path(route) }}"
+    >
+        <span class="mdi {{ icon }} fs-3"></span>
+    </a>
+{% endmacro %}

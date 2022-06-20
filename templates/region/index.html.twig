@@ -1,0 +1,15 @@
+<turbo-frame id="regional_settings" target="_top">
+    <div class="card-body">
+        {{ form_start(regionForm, { action: path('_app_regional_settings')}) }}
+        {{ form_row(regionForm.language) }}
+        <div {{ stimulus_controller('timezone') }}>
+            {{ form_row(regionForm.region) }}
+            {{ form_row(regionForm.timezone) }}
+        </div>
+        {{ form_row(regionForm.currency) }}
+        <button type="submit" class="btn btn-primary w-100">
+            {{ 'save'|trans }}
+        </button>
+        {{ form_end(regionForm) }}
+    </div>
+</turbo-frame>

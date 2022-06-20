@@ -1,0 +1,31 @@
+{% import "macro/asset.macro.twig" as asset %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ app.user.fullName }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-md-12">
+                {{ include('/user/_account-menu.html.twig') }}
+            </div>
+            <div class="col-md-12">
+                <div class="row mb-4">
+                    {% for bookmark in app.user.bookmarks %}
+                        <div class="col-md-6">
+                            {{ asset.card(bookmark.asset) }}
+                        </div>
+                    {% else %}
+                        <div class="d-flex justify-content-center align-items-center min-vh-50">
+                            <div class="text-center text-muted">
+                                <span class="mdi mdi-bookmark-remove display-3"></span>
+                                <div class="h1 text-muted">{{ 'no-saves-found'|trans }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
