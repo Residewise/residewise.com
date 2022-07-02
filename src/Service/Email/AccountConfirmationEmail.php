@@ -23,7 +23,6 @@ class AccountConfirmationEmail implements EmailInterface
         private readonly MailerInterface $mailer,
         private readonly TranslatorInterface $translator,
         private UrlGeneratorInterface $generator,
-        private LoggerInterface $logger
     ) {
     }
 
