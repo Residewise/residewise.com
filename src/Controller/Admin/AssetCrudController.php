@@ -39,15 +39,16 @@ class AssetCrudController extends AbstractCrudController
                 'rent' => 'rent',
                 'sale' => 'sale',
             ]),
-            MoneyField::new('fee')->setCurrency('CZK'),
+            MoneyField::new('price')->setCurrency('CZK'),
             AssociationField::new('owner'),
             AssociationField::new('reviews'),
             AssociationField::new('reactions'),
-            AssociationField::new('images'),
+            AssociationField::new('images')->onlyOnIndex(),
             AssociationField::new('reactions'),
             TextareaField::new('address'),
             NumberField::new('floor'),
             AssociationField::new('publications')->renderAsNativeWidget(),
+            AssociationField::new('amenities'),
             DateTimeField::new('createdAt')
         ];
     }

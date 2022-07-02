@@ -9,8 +9,6 @@ use App\Form\BidFormType;
 use App\Repository\BidRepository;
 use App\Repository\TenderRepository;
 use App\Service\RegionalSettingsService\RegionalSettingsService;
-use App\ValueObject\Term;
-use Money\Currency;
 use Money\Money;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,11 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\UX\Turbo\TurboBundle;
-use Tbbc\MoneyBundle\Money\MoneyManager;
-use Tbbc\MoneyBundle\Money\MoneyManagerInterface;
-use function format_number;
 
 #[Route(path: '/bid')]
 class BidController extends AbstractController
@@ -33,7 +27,6 @@ class BidController extends AbstractController
         private readonly TenderRepository $tenderRepository,
         private readonly HubInterface $hub,
         private readonly RegionalSettingsService $regionalSettingsService,
-        private readonly MoneyManager $moneyManager
     ) {
     }
 
@@ -46,6 +39,7 @@ class BidController extends AbstractController
 
         $form = $this->createForm(BidFormType::class, $bid, [
             'suggested_bid_amount' => $suggestedBidAmount,
+            'asset' => $asset
         ]);
         $form->handleRequest($request);
 
@@ -56,6 +50,7 @@ class BidController extends AbstractController
 
             $bid->setOwner($this->getUser());
             $bid->setPrice($price);
+            $bid->setCurrency($asset->getCurrency());
             $this->bidRepository->add($bid, true);
             $this->resolveTenderBidSuggestion($bid, $asset->getTender());
 

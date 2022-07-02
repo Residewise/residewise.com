@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Conversation;
 use App\Entity\Message;
+use App\Entity\User;
 use App\Form\ConversationFormType;
 use App\Form\KeywordFormType;
 use App\Form\MessageFormType;
@@ -26,7 +27,7 @@ class ConversationController extends AbstractController
         private readonly MessageRepository $messageRepository,
         private readonly ConversationRepository $conversationRepository,
         private readonly HubInterface $hub,
-        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly UrlGeneratorInterface $urlGenerator
     ) {
     }
 
@@ -64,58 +65,26 @@ class ConversationController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/load/{id}', name: 'load_conversation')]
-    public function load_conversation(Conversation $conversation, Request $request): Response
-    {
-        $message = new Message();
-        $message->setConversation($conversation);
-        $message->setOwner($this->getUser());
-
-        $messageForm = $this->createForm(MessageFormType::class, $message, [
-            'action' => $this->urlGenerator->generate('load_conversation', ['id' => $conversation->getId()]),
-        ]);
-
-        $emptyForm = clone $messageForm;
-        $messageForm->handleRequest($request);
-
-        if ($messageForm->isSubmitted() && $messageForm->isValid()) {
-
-            $this->messageRepository->add($message);
-
-            $this->hub->publish(
-                update: new Update(
-                    'chat', $this->renderView(
-                    '/conversation/message/message.stream.html.twig',
-                    ['message' => $message, 'conversation' => $conversation],
-                ), private: true
-                )
-            );
-            $messageForm = $emptyForm;
-        }
-
-        return $this->render('conversation/index.html.twig', [
-            'conversation' => $conversation,
-            'messageForm' => $messageForm->createView(),
-        ]);
-    }
-
     #[Route(path: '/new', name: 'conversation_new')]
     public function new(Request $request): Response
     {
         $conversation = new Conversation();
-
         $conversationForm = $this->createForm(ConversationFormType::class, $conversation);
         $conversationForm->handleRequest($request);
 
         if ($conversationForm->isSubmitted() && $conversationForm->isValid()) {
-            $conversation->addUser($this->getUser());
             $users = $conversationForm->get('users')->getData();
 
-            foreach ($users as $user) {
-                $conversation->addUser($user);
-            }
+//            $findPreviousConversation = $this->conversationRepository->findByUsers($users);
+//
+//            if($findPreviousConversation){
+//                return $this->redirectToRoute('conversation', ['id' => $findPreviousConversation->getId()]);
+//            }
 
+            $conversation->addUser($this->getUser());
+            $conversation->setTitle($conversation->getUsersFirstNamesAsCommaSeperatedString());
             $this->conversationRepository->add($conversation);
+
 
             return $this->redirectToRoute('conversation', ['id' => $conversation->getId()]);
         }
@@ -125,11 +94,38 @@ class ConversationController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/{id}', name: 'conversation', defaults: ['id' => null])]
-    public function chat(?Conversation $conversation = null): Response
+    #[Route(path: '/{id}', name: 'conversation')]
+    public function chat(Conversation $conversation, Request $request): Response
     {
+        $messages = $this->messageRepository->findByConversation($conversation);
+        $message = new Message();
+        $message->setConversation($conversation);
+        $message->setOwner($this->getUser());
+
+        $messageForm = $this->createForm(MessageFormType::class, $message);
+
+        $emptyForm = clone $messageForm;
+        $messageForm->handleRequest($request);
+
+        if ($messageForm->isSubmitted() && $messageForm->isValid()) {
+            $this->messageRepository->add($message);
+            $this->hub->publish(
+                update: new Update(
+                    'chat', $this->renderView(
+                    '/conversation/message/message.stream.html.twig',
+                    ['conversation' => $conversation, 'messages' => $messages ],
+                ), private: true
+                )
+            );
+            $messageForm = $emptyForm;
+
+            return $this->redirectToRoute('conversation', ['id'=> $conversation->getId()]);
+        }
+
         return $this->render('conversation/chat.html.twig', [
+            'messages' => $messages,
             'conversation' => $conversation,
+            'messageForm' => $messageForm->createView()
         ]);
     }
 

@@ -30,7 +30,7 @@ class TenderFormType extends AbstractType
             'mapped' => false,
             'currency' => 'CZK',
             'attr' => [
-                'value' => $options['asset']->getFee()
+                'value' => $options['asset']->getPrice()
             ]
         ]);
     }

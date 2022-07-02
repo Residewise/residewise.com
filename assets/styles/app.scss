@@ -5,6 +5,18 @@
 @import '@kanety/stimulus-multi-select';
 @import "lightpick/css/lightpick.css";
 
+
+.tiny{
+  font-size: 9px;
+}
+
+.resize-none{
+  resize: none;
+}
+
+.object-fit-cover{
+  object-fit: cover;
+}
 .fade-background{
   transition: color 300ms;
 }
@@ -14,9 +26,9 @@
 }
 
 .grid-sizer,
-.grid-item { width: 20%; }
+.grid-item { width: 50%; }
 /* 2 columns */
-.grid-item--width2 { width: 30%; }
+.grid-item--width2 { width: 50%; }
 
 .custom-link{
   text-decoration: none;
@@ -31,7 +43,6 @@
   color: #0f172a;
   padding: 0 5px;
   margin: 0 2px;
-  border-radius: 2px;
 }
 
 .card-btn-sm:hover{
@@ -83,6 +94,7 @@
     font-weight: 100;
     height: 45px;
     width: 45px;
+    object-fit: cover;
     line-height: 45px;
     text-align: center;
     transition: margin 0.1s ease-in-out;

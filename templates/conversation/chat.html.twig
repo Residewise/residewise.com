@@ -9,12 +9,14 @@
                 {{ include('/user/_account-menu.html.twig') }}
             </div>
             <div class="col-md-3">
-                <div class="card">
+                <div class="card mb-3">
                     <div class="list-group list-group-flush">
                         {% for user in conversation.users %}
-                            <a href="{{ path('user_public_profile', {id: user.id }) }}" class="list-group-item d-flex align-items-center justify-content-between">
+                            <a href="{{ path('user_public_profile', {id: user.id }) }}"
+                               class="list-group-item d-flex align-items-center justify-content-between">
                                 <div>
-                                    <img class="rounded-circle" height="30" src="{{ user.avatar }}"/>
+                                    <img class="rounded-circle object-fit-cover" height="30" width="30"
+                                         alt="{{ user.fullName }}" src="{{ user.avatar }}"/>
                                 </div>
                                 <div>
                                     {{ user.fullName }}
@@ -25,28 +27,55 @@
                 </div>
             </div>
             <div class="col-md-6">
-                {% if conversation %}
-                    <turbo-frame id="active_conversation"
-                                 src="{{ path('load_conversation', {id: conversation.id }) }}" target="_self">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
+                <div class="card shadow-sm">
+
+                    {{ include('conversation/_conversation-toolbar.html.twig', {
+                        conversation : conversation
+                    }) }}
+
+                    <div class="messages" {{ stimulus_controller('messages') }}
+                            {{ stimulus_action('messages', 'scroll', 'scroll') }}
+                         id="conversation-{{ conversation.id }}" {{ turbo_stream_listen('chat') }}>
+                        <div class="text-center">
+                            <a href="{{ path('conversation', {id: conversation.id}) }}"
+                               class="btn btn-link">{{ 'load-older'|trans }}</a>
                         </div>
-                    </turbo-frame>
-                {% else %}
-                    <turbo-frame id="active_conversation" target="_self">
-                        <div class="card">
-                            <div class="card-body min-vh-50 d-flex justify-content-center align-items-center">
-                                <div class="text-center">
-                                    <i class="mdi mdi-inbox fs-1"></i>
-                                    <h5>No conversation loaded</h5>
-                                    <p class="text-muted">Load ads in here</p>
+                        {% for message in messages %}
+                            {% if app.user == message.owner %}
+                                <div class="d-flex justify-content-end">
+                                    <div class="col-md-9">
+                                        <div class="bg-grey rounded-2 p-2">{{ message.content }}</div>
+                                        <div class="xtra-small text-muted">{{ message.createdAt|format_datetime('short', 'short', locale='en_GB', timezone=regional.timezone) }}</div>
+                                    </div>
+                                    <div class="col-md-1 d-flex justify-content-end">
+                                        <img class="rounded-circle object-fit-cover sticky-top shadow-sm ms-2"
+                                             height="40"
+                                             width="40" alt="{{ message.owner.fullName }}"
+                                             src="{{ message.owner.avatar }}"/>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </turbo-frame>
-                {% endif %}
+                            {% else %}
+                                <div class="d-flex justify-content-start mb-2">
+                                    <div class="col-md-2" >
+                                        <img class="rounded-circle object-fit-cover sticky-top shadow-sm"
+                                             height="40"
+                                             width="40" alt="{{ message.owner.fullName }}"
+                                             src="{{ message.owner.avatar }}"/>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="bg-grey rounded-2 p-2">{{ message.content }}</div>
+                                        <div class="xtra-small text-muted">{{ message.createdAt|format_datetime('short', 'short', locale='en_GB', timezone=regional.timezone) }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                        {{ include('/conversation/message/message.stream.html.twig', {
+                            conversation : conversation,
+                        }) }}
+                    </div>
+                    {{ include('conversation/message/_form.html.twig') }}
+                </div>
             </div>
         </div>
     </div>

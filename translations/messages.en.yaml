@@ -74,3 +74,6 @@ search: search
 create: create
 no-conversations: no conversations found
 create-conversation: create conversation
+amenity:
+    ac: Air conditioning
+    garage: Garage

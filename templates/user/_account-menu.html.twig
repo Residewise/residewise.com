@@ -1,35 +1,48 @@
 {% import "macro/component.macro.twig" as component %}
 
-<div class="nav nav-pills nav-justified bg-white shadow-sm my-3">
-    {{ component.iconBtnLink(
-        'user_assets',
-        'mdi-home-city'
-    ) }}
-
-    {{ component.iconBtnLink(
-        'conversations',
-        'mdi-forum'
-    ) }}
-
+<div class="nav nav-pills nav-justified my-3">
+    <div class="nav-item">
+        <a class="nav-link rounded-pill {% if app.request.attributes.get('_route') == 'user_assets' %} bg-primary text-white {% endif %}"
+           href="{{ path('user_assets') }}">
+            <span class="mdi mdi-home-city fs-3"></span>
+            <div>{{ 'properties'|trans }}</div>
+        </a>
+    </div>
+    <div class="nav-item">
+        <a class="nav-link rounded-pill {% if app.request.attributes.get('_route') == 'conversations' or app.request.attributes.get('_route') == 'conversation' %}bg-primary text-white{% endif %}"
+           href="{{ path('conversations') }}">
+            <span class="mdi mdi-forum fs-3"></span>
+            <div>{{ 'messages'|trans }}</div>
+        </a>
+    </div>
     {% if app.user.agency %}
-        {{ component.iconBtnLink(
-            'user_agency',
-            'mdi-sign-real-estate'
-        ) }}
+        <div class="nav-item">
+            <a class="nav-link rounded-pill {% if app.request.attributes.get('_route') == 'user_agency' %}bg-primary text-white{% endif %}"
+               href="{{ path('user_agency') }}">
+                <span class="mdi mdi-sign-real-estate fs-3"></span>
+                <div>{{ 'add-business-details'|trans }}</div>
+            </a>
+        </div>
     {% endif %}
-
-    {{ component.iconBtnLink(
-        'new_user_asset',
-        'mdi-home-plus'
-    ) }}
-
-    {{ component.iconBtnLink(
-        'user_bookmarks',
-        'mdi-bookmark'
-    ) }}
-
-    {{ component.iconBtnLink(
-        'user_account',
-        'mdi-account-circle'
-    ) }}
+    <div class="nav-item">
+        <a class="nav-link rounded-pill {% if app.request.attributes.get('_route') == 'new_user_asset' %}bg-primary text-white{% endif %}"
+           href="{{ path('new_user_asset') }}">
+            <span class="mdi mdi-home-plus fs-3"></span>
+            <div>{{ 'create'|trans }}</div>
+        </a>
+    </div>
+    <div class="nav-item">
+        <a class="nav-link rounded-pill {% if app.request.attributes.get('_route') == 'user_bookmarks' %}bg-primary text-white{% endif %}"
+           href="{{ path('user_bookmarks') }}">
+            <span class="mdi mdi-bookmark fs-3"></span>
+            <div>{{ 'saved'|trans }}</div>
+        </a>
+    </div>
+    <div class="nav-item">
+        <a class="nav-link rounded-pill {% if app.request.attributes.get('_route') == 'user_account' %}bg-primary text-white{% endif %}"
+           href="{{ path('user_account') }}">
+            <span class="mdi mdi-account-circle fs-3"></span>
+            <div>{{ 'account'|trans }}</div>
+        </a>
+    </div>
 </div>

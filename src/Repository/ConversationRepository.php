@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Conversation;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -114,5 +115,17 @@ class ConversationRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findByUsers(ArrayCollection $users)
+    {
+        dump($users);
+        $qb = $this->createQueryBuilder('c');
+        $qb->andWhere(
+            'c.users IN (:users)'
+        )->setParameter('users', $users);
+
+       return $qb->getQuery()->getOneOrNullResult();
+
+    }
 
 }

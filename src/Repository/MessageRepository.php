@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Conversation;
 use App\Entity\Message;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -74,4 +75,23 @@ class MessageRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findByConversation(Conversation $conversation)
+    {
+        $qb = $this->createQueryBuilder('m');
+        $qb->orderBy('m.createdAt', 'DESC');
+        $qb->addGroupBy('m.id');
+        $qb->addGroupBy('m.conversation');
+
+        $qb->andWhere(
+            $qb->expr()->eq('m.conversation', ':conversation')
+        )->setParameter('conversation', $conversation);
+
+        $result = $qb->getQuery()
+            ->setMaxResults(10)
+            ->setFirstResult(0)
+            ->getResult();
+        $reversed  = array_reverse($result);
+        return $reversed;
+    }
 }

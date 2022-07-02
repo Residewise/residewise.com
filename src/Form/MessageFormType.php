@@ -14,7 +14,12 @@ class MessageFormType extends AbstractType
     {
         $builder
             ->add('content', TextareaType::class, [
-                'label' => false
+                'label' => false,
+                'attr' => [
+                    'class' => 'resize-none',
+                    'rows' => 4,
+                    'data-controller' => 'textarea-autogrow'
+                ]
             ])
         ;
     }

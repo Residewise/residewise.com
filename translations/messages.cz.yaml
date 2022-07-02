@@ -70,3 +70,6 @@ search: __search
 create: __create
 no-conversations: __no-conversations
 create-conversation: __create-conversation
+amenity:
+    ac: Klimatizace
+    garage: Garáž

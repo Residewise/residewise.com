@@ -3,7 +3,6 @@
 namespace App\Serializer;
 
 use App\Entity\Asset;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Twig\Environment;

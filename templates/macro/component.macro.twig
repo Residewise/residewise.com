@@ -3,7 +3,7 @@
     frameId,
     path,
     title,
-    target
+    target = '_top'
     ) %}
 
     <div class="modal fade" id="{{ modalId }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -39,10 +39,5 @@
     route,
     icon
     ) %}
-    <a
-            class="nav-link {% if app.request.attributes.get('_route') == route %}active{% endif %}"
-            href="{{ path(route) }}"
-    >
-        <span class="mdi {{ icon }} fs-3"></span>
-    </a>
+
 {% endmacro %}

@@ -5,10 +5,7 @@ namespace App\Repository;
 use App\Entity\Asset;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
-use Money\Money;
-use function strtolower;
 
 /**
  * @method Asset|null find($id, $lockMode = null, $lockVersion = null)
@@ -24,10 +21,6 @@ class AssetRepository extends ServiceEntityRepository
         parent::__construct($registry, Asset::class);
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function add(Asset $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
@@ -36,10 +29,6 @@ class AssetRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function remove(Asset $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
@@ -51,22 +40,18 @@ class AssetRepository extends ServiceEntityRepository
     public function findBySearch(
         ?int $minSqm,
         ?int $maxSqm,
-        ?Money $minPrice,
-        ?Money $maxPrice,
+        ?int $minPrice,
+        ?int $maxPrice,
         ?string $type,
         ?string $term,
         ?string $userType,
         ?string $title,
         ?int $floor,
-        ?Money $agencyFee,
+        ?int $agencyFee,
         ?string $address
     ): mixed {
         $qb = $this->createQueryBuilder('a');
-        $qb->leftJoin('a.publications', 'p');
-
-        $qb->andWhere('p.isApproved = :true')->setParameter('true', true)->andWhere(
-            "CURRENT_TIMESTAMP() BETWEEN p.startsAt AND p.endsAt"
-        )->orderBy('a.createdAt', 'ASC');
+        $qb->orderBy('a.createdAt', 'ASC');
 
         if ($floor) {
             $qb->andWhere(

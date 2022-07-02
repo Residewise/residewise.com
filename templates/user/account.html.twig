@@ -6,11 +6,16 @@
 
 {% block body %}
     <div class="container">
-        <div class="row justify-content-between">
+        <div class="row justify-content-center">
             <div class="col-md-12">
                 {{ include('/user/_account-menu.html.twig') }}
             </div>
-            <div class="col-md-12">
+            <div class="col-md-3">
+                <div class="d-flex justify-content-center">
+                    <img class="rounded-circle object-fit-cover" width="200" height="200" alt="{{ app.user.fullName }}" src="{{ app.user.avatar }}" />
+                </div>
+            </div>
+            <div class="col-md-8">
                 <div class="card mb-3">
                     <div class="card-body">
                         {{ form_start(accountForm) }}

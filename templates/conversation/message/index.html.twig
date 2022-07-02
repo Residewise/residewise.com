@@ -1,7 +1,8 @@
 <div class="card shadow-sm">
     <div class="messages" id="conversation-{{ conversation.id }}" {{ turbo_stream_listen('chat') }}>
         {{ include('/conversation/message/message.stream.html.twig', {
-            'conversation' : conversation
+            conversation : conversation,
+            messages: messages
         }) }}
     </div>
     {{ include('conversation/_form.html.twig') }}

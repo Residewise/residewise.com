@@ -11,7 +11,7 @@
                     {% if asset.tender == null %}
                         <div class="card">
                             <div class="card-body">
-                                <div class="h3 m-0">{{ asset.price|format_currency( regional.currency ) }}</div>
+                                <div class="h3 m-0">{{ asset.price|format_currency(asset.currency) }}</div>
                             </div>
                         </div>
                     {% else %}
@@ -25,13 +25,14 @@
                     {% endif %}
                 </div>
 
-                {{ include('profile/_public-profile-sidebar.html.twig', {
+                {{ include('profile/_public-profile-widget.html.twig', {
                     user: asset.owner
                 }) }}
             </div>
             <div class="col-md-8">
                 <div class="sticky-top">
-                    <div class="d-flex bg-white justify-content-between">
+                    <div class="card card-body">
+                    <div class="d-flex bg-white align-items-center justify-content-between">
                         <div id="asset-reaction-{{ asset.id }}" {{ turbo_stream_listen('reaction') }}>
                             {{ include('reaction/_badges.html.twig', {
                                 asset: asset
@@ -45,18 +46,38 @@
                             </div>
                         {% endif %}
                     </div>
+                    </div>
                 </div>
-                <div class="grid" {{ stimulus_controller('photoswipe') }}>
+
+                <div class="d-flex justify-content-between my-3">
+                    <div class="bg-white py-0 px-2 shadow-sm rounded-pill">{{ asset.sqm }} SQM</div>
+                    <div class="bg-white py-0 px-2 shadow-sm rounded-pill">{{ asset.sqm }}</div>
+                </div>
+
+                <div class="row g-2" {{ stimulus_controller('photoswipe') }}>
                     {% for image in asset.images %}
                         <a href="{{ image.base64 }}"
+                           class="{% if loop.first %}col-md-6{% endif %} {% if loop.index == 2 %}col-md-6{% endif %} col-md-2"
                            data-pswp-width="{{ image.width }}"
                            data-pswp-height="{{ image.height }}"
                            target="_blank">
-                            <img class="p-1 grid-item img-fluid"
-                                 src="{{ image.base64 }}" alt=""/>
+                            <img class="img-fluid w-100 h-100"
+                                 src="{{ image.base64 }}" alt="{{ image }}"/>
                         </a>
                     {% endfor %}
                 </div>
+
+                <div class="d-flex flex-wrap mt-3">
+                    {% for amenity in asset.amenities %}
+                        <div class="me-2 mb-2 bg-white py-0 px-2 shadow-sm rounded-pill align-items-center d-flex justify-content-between">
+                            <div class="me-2">{{ amenity.name|trans }}</div>
+                            <div>
+                                <span class="{{ amenity.icon }} fs-3"></span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
             </div>
         </div>
     </div>

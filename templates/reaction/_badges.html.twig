@@ -5,8 +5,8 @@
             path: path('asset_reaction_create', {id :asset.id})
         }) }}
     {% endif %}
-            class="btn btn-secondary {% if not app.user %} disabled {% endif %}">
-        <span class="mdi {% if app.user and asset.isLikedByUser(app.user) %} mdi-heart text-danger {% else %} mdi-heart-outline {% endif %}"></span>
+            class="btn btn-secondary d-flex align-items-center {% if not app.user %} disabled {% endif %}">
+        <span class="me-1 fs-4 mdi {% if app.user and asset.isLikedByUser(app.user) %} mdi-heart text-danger {% else %} mdi-heart-outline {% endif %}"></span>
         {{ asset.likes|compact_notation }}
     </a>
 
@@ -15,8 +15,8 @@
             type: 'dislike',
             path: path('asset_reaction_create', {id :asset.id})
         }) }}
-    {% endif %} class="btn btn-secondary {% if not app.user %} disabled {% endif %}">
-        <span class="mdi {% if app.user and asset.isDislikedByUser(app.user) %} mdi-thumb-down {% else %} mdi-thumb-down-outline {% endif %}"></span>
+    {% endif %} class="btn btn-secondary d-flex align-items-center {% if not app.user %} disabled {% endif %}">
+        <span class="me-1 fs-4 mdi {% if app.user and asset.isDislikedByUser(app.user) %} mdi-thumb-down {% else %} mdi-thumb-down-outline {% endif %}"></span>
         {{ asset.dislikes|compact_notation }}
     </a>
 </div>

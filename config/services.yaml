@@ -26,7 +26,3 @@ services:
         class: App\Service\ImageUploadService
         arguments:
             - '@assets.packages'
-    tbbc_money.ratio_provider.ecb:
-      class: Tbbc\MoneyBundle\Pair\RatioProvider\ECBRatioProvider
-      arguments:
-        - '@Symfony\Contracts\HttpClient\HttpClientInterface'

@@ -1,17 +1,6 @@
 {{ form_start(conversationForm, {'action' : path|default(path('conversation_new')) }) }}
-<div {{ stimulus_controller('autocomplete-select', {
-    url: path('_user_search')
-}) }}>
-
-    <div class="list-group" data-autocomplete-select-target="selected"></div>
-    {{ form_widget(conversationForm.autocomplete, {
-        attr: {
-            'placeholder': 'search'|trans
-        }
-    }) }}
-    {{ form_widget(conversationForm.users) }}
-    <div data-autocomplete-select-target="autocompleteResult"></div>
-
+<div class="card-body">
+    {{ form_row(conversationForm.users) }}
     <button type="submit" class="btn btn-primary w-100">
         {{ 'create'|trans }}
     </button>

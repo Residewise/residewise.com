@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import PhotoSwipeLightbox from 'photoswipe/lightbox';
+import PhotoSwipe from 'photoswipe';
 import 'photoswipe/style.css';
 
 export default class extends Controller {
@@ -8,8 +9,9 @@ export default class extends Controller {
       gallery: this.element,
       children: 'a',
       showHideAnimationType: 'fade',
-      pswpModule: () => import('photoswipe')
+      pswpModule: PhotoSwipe
     });
     lightbox.init();
+
   }
 }

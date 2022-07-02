@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Contract\PriceableEntityInterface;
 use Stringable;
 use App\Repository\AssetRepository;
 use Carbon\Carbon;
@@ -15,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: AssetRepository::class)]
-class Asset implements Stringable
+class Asset implements Stringable, PriceableEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -88,9 +89,6 @@ class Asset implements Stringable
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: AssetView::class)]
     private Collection $views;
 
-    #[ORM\OneToMany(mappedBy: 'asset', targetEntity: Publication::class, cascade: ['persist'])]
-    private Collection $publications;
-
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $agencyFee;
 
@@ -104,15 +102,21 @@ class Asset implements Stringable
     #[ORM\JoinColumn(nullable: true)]
     private ?Tender $tender = null;
 
+    #[ORM\Column(type: 'string', length: 3, nullable: true)]
+    private string $currency = 'EUR';
+
+    #[ORM\ManyToMany(targetEntity: Amenity::class, inversedBy: 'assets')]
+    private Collection $amenities;
+
     public function __construct() {
         $this->createdAt = new DateTimeImmutable();
         $this->images = new ArrayCollection();
         $this->reviews = new ArrayCollection();
         $this->reactions = new ArrayCollection();
         $this->views = new ArrayCollection();
-        $this->publications = new ArrayCollection();
         $this->bookmarks = new ArrayCollection();
         $this->tenders = new ArrayCollection();
+        $this->amenities = new ArrayCollection();
     }
 
     public function getId(): Uuid
@@ -264,10 +268,10 @@ class Asset implements Stringable
         return $this->price / 100;
     }
 
-    public function setPrice(int $price): int
+    public function setPrice(int $price): self
     {
         $this->price = $price * 100;
-        return $this->price;
+        return $this;
     }
 
     public function getAddress(): string
@@ -460,51 +464,6 @@ class Asset implements Stringable
         return $views;
     }
 
-    /**
-     * @return Collection<int, Publication>
-     */
-    public function getPublications(): Collection
-    {
-        return $this->publications;
-    }
-
-    public function addPublication(Publication $publication): self
-    {
-        if (!$this->publications->contains($publication)) {
-            $this->publications[] = $publication;
-            $publication->setAsset($this);
-        }
-
-        return $this;
-    }
-
-    public function removePublication(Publication $publication): self
-    {
-        if ($this->publications->removeElement($publication)) {
-            // set the owning side to null (unless already changed)
-            if ($publication->getAsset() === $this) {
-                $publication->setAsset(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getIsPublished(): bool
-    {
-        /** @var Publication $publication */
-        foreach ($this->publications as $publication){
-
-            if(!$publication->getIsActive()){
-                continue;
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
     public function getAgencyFee(): ?int
     {
         return $this->agencyFee;
@@ -596,6 +555,42 @@ class Asset implements Stringable
     public function setTender(?Tender $tender): self
     {
         $this->tender = $tender;
+
+        return $this;
+    }
+
+    public function getCurrency(): ?string
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(string $currency): self
+    {
+        $this->currency = $currency;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Amenity>
+     */
+    public function getAmenities(): Collection
+    {
+        return $this->amenities;
+    }
+
+    public function addAmenity(Amenity $amenity): self
+    {
+        if (!$this->amenities->contains($amenity)) {
+            $this->amenities[] = $amenity;
+        }
+
+        return $this;
+    }
+
+    public function removeAmenity(Amenity $amenity): self
+    {
+        $this->amenities->removeElement($amenity);
 
         return $this;
     }

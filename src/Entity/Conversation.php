@@ -14,7 +14,6 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: ConversationRepository::class)]
-#[Broadcast]
 class Conversation implements Stringable
 {
     #[ORM\Id]
@@ -132,5 +131,17 @@ class Conversation implements Stringable
         $this->title = $title;
 
         return $this;
+    }
+
+
+
+    public  function  getUsersFirstNamesAsCommaSeperatedString() : string
+    {
+        $names = [];
+        /** @var User $user */
+        foreach ($this->users as $user){
+            $names[] = $user->getFirstName();
+        }
+        return implode(', ', $names);
     }
 }

@@ -1,3 +1,4 @@
+{% import "macro/user.macro.twig" as userMacro %}
 {% import "macro/component.macro.twig" as component %}
 {% import "macro/conversation.macro.twig" as conversationMacro %}
 {% extends 'base.html.twig' %}
@@ -9,38 +10,62 @@
             <div class="col-md-12">
                 {{ include('/user/_account-menu.html.twig') }}
             </div>
-            <div class="col-md-6 col-12">
-
-                <div class="d-flex justify-content-between mb-3">
-
-                    {{ include('forms/_keyword-form.html.twig') }}
-
-
-                    <button type="button" class="ms-1 btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#new_conversation">
-                        <span class="mdi mdi-message-plus fs-4"></span>
-                    </button>
-                </div>
-
-                <div class="list-group list-group-flush conversation-list">
-                    {% for conversation in pagination %}
-                        {{ conversationMacro.item(conversation, true) }}
-                    {% else %}
-                        <div class="card card-body d-flex justify-content-center align-items-center min-vh-50">
-                            <div class="text-center">
-                                <span class="mdi mdi-inbox fs-1"></span>
-                                <div>{{ 'no-conversations'|trans }}</div>
-                            </div>
+            <div class="col-md-8 col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-secondary">
+                        <div class="d-flex justify-content-between">
+                            {{ include('forms/_keyword-form.html.twig',{
+                                bgColor: 'rounded'
+                            }) }}
+                            <button type="button" class="btn btn-link" data-bs-toggle="modal"
+                                    data-bs-target="#new_conversation">
+                                <span class="mdi mdi-message-plus fs-4"></span>
+                            </button>
                         </div>
-                    {% endfor %}
+                    </div>
+                    <div class="list-group list-group-flush">
+                        {% for conversation in pagination %}
+                            <a class="list-group-item list-group-item-action align-items-center py-3"
+                               href="{{ path('conversation', {id: conversation.id}) }}">
+                                <div>
+                                    <div class="d-flex justify-content-between">
+                                        <div>{{ conversation.title }}</div>
+                                        <div class="small text-muted">{{ conversation.createdAt|format_datetime('short', 'short', locale='en_GB', timezone=regional.timezone) }}</div>
+                                    </div>
+                                    <div class="d-flex justify-content-start align-items-center">
+                                        <div class="me-2">
+                                            {{ userMacro.avatar(conversation.users) }}
+                                        </div>
+                                        <div>
+                                            {% if conversation.messages|last %}
+                                                <div class="bg-grey p-2 rounded-pill">{{ conversation.messages|last|slice(0,50) }}
+                                                    ...
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        {% else %}
+                            <div class="card card-body d-flex justify-content-center align-items-center min-vh-50">
+                                <div class="text-center">
+                                    <span class="mdi mdi-inbox fs-1"></span>
+                                    <div>{{ 'no-conversations'|trans }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if knp_pagination_render(pagination) %}
+                        <div class="card-body d-flex justify-content-center">
+                            {{ knp_pagination_render(pagination) }}
+                        </div>
+                    {% endif %}
                 </div>
-
-                <div class="d-flex justify-content-center">
-                    {{ knp_pagination_render(pagination) }}
-                </div>
-
             </div>
-        </div>
+            <div class="col-md-3 col-12">
+                ADS
+            </div>
+            </div>
     </div>
 
     {{ component.modal(

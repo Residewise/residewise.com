@@ -8,7 +8,7 @@
     <div class="card h-100 position-relative mb-3 shadow-sm">
         {% if asset.owner.agency %}
             <div class="asset-card-agent-logo" style="z-index: 50;">
-                <img src="{{ asset.owner.agency.logo }}" height="30" width="30"/>
+                <img src="{{ asset.owner.agency.logo }}" alt="{{ asset.owner.agency.title }}" class="object-fit-cover"  height="30" width="30"/>
             </div>
         {% endif %}
         {% if carousel %}
@@ -20,7 +20,7 @@
                 </div>
             </turbo-frame>
         {% endif %}
-        {% if asset.tender and asset.tender.isActive %}
+        {% if asset.tender %}
             <div class="asset-new-badge">
                 <span class="badge rounded-pill bg-primary pulse letter-spacing-1">{{ 'aution-active'|trans }}</span>
             </div>
@@ -93,21 +93,7 @@
     asset
     ) %}
     <div class="card position-relative shadow-sm">
-        <div class="card-body pt-2 position-relative">
-            <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
-                <div>
-                    <div class="h5 m-0">{{ asset.title|capitalize }}</div>
-                    <div class="mt-2">{{ asset.description|slice(0,100) }}...</div>
-                </div>
-                <div>
-                    <a href="{{ path('app_asset_edit', {id: asset.id}) }}"
-                       class="btn btn-secondary">
-                        <i class="mdi mdi-pencil-outline fs-3"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="card-footer bg-white d-flex justify-content-evenly w-100">
+        <div class="card-footer border-bottom border-top-0 bg-white d-flex justify-content-evenly w-100">
                 <span class="badge bg-primary rounded-pill"><span
                             class="mdi mdi-heart-outline me-1"></span> {{ asset.likes|compact_notation }}</span>
             <span class="badge bg-primary rounded-pill"><span
@@ -116,6 +102,22 @@
                         class="mdi mdi-bookmark-outline me-1"></span>{{ asset.bookmarks.count|compact_notation }}</span>
             <span class="badge bg-primary rounded-pill"><span
                         class="mdi mdi-eye me-1"></span>{{ asset.views.count|compact_notation }}</span>
+        </div>
+        <div class="card-body pt-2 position-relative">
+            <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
+                <div>
+                    <div class="h5 m-0">{{ asset.title|capitalize }}</div>
+                    <div class="mt-2">{{ asset.description|slice(0,100) }}...</div>
+                </div>
+                <div>
+                    {% if not asset.tender %}
+                    <a href="{{ path('app_asset_edit', {id: asset.id}) }}"
+                       class="btn btn-secondary">
+                        <i class="mdi mdi-pencil-outline fs-3"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
         <div class="card-footer bg-white">
             <div class="d-flex justify-content-end">
@@ -127,5 +129,8 @@
                 {% endif %}
             </div>
         </div>
-    </div>
+        <div class="card-footer bg-white text-center">
+            {{ asset.createdAt|format_date }}
+        </div>
+        </div>
 {% endmacro %}

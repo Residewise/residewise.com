@@ -4,15 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Asset;
 use App\Entity\Image;
-use App\Factory\PublicationFactory;
 use App\Form\AssetSearchFormType;
 use App\Form\AssetType;
 use App\Repository\AssetRepository;
 use App\Repository\ImageRepository;
-use App\Repository\PublicationRepository;
-use App\Service\Base64FileUtil;
 use App\Service\ImageUploadService;
-use App\Service\RegionalSettingsService\RegionalSettingsService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -20,8 +16,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mercure\HubInterface;
-use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -32,8 +26,6 @@ class AssetController extends AbstractController
         private readonly AssetRepository $assetRepository,
         private readonly ImageRepository $imageRepository,
         private readonly SerializerInterface $serializer,
-        private readonly PublicationFactory $publicationFactory,
-        private readonly PublicationRepository $publicationRepository,
         private readonly ImageUploadService $imageUploadService,
     ) {
     }
@@ -92,8 +84,6 @@ class AssetController extends AbstractController
                 $this->imageRepository->add($image);
             }
 
-            $publication = $this->publicationFactory->create($asset, null);
-            $this->publicationRepository->add($publication);
             $this->assetRepository->add($asset);
             return $this->redirectToRoute('user_assets');
         }

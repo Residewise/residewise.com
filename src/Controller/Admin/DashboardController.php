@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Amenity;
 use App\Entity\Asset;
 use App\Entity\Conversation;
 use App\Entity\Message;
@@ -49,6 +50,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('User', 'fas fa-users', User::class);
         yield MenuItem::linkToCrud('Reactions', 'fas fa-thumbs-up', Reaction::class);
         yield MenuItem::linkToCrud('Asset', 'fas fa-list', Asset::class);
+        yield MenuItem::linkToCrud('Amenity', 'fas fa-tag', Amenity::class);
         yield MenuItem::linkToCrud('Publication', 'fas fa-list', Publication::class);
     }
 }

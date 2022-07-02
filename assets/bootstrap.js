@@ -1,10 +1,10 @@
 import { startStimulusApp } from '@symfony/stimulus-bridge';
 import FormValidationController from "stimulus-form-validation"
 import CharacterCounter from 'stimulus-character-counter'
-import TextareaAutogrow from 'stimulus-textarea-autogrow'
 import PasswordVisibility from 'stimulus-password-visibility'
 import { Autocomplete } from 'stimulus-autocomplete'
 import MultiSelectController from '@kanety/stimulus-multi-select';
+import TextareaAutogrow from 'stimulus-textarea-autogrow'
 
 // Registers Stimulus controllers from controllers.json and in the controllers/ directory
 export const app = startStimulusApp(require.context(

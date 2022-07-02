@@ -1,6 +1,6 @@
 <div class="list-group list-group-flush">
-    <a href="{{ path('user_public_profile', {id: user.id }) }}" class="list-group-item d-flex justify-content-between align-items-center">
-        <img height="30" class="rounded-circle" src="{{ user.avatar }}" alt="{{ user.fullName }}"/>
+    <a href="{{ path('user_public_profile', {id: user.id }) }}" class="list-group-item  list-group-item-action d-flex justify-content-between align-items-center">
+        <img height="40" width="40" class="rounded-circle object-fit-cover" src="{{ user.avatar }}" alt="{{ user.fullName }}"/>
         <div>{{ user.fullName }} </div>
     </a>
     <div class="list-group-item">

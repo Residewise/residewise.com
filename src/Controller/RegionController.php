@@ -39,6 +39,7 @@ class RegionController extends AbstractController
             $this->regionalSettingsService->configureTimezone($timezone);
             $this->regionalSettingsService->configureCurrency($currency);
 
+
             return $this->redirectToRoute('app_asset_index');
         }
 

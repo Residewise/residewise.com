@@ -165,9 +165,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/ux-chartjs" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/knplabs/knp-components" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/knplabs/knp-paginator-bundle" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/templating" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/moneyphp/money" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/tbbc/money-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/florianv/exchanger" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/simple-cache" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/clue/stream-filter" />
@@ -178,6 +175,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/php-http/discovery" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/php-http/promise" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/masterminds/html5" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/ux-autocomplete" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

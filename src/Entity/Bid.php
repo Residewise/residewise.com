@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Contract\PriceableEntityInterface;
 use App\Repository\BidRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: BidRepository::class)]
-class Bid
+class Bid implements PriceableEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -28,6 +29,9 @@ class Bid
 
     #[ORM\Column(type: 'integer')]
     private int $price;
+
+    #[ORM\Column(type: 'string', length: 3)]
+    private string $currency;
 
     public function __construct()
     {
@@ -65,11 +69,24 @@ class Bid
 
     public function getPrice(): ?int
     {
-       return $this->price / 100;
+       return $this->price;
     }
 
-    public function setPrice(int $price)
+    public function setPrice(int $price) : self
     {
-        $this->price = $price * 100;
+        $this->price = $price;
+        return $this;
+    }
+
+    public function getCurrency(): ?string
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(string $currency): self
+    {
+        $this->currency = $currency;
+
+        return $this;
     }
 }

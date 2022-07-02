@@ -19,9 +19,10 @@ class BidFormType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
         $builder
             ->add('price', MoneyType::class, [
-                'currency' => $this->regionalSettingsService->getCurrency(),
+                'currency' => $options['asset']->getCurrency(),
                 'data' => $options['suggested_bid_amount']
             ])
         ;
@@ -30,7 +31,8 @@ class BidFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired([
-            'suggested_bid_amount'
+            'suggested_bid_amount',
+            'asset'
         ]);
         $resolver->setDefaults([
             'data_class' => Bid::class,

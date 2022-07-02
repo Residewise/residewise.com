@@ -3,7 +3,7 @@
 <nav class="navbar navbar-expand bg-light">
     <div class="container">
         <a class="navbar-brand" href="{{ path('app_asset_index') }}">
-            <img alt="residewise" height="25" src="{{ asset('images/logo.png') }}"/>
+            <img alt="residewise" height="30" src="{{ asset('images/logo.png') }}" />
         </a>
         <ul class="navbar-nav ms-auto">
             {% if app.user %}
@@ -46,8 +46,8 @@
                     <a class="nav-link d-flex justify-content-between align-items-center"
                        href="{{ path('user_account') }}">
                         <div>
-                            <img alt="{{ app.user.fullName }}" class="rounded-circle shadow-sm mr-3"
-                                 src="{{ app.user.avatar }}" height="35"/>
+                            <img alt="{{ app.user.fullName }}" class="rounded-circle object-fit-cover shadow-sm mr-3"
+                                 src="{{ app.user.avatar }}" height="35" width="35"/>
                         </div>
                         <div>
                             {{ app.user.fullName|capitalize }}
@@ -83,7 +83,7 @@
                     <a class="nav-link d-flex justify-content-between align-items-center"
                        href="{{ path('conversations') }}">
                         <div>
-                            <i class="bi bi-chat-fill fs-3"></i>
+                            <i class="mdi mdi-forum fs-3"></i>
                         </div>
                         <div>
                             {{ 'messages'|trans|capitalize }}
@@ -94,7 +94,7 @@
                     <a class="nav-link d-flex justify-content-between align-items-center"
                        href="{{ path('user_bookmarks') }}">
                         <div>
-                            <i class="bi bi-bookmark-fill fs-3"></i>
+                            <i class="mdi mdi-bookmark fs-3"></i>
                         </div>
                         <div>
                             {{ 'saved'|trans|capitalize }}
@@ -106,7 +106,7 @@
                        aria-current="page"
                        href="{{ path('app_logout') }}">
                         <div>
-                            <i class="bi bi-box-arrow-in-right fs-3"></i>
+                            <i class="mdi mdi-logout-variant fs-3"></i>
                         </div>
                         <div>
                             {{ 'logout'|trans|capitalize }}
@@ -119,7 +119,7 @@
                        aria-current="page"
                        href="{{ path('app_login') }}">
                         <div>
-                            <i class="bi bi-box-arrow-in-left fs-3"></i>
+                            <i class="mdi mdi-login-variant fs-3"></i>
                         </div>
                         <div>
                             {{ "login"|trans|capitalize }}
@@ -132,7 +132,7 @@
                        href="{{ path('app_register') }}"
                     >
                         <div>
-                            <i class="bi bi-person-plus-fill fs-3"></i>
+                            <i class="mdi mdi-account-plus fs-3"></i>
                         </div>
                         <div>
                             {{ 'register'|trans|capitalize }}

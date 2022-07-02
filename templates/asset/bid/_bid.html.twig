@@ -2,7 +2,7 @@
     <div class="d-flex align-items-center">
         <div class="me-2">{{ 'current-bid'|trans }}</div>
         {% if tender.bid.owner == app.user %}
-            <img src="{{ app.user.avatar }}" height="20" class="rounded-circle me-2"/>
+            <img src="{{ app.user.avatar }}" height="20" width="20" class="rounded-circle object-fit-cover me-2"/>
         {% endif %}
     </div>
 {% endif %}
@@ -11,7 +11,7 @@
             {{ stimulus_controller('bid-style') }}
         {% endif %} >
     {% if tender.bid %}
-        {{ tender.bid.price|format_currency(regional.currency) }}
+        {{ tender.bid.price|format_currency(tender.asset.currency) }}
     {% else %}
         {{ 'no-bids-yet'|trans }}
     {% endif %}

@@ -2,7 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Amenity;
 use App\Entity\Asset;
+use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -15,7 +18,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\Image;
 
 class AssetType extends AbstractType
 {
@@ -76,6 +78,15 @@ class AssetType extends AbstractType
             'attr' => [
                 'data-asset-location-target' => 'longitude'
             ]
+        ])->add('amenities', EntityType::class, [
+            'choice_translation_domain' => true,
+            'class' => Amenity::class,
+            'choice_label' => 'name',
+            'tom_select_options' => [
+                'create' => true,
+            ],
+            'multiple' => true,
+            'autocomplete' => true,
         ]);
 
         if ($this->security->getUser()->getAgency()) {

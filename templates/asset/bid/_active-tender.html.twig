@@ -9,7 +9,7 @@
         </div>
         <div class="small text-muted">
             {{ 'starting-bid'|trans }}
-            {{ asset.price|format_currency(regional.currency) }}
+            {{ asset.price|format_currency(asset.currency) }}
         </div>
         <turbo-frame id="bid-form" src="{{ path('_new_bid', {id: asset.id}) }}" target="_self">
             <div class="d-flex justify-content-center">
@@ -18,6 +18,12 @@
                 </div>
             </div>
         </turbo-frame>
+        {% if asset.currency != regional.currency %}
+            <div class="mt-2">
+                <div>Aproximately 600 EUR</div>
+                <div class="text-muted tiny">Please note this value may change and is aproximation of the price conversion from it's original currency</div>
+            </div>
+        {% endif %}
         <hr/>
         <div {{ stimulus_controller('countdown', {
             seconds: asset.tender.timeUntilEnd,
