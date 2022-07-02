@@ -4,9 +4,9 @@
 
 {% block body %}
     <div class="container">
-        <div class="row justify-content-center mt-3">
+        <div class="row justify-content-center g-0 mt-3">
             <div class="col-md-4">
-                <div class="card shadow">
+                <div class="card h-100 shadow">
                     <div class="card-body">
                         <h1 class="h3 mb-3 font-weight-normal">{{ 'login'|trans }}</h1>
                         {{ include('security/_social-auth.html.twig') }}
@@ -28,7 +28,7 @@
                                    value="{{ csrf_token('authenticate') }}"
                             >
                             <div class="text-end">
-                                <a class="btn btn-link" href="{{ path('user_forgot_password') }}"></a>
+                                <a class="btn btn-link" href="{{ path('user_forgot_password') }}">forgot password</a>
                             </div>
 
                             <button class="btn w-100 mt-3 btn-primary" type="submit">

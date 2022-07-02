@@ -27,7 +27,6 @@ class ConversationController extends AbstractController
         private readonly MessageRepository $messageRepository,
         private readonly ConversationRepository $conversationRepository,
         private readonly HubInterface $hub,
-        private readonly UrlGeneratorInterface $urlGenerator
     ) {
     }
 

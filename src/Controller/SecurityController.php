@@ -8,11 +8,14 @@ use App\Form\AssetType;
 use App\Form\EmailFormType;
 use App\Form\PasswordFormType;
 use App\Repository\UserRepository;
+use App\Service\Email\AccountConfirmationEmail;
 use LogicException;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -28,7 +31,8 @@ class SecurityController extends AbstractController
         private readonly UserRepository $userRepository,
         private readonly TranslatorInterface $translator,
         private readonly UserPasswordHasherInterface $userPasswordHasher,
-        private readonly AuthenticationUtils $authenticationUtils
+        private readonly AuthenticationUtils $authenticationUtils,
+        private AccountConfirmationEmail $accountConfirmationEmail
     )
     {
     }
@@ -102,9 +106,8 @@ class SecurityController extends AbstractController
         ]);
     }
 
-
-    #[Route('/forgot/password', name: 'user_forgot_password')]
-    public function forgotPassword(Request $request)
+    #[Route(path: '/forgot/password', name: 'user_forgot_password')]
+    public function forgotPassword(Request $request) : Response
     {
         $emailForm = $this->createForm(EmailFormType::class);
         $emailForm->handleRequest($request);
@@ -116,18 +119,22 @@ class SecurityController extends AbstractController
             $user = $this->userRepository->findOneBy(['email' => $email]);
 
             if($user){
-
+                $this->accountConfirmationEmail->send($user, []);
             }
+
+            $this->addFlash('message', $this->translator->trans('password-reset-email-sent'));
+            return $this->redirectToRoute('user_forgot_password');
 
         }
 
         return $this->render('security/forgot-password.html.twig', [
-            'error' => $error
+            'error' => $error,
+            'emailForm' => $emailForm->createView()
         ]);
     }
 
-    #[Route('/password/reset/{token}', name: 'user_reset_password')]
-    public function setNewPassword(User $user, Request $request)
+    #[Route(path:'/password/reset/{token}', name: 'user_reset_password')]
+    public function setNewPassword(User $user, Request $request) : Response
     {
 
         if(!$user){
