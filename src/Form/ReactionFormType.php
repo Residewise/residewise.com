@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -14,20 +16,20 @@ class ReactionFormType extends AbstractType
         $builder->add('like', SubmitType::class, [
             'label' => false,
             'attr' => [
-                'class' => 'btn mdi mdi-heart-outline'
-            ]
+                'class' => 'btn mdi mdi-heart-outline',
+            ],
         ])->add('dislike', SubmitType::class, [
             'label' => false,
             'attr' => [
-                'class' => 'btn mdi mdi-thumb-down-outline'
-            ]
+                'class' => 'btn mdi mdi-thumb-down-outline',
+            ],
         ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => null
+            'data_class' => null,
         ]);
     }
 }

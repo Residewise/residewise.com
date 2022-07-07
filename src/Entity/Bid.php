@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Entity;
 
 use App\Entity\Contract\PriceableEntityInterface;
 use App\Repository\BidRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Money\Currency;
-use Money\Money;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
@@ -72,9 +72,10 @@ class Bid implements PriceableEntityInterface
        return $this->price;
     }
 
-    public function setPrice(int $price) : self
+    public function setPrice(int $price): self
     {
         $this->price = $price;
+
         return $this;
     }
 

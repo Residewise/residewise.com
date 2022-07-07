@@ -1,11 +1,10 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Service;
 
 use Jdenticon\Identicon;
-use Jdenticon\IdenticonStyle;
 
 final class AvatarService
 {

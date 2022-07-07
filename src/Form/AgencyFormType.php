@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Form;
 
 use App\Entity\Agency;
@@ -15,11 +17,8 @@ class AgencyFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('logo', DropzoneType::class, [
-                'mapped' => false
-            ])->add('title', TextType::class)->add('description', TextAreaType::class)->add(
-                'address',
-                TextType::class
-            );
+            'mapped' => false,
+        ])->add('title', TextType::class)->add('description', TextAreaType::class)->add('address', TextType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

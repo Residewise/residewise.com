@@ -1,17 +1,18 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Entity;
 
 use App\Entity\Contract\PriceableEntityInterface;
-use Stringable;
 use App\Repository\AssetRepository;
 use Carbon\Carbon;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Stringable;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
@@ -53,7 +54,7 @@ class Asset implements Stringable, PriceableEntityInterface
     private string $term;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'assets')]
-    private null|User|UserInterface $owner = null;
+    private null|Person $owner = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     #[Groups(['asset_map'])]
@@ -108,6 +109,9 @@ class Asset implements Stringable, PriceableEntityInterface
     #[ORM\ManyToMany(targetEntity: Amenity::class, inversedBy: 'assets')]
     private Collection $amenities;
 
+    #[ORM\ManyToOne(targetEntity: Agency::class, inversedBy: 'assests')]
+    private $agency;
+
     public function __construct() {
         $this->createdAt = new DateTimeImmutable();
         $this->images = new ArrayCollection();
@@ -117,6 +121,11 @@ class Asset implements Stringable, PriceableEntityInterface
         $this->bookmarks = new ArrayCollection();
         $this->tenders = new ArrayCollection();
         $this->amenities = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->title;
     }
 
     public function getId(): Uuid
@@ -208,27 +217,24 @@ class Asset implements Stringable, PriceableEntityInterface
         return $this;
     }
 
-    public function getOwner(): null|User|UserInterface
+    public function getOwner(): null|Person
     {
         return $this->owner;
     }
 
-    /**
-     * @param null|User|UserInterface $owner
-     */
-    public function setOwner(null|User|UserInterface $owner): self
+    public function setOwner(null|Person $owner): self
     {
         $this->owner = $owner;
 
         return $this;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -245,7 +251,7 @@ class Asset implements Stringable, PriceableEntityInterface
 
     public function addImage(Image $image): self
     {
-        if (!$this->images->contains($image)) {
+        if (! $this->images->contains($image)) {
             $this->images[] = $image;
             $image->setAsset($this);
         }
@@ -271,6 +277,7 @@ class Asset implements Stringable, PriceableEntityInterface
     public function setPrice(int $price): self
     {
         $this->price = $price * 100;
+
         return $this;
     }
 
@@ -308,7 +315,7 @@ class Asset implements Stringable, PriceableEntityInterface
 
     public function addReview(Review $review): self
     {
-        if (!$this->reviews->contains($review)) {
+        if (! $this->reviews->contains($review)) {
             $this->reviews[] = $review;
             $review->setAsset($this);
         }
@@ -336,7 +343,7 @@ class Asset implements Stringable, PriceableEntityInterface
 
     public function addReaction(Reaction $reaction): self
     {
-        if (!$this->reactions->contains($reaction)) {
+        if (! $this->reactions->contains($reaction)) {
             $this->reactions[] = $reaction;
             $reaction->setAsset($this);
         }
@@ -386,14 +393,10 @@ class Asset implements Stringable, PriceableEntityInterface
         return $dislikes;
     }
 
-    public function __toString(): string
-    {
-        return $this->title;
-    }
-
     public function isNew(): bool
     {
         $week = Carbon::parse($this->createdAt)->addWeek();
+
         return Carbon::now()->isBefore($week);
     }
 
@@ -401,7 +404,7 @@ class Asset implements Stringable, PriceableEntityInterface
     {
         /** @var Reaction $reaction */
         foreach ($this->reactions as $reaction) {
-            if ($reaction->getType() == 'like' && $reaction->getOwner() === $user) {
+            if ($reaction->getType() === 'like' && $reaction->getOwner() === $user) {
                 return true;
             }
         }
@@ -413,7 +416,7 @@ class Asset implements Stringable, PriceableEntityInterface
     {
         /** @var Reaction $reaction */
         foreach ($this->reactions as $reaction) {
-            if ($reaction->getType() == 'dislike' && $reaction->getOwner() === $user) {
+            if ($reaction->getType() === 'dislike' && $reaction->getOwner() === $user) {
                 return true;
             }
         }
@@ -431,7 +434,7 @@ class Asset implements Stringable, PriceableEntityInterface
 
     public function addView(AssetView $view): self
     {
-        if (!$this->views->contains($view)) {
+        if (! $this->views->contains($view)) {
             $this->views[] = $view;
             $view->setAsset($this);
         }
@@ -456,7 +459,7 @@ class Asset implements Stringable, PriceableEntityInterface
         $views = 0;
         /** @var AssetView $view */
         foreach ($this->views as $view) {
-            if (!$view->hasUser()) {
+            if (! $view->hasUser()) {
                 $views++;
             }
         }
@@ -472,6 +475,7 @@ class Asset implements Stringable, PriceableEntityInterface
     public function setAgencyFee(?int $agencyFee): self
     {
         $this->agencyFee = $agencyFee;
+
         return $this;
     }
 
@@ -485,7 +489,7 @@ class Asset implements Stringable, PriceableEntityInterface
 
     public function addBookmark(Bookmark $bookmark): self
     {
-        if (!$this->bookmarks->contains($bookmark)) {
+        if (! $this->bookmarks->contains($bookmark)) {
             $this->bookmarks[] = $bookmark;
             $bookmark->setAsset($this);
         }
@@ -527,7 +531,7 @@ class Asset implements Stringable, PriceableEntityInterface
 
     public function addTender(Tender $tender): self
     {
-        if (!$this->tenders->contains($tender)) {
+        if (! $this->tenders->contains($tender)) {
             $this->tenders[] = $tender;
             $tender->setAsset($this);
         }
@@ -581,7 +585,7 @@ class Asset implements Stringable, PriceableEntityInterface
 
     public function addAmenity(Amenity $amenity): self
     {
-        if (!$this->amenities->contains($amenity)) {
+        if (! $this->amenities->contains($amenity)) {
             $this->amenities[] = $amenity;
         }
 
@@ -595,4 +599,8 @@ class Asset implements Stringable, PriceableEntityInterface
         return $this;
     }
 
+    public function isAgent(): bool
+    {
+        return $this->owner instanceof Agency;
+    }
 }

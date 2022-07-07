@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller;
 
 use App\Entity\Asset;
@@ -21,7 +23,6 @@ class BookmarkController extends AbstractController
         private readonly BookmarkRepository $bookmarkRepository,
         private readonly BookmarkFactory $bookmarkFactory,
         private readonly HubInterface $hub,
-
     ) {
     }
 
@@ -29,14 +30,12 @@ class BookmarkController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function create(Asset $asset, Request $request): Response
     {
-        $bookmark = $this->bookmarkRepository->findOneBy(
-            [
-                'owner' => $this->getUser(),
-                'asset' => $asset
-            ]
-        );
+        $bookmark = $this->bookmarkRepository->findOneBy([
+            'owner' => $this->getUser(),
+            'asset' => $asset,
+        ]);
 
-        if (!$bookmark) {
+        if (! $bookmark) {
             $bookmark = $this->bookmarkFactory->create($asset, $this->getUser());
             $this->bookmarkRepository->add($bookmark, true);
         } else {
@@ -46,12 +45,14 @@ class BookmarkController extends AbstractController
         $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
         $this->hub->publish(
             new Update(
-                'bookmark', $this->renderView('/bookmark/bookmark.stream.html.twig', ['asset' => $asset])
+                'bookmark',
+                $this->renderView('/bookmark/bookmark.stream.html.twig', [
+                    'asset' => $asset,
+                ])
             )
         );
 
         return $this->json('', 200);
 
     }
-
 }

@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Security;
 
-use App\Entity\SocialAuth;
 use App\Entity\User;
 use App\Factory\SocialAuthFactory;
 use App\Factory\UserFactory;
@@ -11,7 +12,6 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
-use League\OAuth2\Client\Provider\FacebookUser;
 use League\OAuth2\Client\Provider\GoogleUser;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,10 +56,9 @@ class GoogleAuthenticator extends OAuth2Authenticator
                 $googleUser = $client->fetchUserFromToken($accessToken);
                 $email = $googleUser->getEmail();
 
-
                 // 1) have they logged in with Facebook before? Easy!
                 $socialAuth = $this->socialAuthRepository->findOneBy([
-                    'token' => $googleUser->getId()
+                    'token' => $googleUser->getId(),
                 ]);
 
                 if ($socialAuth) {
@@ -67,9 +66,11 @@ class GoogleAuthenticator extends OAuth2Authenticator
                 }
 
                 // 2) do we have a matching user by email?
-                $user = $this->userRepository->findOneBy(['email' => $email]);
+                $user = $this->userRepository->findOneBy([
+                    'email' => $email,
+                ]);
 
-                if (!$user) {
+                if (! $user) {
                     // 3) Maybe you just want to "register" them
                     $user = $this->userFactory->create(
                         firstName: $googleUser->getName(),
@@ -106,8 +107,8 @@ class GoogleAuthenticator extends OAuth2Authenticator
         $message = strtr($exception->getMessageKey(), $exception->getMessageData());
 
         $loginRoute = $this->router->generate('app_login');
+
         return new RedirectResponse($loginRoute);
 
     }
-
 }

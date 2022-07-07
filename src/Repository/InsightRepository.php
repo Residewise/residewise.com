@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Repository;
 
 use App\Entity\Insight;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -22,10 +22,6 @@ class InsightRepository extends ServiceEntityRepository
         parent::__construct($registry, Insight::class);
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function add(Insight $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
@@ -34,10 +30,6 @@ class InsightRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function remove(Insight $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Event\Subscriber;
 
 use App\Entity\User;
@@ -13,7 +15,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class EmptyPasswordSubscriber implements EventSubscriberInterface
 {
-
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly Security $security
@@ -36,7 +37,7 @@ class EmptyPasswordSubscriber implements EventSubscriberInterface
             $request = $event->getRequest();
             $route = $request->attributes->get('_route');
 
-            if ($user->getPassword() == UserFactory::PASSWORD_NOT_SET) {
+            if ($user->getPassword() === UserFactory::PASSWORD_NOT_SET) {
                 if ($route !== 'user_set_empty_password') {
                     $url = $this->urlGenerator->generate('user_set_empty_password');
                     $event->setResponse(new RedirectResponse($url));
@@ -45,5 +46,4 @@ class EmptyPasswordSubscriber implements EventSubscriberInterface
         }
 
     }
-
 }

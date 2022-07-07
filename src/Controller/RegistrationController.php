@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller;
 
+use App\Entity\Agent;
+use App\Entity\Person;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\AppCustomAuthenticator;
@@ -33,7 +37,6 @@ class RegistrationController extends AbstractController
     ) {
     }
 
-
     #[Route('/register', name: 'app_register')]
     public function register(
         Request $request,
@@ -42,31 +45,24 @@ class RegistrationController extends AbstractController
         AppCustomAuthenticator $authenticator,
         EntityManagerInterface $entityManager
     ): ?Response {
-        $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+
+        $person = new Person();
+
+        $form = $this->createForm(RegistrationFormType::class, $person);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setAvatar($this->avatarService->createAvatar($user->getEmail()));
 
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
+            $person->setAvatar($this->avatarService->createAvatar($person->getEmail()));
+            $person->setPassword($userPasswordHasher->hashPassword($person, $form->get('plainPassword')->getData()));
 
-            $entityManager->persist($user);
+            $this->sendConfirmationEmail($person);
+
+            $entityManager->persist($person);
             $entityManager->flush();
 
-            $this->sendConfirmationEmail($user);
 
-            return $userAuthenticator->authenticateUser(
-                $user,
-                $authenticator,
-                $request
-            );
+            return $userAuthenticator->authenticateUser($person, $authenticator, $request);
         }
 
         return $this->render('registration/register.html.twig', [
@@ -74,19 +70,17 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    private function sendConfirmationEmail(
-        User $user
-    ): void {
+    private function sendConfirmationEmail(Person $user): void {
         $email = new TemplatedEmail();
         $email->from('fabien@example.com');
         $email->to(new Address($user->getEmail()));
-        $email->subject(
-            $this->translator->trans('email.confirmation.subject')
-        );
+        $email->subject($this->translator->trans('email.confirmation.subject'));
         $email->htmlTemplate('emails/confirm-email-address.html.twig');
         $email->context([
             'user' => $user,
-            'path' => $this->urlGenerator->generate('app_account_confirm', ['token' => $user->getToken()]),
+            'path' => $this->urlGenerator->generate('app_account_confirm', [
+                'token' => $user->getToken(),
+            ]),
         ]);
 
         try {

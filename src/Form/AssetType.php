@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Form;
 
+use App\Entity\Agent;
 use App\Entity\Amenity;
 use App\Entity\Asset;
-use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -30,12 +32,12 @@ class AssetType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('address', TextType::class)->add('floor', NumberType::class, [
-            'label' => $this->translator->trans('floor')
+            'label' => $this->translator->trans('floor'),
         ])->add('images', FileType::class, [
             'mapped' => false,
             'label' => false,
             'attr' => [
-                'placeholder' => $this->translator->trans('dropzone.placeholder')
+                'placeholder' => $this->translator->trans('dropzone.placeholder'),
             ],
             'multiple' => true,
             'help' => $this->translator->trans('image-upload-help'),
@@ -46,14 +48,14 @@ class AssetType extends AbstractType
             'attr' => [
                 'data-controller' => 'textarea-autogrow',
                 'data-character-counter-target' => 'input',
-                'style' => 'resize:none'
-            ]
+                'style' => 'resize:none',
+            ],
         ])->add('sqm', NumberType::class, [
-            'label' => $this->translator->trans('sqm')
+            'label' => $this->translator->trans('sqm'),
         ])->add('price', MoneyType::class, [
             'help' => $this->translator->trans('fee-input-help'),
             'currency' => 'CZK',
-            'label' => $this->translator->trans('price')
+            'label' => $this->translator->trans('price'),
         ])->add('type', ChoiceType::class, [
             'label' => $this->translator->trans('type'),
             'choices' => [
@@ -63,21 +65,21 @@ class AssetType extends AbstractType
                 $this->translator->trans('commercial') => 'commercial',
                 $this->translator->trans('industrial') => 'industrial',
                 $this->translator->trans('other') => 'other',
-            ]
+            ],
         ])->add('term', ChoiceType::class, [
             'label' => $this->translator->trans('terms'),
             'choices' => [
                 $this->translator->trans('rent') => 'rent',
                 $this->translator->trans('sale') => 'sale',
-            ]
+            ],
         ])->add('latitude', HiddenType::class, [
             'attr' => [
-                'data-asset-location-target' => 'latitude'
-            ]
+                'data-asset-location-target' => 'latitude',
+            ],
         ])->add('longitude', HiddenType::class, [
             'attr' => [
-                'data-asset-location-target' => 'longitude'
-            ]
+                'data-asset-location-target' => 'longitude',
+            ],
         ])->add('amenities', EntityType::class, [
             'choice_translation_domain' => true,
             'class' => Amenity::class,
@@ -89,10 +91,10 @@ class AssetType extends AbstractType
             'autocomplete' => true,
         ]);
 
-        if ($this->security->getUser()->getAgency()) {
+        if ($this->security->getUser() instanceof Agent) {
             $builder->add('agencyFee', MoneyType::class, [
                 'currency' => 'CZK',
-                'label' => $this->translator->trans('agency-fee')
+                'label' => $this->translator->trans('agency-fee'),
             ]);
         }
     }

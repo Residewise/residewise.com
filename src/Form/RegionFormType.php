@@ -1,17 +1,16 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Form;
 
 use App\Service\RegionalSettingsService\RegionalSettingsService;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\CurrencyType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\LanguageType;
-use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\LocaleSwitcher;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -34,7 +33,7 @@ class RegionFormType extends AbstractType
                 'mapped' => false,
                 'choices' => [
                     'English' => 'en',
-                    'Češka' => 'cs',
+                    'Češka' => 'cz',
                 ],
                 'data' => $this->regionalSettingsService->getLocale(),
             ])
@@ -44,11 +43,8 @@ class RegionFormType extends AbstractType
                 'attr' => [
                     'data-timezone-target' => 'region',
                 ],
-                'preferred_choices' => [
-                    'en',
-                    'cs',
-                ],
-                'data' => $this->regionalSettingsService->getRegion()
+                'preferred_choices' => ['en', 'cs'],
+                'data' => $this->regionalSettingsService->getRegion(),
             ])
             ->add('currency', CurrencyType::class, [
                 'label' => $this->translator->trans('currency'),
@@ -64,9 +60,7 @@ class RegionFormType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setRequired([
-            'request',
-        ]);
+        $resolver->setRequired(['request']);
         $resolver->setDefaults([
             // Configure your form options here
         ]);

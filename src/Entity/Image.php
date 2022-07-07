@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Entity;
 
-use Stringable;
 use App\Repository\ImageRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Stringable;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Uid\Uuid;
 
@@ -30,10 +32,14 @@ class Image implements Stringable
     public function __construct(
         #[ORM\Column(type: 'text')] private string $base64,
         #[ORM\ManyToOne(targetEntity: Asset::class, cascade: ['persist'], inversedBy: 'images')] private ?Asset $asset
-
     )
     {
         $this->createdAt = new DateTimeImmutable();
+    }
+
+    public function __toString(): string
+    {
+        return $this->base64;
     }
 
     public function getId(): Uuid
@@ -75,11 +81,6 @@ class Image implements Stringable
         $this->createdAt = $createdAt;
 
         return $this;
-    }
-
-    public function __toString() : string
-    {
-        return $this->base64;
     }
 
     public function getHeight(): ?int

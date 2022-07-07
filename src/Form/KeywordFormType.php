@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -15,9 +17,9 @@ class KeywordFormType extends AbstractType
         $builder->setMethod(Request::METHOD_GET)
             ->add('keyword', TextType::class, [
                 'required' => false,
-                'attr'=> [
-                    'class' => 'bg-white'
-                ]
+                'attr' => [
+                    'class' => 'bg-white',
+                ],
             ])
         ;
     }

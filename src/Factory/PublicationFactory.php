@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Factory;
 
 use App\Entity\Asset;
@@ -9,11 +11,7 @@ use DateTimeImmutable;
 
 class PublicationFactory
 {
-    public function create(
-        ?Asset $asset,
-        ?DateTimeImmutable $startsAt,
-        bool $isApproved = false
-    ): Publication {
+    public function create(?Asset $asset, ?DateTimeImmutable $startsAt, bool $isApproved = false): Publication {
         $publication = new Publication();
         $publication->setAsset($asset);
         $publication->setIsApproved($isApproved);
@@ -28,7 +26,8 @@ class PublicationFactory
     private function calculateEndDate(Publication $publication): DateTimeImmutable
     {
         $startsAt = Carbon::parse($publication->getStartsAt());
-        return $startsAt->addDays(30)->toDateTimeImmutable();
-    }
 
+        return $startsAt->addDays(30)
+            ->toDateTimeImmutable();
+    }
 }

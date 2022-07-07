@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Service\Email;
 
 use App\Entity\User;
 use PharIo\Manifest\InvalidEmailException;
-use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
@@ -26,10 +26,7 @@ class AccountConfirmationEmail implements EmailInterface
     ) {
     }
 
-    public function send(
-        User|UserInterface $user,
-        ?array $options
-    ): TemplatedEmail|Email
+    public function send(User|UserInterface $user, ?array $options): TemplatedEmail|Email
     {
         $subject = $this->translator->trans('email.confirm.email-address');
 
@@ -39,7 +36,9 @@ class AccountConfirmationEmail implements EmailInterface
         $email->addTo(new Address($user->getEmail()));
         $email->htmlTemplate(self::EMAIL_TEMPLATE)->context([
             'user' => $user,
-            'path' => $this->generator->generate('user_reset_password', ['token' => $user->getToken()]),
+            'path' => $this->generator->generate('user_reset_password', [
+                'token' => $user->getToken(),
+            ]),
         ]);
 
         try {
@@ -50,6 +49,4 @@ class AccountConfirmationEmail implements EmailInterface
 
         return $email;
     }
-
-
 }

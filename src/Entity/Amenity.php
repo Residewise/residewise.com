@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Entity;
 
 use App\Repository\AmenityRepository;
@@ -32,6 +34,11 @@ class Amenity
         $this->assets = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->name;
+    }
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -59,7 +66,7 @@ class Amenity
 
     public function addAsset(Asset $asset): self
     {
-        if (!$this->assets->contains($asset)) {
+        if (! $this->assets->contains($asset)) {
             $this->assets[] = $asset;
             $asset->addAmenity($this);
         }
@@ -86,10 +93,5 @@ class Amenity
         $this->icon = $icon;
 
         return $this;
-    }
-
-    public function __toString() : string
-    {
-        return $this->name;
     }
 }

@@ -1,22 +1,24 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Form;
 
 use App\Entity\Conversation;
+use App\Entity\Person;
 use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class ConversationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('users', EntityType::class, [
-                'class' => User::class,
+            ->add('people', EntityType::class, [
+                'class' => Person::class,
                 'choice_label' => 'fullName',
                 'multiple' => true,
                 'autocomplete' => true,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller\Admin;
 
 use App\Entity\Reaction;
@@ -21,9 +23,8 @@ class ReactionCrudController extends AbstractCrudController
             AssociationField::new('asset'),
             ChoiceField::new('type')->setChoices([
                 'like' => 'like',
-                'dislike' => 'dislike'
+                'dislike' => 'dislike',
             ]),
         ];
     }
-
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller;
 
 use App\Entity\Review;
@@ -13,7 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/review')]
 class ReviewController extends AbstractController
 {
-
     public function __construct(
         private readonly ReviewRepository $reviewRepository
     ) {
@@ -31,12 +32,15 @@ class ReviewController extends AbstractController
 
         if ($reviewForm->isSubmitted() && $reviewForm->isValid()) {
             $this->reviewRepository->add($review);
-            return $this->redirectToRoute('user_public_profile', ['id' => $user->getId()]);
+
+            return $this->redirectToRoute('user_public_profile', [
+                'id' => $user->getId(),
+            ]);
         }
 
         return $this->render('review/new.html.twig', [
             'reviewForm' => $reviewForm->createView(),
-            'user' => $user
-         ]);
+            'user' => $user,
+        ]);
     }
 }

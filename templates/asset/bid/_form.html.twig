@@ -2,7 +2,7 @@
     <hr/>
 {{ form_start(bidForm, {action: path('_new_bid', {id: asset.id}) }) }}
     {{ form_widget(bidForm.price) }}
-    <button type="submit" class="btn btn-primary w-100">
+    <button type="submit" {% if asset.tender.bid.owner == app.user %} disabled {% endif %}class="btn btn-primary w-100 {% if asset.tender.bid.owner == app.user %} disabled {% endif %}" >
         {{ 'bid'|trans }}
     </button>
 {{ form_end(bidForm) }}

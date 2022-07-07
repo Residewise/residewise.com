@@ -1,17 +1,18 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Entity;
 
-use Stringable;
 use App\Repository\ConversationRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Stringable;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
-use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: ConversationRepository::class)]
 class Conversation implements Stringable
@@ -29,10 +30,10 @@ class Conversation implements Stringable
     private Collection $messages;
 
     /**
-     * @var ArrayCollection<int, User>
+     * @var ArrayCollection<int, Person>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'conversations', cascade: ['persist'])]
-    private Collection $users;
+    #[ORM\ManyToMany(targetEntity: Person::class, inversedBy: 'conversations', cascade: ['persist'])]
+    private Collection $people;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
@@ -43,8 +44,13 @@ class Conversation implements Stringable
     public function __construct()
     {
         $this->messages = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->people = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
+    }
+
+    public function __toString(): string
+    {
+        return $this->id;
     }
 
     public function getId(): Uuid
@@ -62,7 +68,7 @@ class Conversation implements Stringable
 
     public function addMessage(Message $message): self
     {
-        if (!$this->messages->contains($message)) {
+        if (! $this->messages->contains($message)) {
             $this->messages[] = $message;
             $message->setConversation($this);
         }
@@ -81,44 +87,39 @@ class Conversation implements Stringable
     }
 
     /**
-     * @return Collection<int, User|UserInterface>
+     * @return Collection<int, Person|UserInterface>
      */
-    public function getUsers(): Collection
+    public function getPeople(): Collection
     {
-        return $this->users;
+        return $this->people;
     }
 
-    public function addUser(null|User|UserInterface $user): self
+    public function addPerson(null|Person|UserInterface $person): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
+        if (! $this->people->contains($person)) {
+            $this->people[] = $person;
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public function removePerson(Person|UserInterface $person): self
     {
-        $this->users->removeElement($user);
+        $this->people->removeElement($person);
 
         return $this;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
-    }
-
-    public function __toString() : string
-    {
-        return $this->id;
     }
 
     public function getTitle(): ?string
@@ -133,15 +134,14 @@ class Conversation implements Stringable
         return $this;
     }
 
-
-
-    public  function  getUsersFirstNamesAsCommaSeperatedString() : string
+    public  function  getUsersFirstNamesAsCommaSeperatedString(): string
     {
         $names = [];
         /** @var User $user */
-        foreach ($this->users as $user){
+        foreach ($this->people as $user){
             $names[] = $user->getFirstName();
         }
+
         return implode(', ', $names);
     }
 }

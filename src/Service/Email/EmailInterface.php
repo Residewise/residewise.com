@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Service\Email;
 
 use App\Entity\User;
@@ -11,6 +13,5 @@ interface EmailInterface
 {
     public const SENDER_EMAIL = 'info@residewise.com';
 
-    public function send(User|UserInterface $user, ?array $options) : TemplatedEmail|Email;
-
+    public function send(User|UserInterface $user, ?array $options): TemplatedEmail|Email;
 }

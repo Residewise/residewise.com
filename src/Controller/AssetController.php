@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller;
 
 use App\Entity\Asset;
@@ -37,17 +39,21 @@ class AssetController extends AbstractController
         $searchForm->handleRequest($request);
         $assets = $this->assetRepository->findAll();
 
-        $json = new JsonResponse($this->serializer->serialize($assets, 'json', ['groups' => 'asset_map']));
+        $json = new JsonResponse($this->serializer->serialize($assets, 'json', [
+            'groups' => 'asset_map',
+        ]));
 
         if ($searchForm->isSubmitted() && $searchForm->isValid()) {
 
             $assets = $this->handleSearchForm($request, $searchForm);
-            $json = new JsonResponse($this->serializer->serialize($assets, 'json', ['groups' => 'asset_map']));
+            $json = new JsonResponse($this->serializer->serialize($assets, 'json', [
+                'groups' => 'asset_map',
+            ]));
 
             return $this->render('asset/index.html.twig', [
                 'features' => $json->getContent(),
                 'assets' => $assets,
-                'searchForm' => $searchForm->createView()
+                'searchForm' => $searchForm->createView(),
             ]);
 
         }
@@ -55,7 +61,7 @@ class AssetController extends AbstractController
         return $this->render('asset/index.html.twig', [
             'features' => $json->getContent(),
             'assets' => $assets,
-            'searchForm' => $searchForm->createView()
+            'searchForm' => $searchForm->createView(),
         ]);
     }
 
@@ -71,7 +77,8 @@ class AssetController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             /** @var array<UploadedFile> $files */
-            $files = $form->get('images')->getData();
+            $files = $form->get('images')
+                ->getData();
 
             foreach ($files as $file) {
                 $info = getimagesize($file);
@@ -85,6 +92,7 @@ class AssetController extends AbstractController
             }
 
             $this->assetRepository->add($asset);
+
             return $this->redirectToRoute('user_assets');
         }
 
@@ -98,7 +106,7 @@ class AssetController extends AbstractController
     public function images(Asset $asset): Response
     {
         return $this->render('asset/images/show.html.twig', [
-            'asset' => $asset
+            'asset' => $asset,
         ]);
     }
 
@@ -107,7 +115,7 @@ class AssetController extends AbstractController
     {
 
         return $this->render('asset/show.html.twig', [
-            'asset' => $asset
+            'asset' => $asset,
         ]);
     }
 
@@ -120,6 +128,7 @@ class AssetController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $assetRepository->add($asset);
+
             return $this->redirectToRoute('app_asset_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -132,10 +141,7 @@ class AssetController extends AbstractController
     #[Route(path: '/delete/{id}', name: 'app_asset_delete', methods: ['POST'])]
     public function delete(Request $request, Asset $asset, AssetRepository $assetRepository): Response
     {
-        if ($this->isCsrfTokenValid(
-            'delete' . $asset->getId(),
-            (string)$request->request->get('_token')
-        )) {
+        if ($this->isCsrfTokenValid('delete' . $asset->getId(), (string)$request->request->get('_token'))) {
             $assetRepository->remove($asset);
         }
 
@@ -145,17 +151,28 @@ class AssetController extends AbstractController
     private function handleSearchForm(Request $request, FormInterface $searchForm): mixed
     {
         return $this->assetRepository->findBySearch(
-            minSqm: $searchForm->get('minSqm')->getData(),
-            maxSqm: $searchForm->get('maxSqm')->getData(),
-            minPrice: $searchForm->get('minPrice')->getData(),
-            maxPrice: $searchForm->get('maxPrice')->getData(),
-            type: $searchForm->get('type')->getData(),
-            term: $searchForm->get('term')->getData(),
-            userType: $searchForm->get('userType')->getData(),
-            title: $searchForm->get('title')->getData(),
-            floor: $searchForm->get('floor')->getData(),
-            agencyFee: $searchForm->get('agencyFee')->getData(),
-            address: $searchForm->get('address')->getData()
+            minSqm: $searchForm->get('minSqm')
+                ->getData(),
+            maxSqm: $searchForm->get('maxSqm')
+                ->getData(),
+            minPrice: $searchForm->get('minPrice')
+                ->getData(),
+            maxPrice: $searchForm->get('maxPrice')
+                ->getData(),
+            type: $searchForm->get('type')
+                ->getData(),
+            term: $searchForm->get('term')
+                ->getData(),
+            userType: $searchForm->get('userType')
+                ->getData(),
+            title: $searchForm->get('title')
+                ->getData(),
+            floor: $searchForm->get('floor')
+                ->getData(),
+            agencyFee: $searchForm->get('agencyFee')
+                ->getData(),
+            address: $searchForm->get('address')
+                ->getData()
         );
     }
 }

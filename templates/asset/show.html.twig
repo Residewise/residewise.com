@@ -32,26 +32,30 @@
             <div class="col-md-8">
                 <div class="sticky-top">
                     <div class="card card-body">
-                    <div class="d-flex bg-white align-items-center justify-content-between">
-                        <div id="asset-reaction-{{ asset.id }}" {{ turbo_stream_listen('reaction') }}>
-                            {{ include('reaction/_badges.html.twig', {
-                                asset: asset
-                            }) }}
-                        </div>
-                        {% if app.user != asset.owner %}
-                            <div id="asset-bookmark-{{ asset.id }}" {{ turbo_stream_listen('bookmark') }}>
-                                {{ include('bookmark/_button.html.twig', {
-                                    path: path('add_bookmark', {id: asset.id})
+                        <div class="d-flex bg-white align-items-center justify-content-between">
+                            <div id="asset-reaction-{{ asset.id }}" {{ turbo_stream_listen('reaction') }}>
+                                {{ include('reaction/_badges.html.twig', {
+                                    asset: asset
                                 }) }}
                             </div>
-                        {% endif %}
-                    </div>
+                            {% if app.user != asset.owner %}
+                                <div id="asset-bookmark-{{ asset.id }}" {{ turbo_stream_listen('bookmark') }}>
+                                    {{ include('bookmark/_button.html.twig', {
+                                        path: path('add_bookmark', {id: asset.id})
+                                    }) }}
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-between my-3">
-                    <div class="bg-white py-0 px-2 shadow-sm rounded-pill">{{ asset.sqm }} SQM</div>
-                    <div class="bg-white py-0 px-2 shadow-sm rounded-pill">{{ asset.sqm }}</div>
+                <div class="d-flex justify-content-start my-3">
+                    <div class="me-2 bg-white py-0 px-2 shadow-sm rounded-pill">
+                        {{ asset.sqm }}
+                        <span class="mdi mdi-axis-arrow"></span>
+                    </div>
+                    <div class="me-2 bg-white py-0 px-2 shadow-sm rounded-pill">{{ asset.type }}</div>
+                    <div class="me-2 bg-white py-0 px-2 shadow-sm rounded-pill">{{ asset.term }}</div>
                 </div>
 
                 <div class="row g-2" {{ stimulus_controller('photoswipe') }}>

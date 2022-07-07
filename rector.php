@@ -8,6 +8,7 @@ use Rector\Set\ValueObject\LevelSetList;
 use Rector\Symfony\Set\SymfonySetList;
 
 return static function (RectorConfig $rectorConfig) {
+    $rectorConfig->parallel();
     $rectorConfig->importNames();
     $rectorConfig->paths([
         __DIR__ . '/src',

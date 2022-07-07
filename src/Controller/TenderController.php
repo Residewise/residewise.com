@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller;
 
 use App\Entity\Asset;
@@ -8,14 +10,11 @@ use App\Form\TenderFormType;
 use App\Repository\AssetRepository;
 use App\Repository\TenderRepository;
 use Carbon\Carbon;
-use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\HubInterface;
-use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
-use function dump;
 
 #[Route(path: '/auction')]
 class TenderController extends AbstractController
@@ -32,7 +31,7 @@ class TenderController extends AbstractController
     {
         $tender = new Tender();
         $form = $this->createForm(TenderFormType::class, $tender, [
-            'asset' => $asset
+            'asset' => $asset,
         ]);
          $form->handleRequest($request);
 
@@ -40,12 +39,16 @@ class TenderController extends AbstractController
 
             if($this->assetHasActiveTender($asset)){
                 $this->addFlash('message', 'tender already active');
-                return $this->redirectToRoute('app_asset_show', ['id' => $asset->getId()]);
+
+                return $this->redirectToRoute('app_asset_show', [
+                    'id' => $asset->getId(),
+                ]);
             }
 
             $asset->setTender($tender);
 
-            $minimumBid = $form->get('minimumBid')->getData();
+            $minimumBid = $form->get('minimumBid')
+                ->getData();
             if ($minimumBid) {
                 $asset->setPrice($minimumBid);
             }
@@ -60,17 +63,19 @@ class TenderController extends AbstractController
             $this->tenderRepository->add($tender, true);
             $this->assetRepository->add($asset);
 
-            return $this->redirectToRoute('app_asset_show', ['id' => $asset->getId()]);
+            return $this->redirectToRoute('app_asset_show', [
+                'id' => $asset->getId(),
+            ]);
 
         }
 
         return $this->render('asset/tender/new.html.twig', [
             'tenderForm' => $form->createView(),
-            'asset' => $asset
+            'asset' => $asset,
         ]);
     }
 
-    private function assetHasActiveTender(Asset $asset) : bool
+    private function assetHasActiveTender(Asset $asset): bool
     {
         /** @var Tender $tender */
         foreach ($asset->getTenders() as $tender){
@@ -81,5 +86,4 @@ class TenderController extends AbstractController
 
         return false;
     }
-
 }

@@ -1,21 +1,17 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller;
 
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
-use KnpU\OAuth2ClientBundle\Client\Provider\FacebookClient;
-use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-use League\OAuth2\Client\Provider\FacebookUser;
-use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/social/facebook')]
 class FacebookController extends AbstractController
 {
-
     public function __construct(
         private readonly ClientRegistry $clientRegistry
     )
@@ -30,8 +26,7 @@ class FacebookController extends AbstractController
     }
 
     #[Route(path: '/connect/check', name: 'connect_facebook_check')]
-    public function check() : void
+    public function check(): void
     {
     }
-
 }

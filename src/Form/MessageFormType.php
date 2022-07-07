@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Form;
 
 use App\Entity\Message;
@@ -18,8 +20,8 @@ class MessageFormType extends AbstractType
                 'attr' => [
                     'class' => 'resize-none',
                     'rows' => 4,
-                    'data-controller' => 'textarea-autogrow'
-                ]
+                    'data-controller' => 'textarea-autogrow',
+                ],
             ])
         ;
     }

@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller;
 
 use App\Entity\Conversation;
 use App\Entity\Message;
-use App\Entity\User;
 use App\Form\ConversationFormType;
 use App\Form\KeywordFormType;
 use App\Form\MessageFormType;
@@ -16,9 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use function exp;
-use function explode;
 
 #[Route('/im')]
 class ConversationController extends AbstractController
@@ -45,7 +43,8 @@ class ConversationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $keyword = $form->get('keyword')->getData();
+            $keyword = $form->get('keyword')
+                ->getData();
             $pagination = $this->conversationRepository->findByUserAndKeyword(
                 user: $this->getUser(),
                 keyword: $keyword,
@@ -72,7 +71,8 @@ class ConversationController extends AbstractController
         $conversationForm->handleRequest($request);
 
         if ($conversationForm->isSubmitted() && $conversationForm->isValid()) {
-            $users = $conversationForm->get('users')->getData();
+            $users = $conversationForm->get('people')
+                ->getData();
 
 //            $findPreviousConversation = $this->conversationRepository->findByUsers($users);
 //
@@ -80,12 +80,13 @@ class ConversationController extends AbstractController
 //                return $this->redirectToRoute('conversation', ['id' => $findPreviousConversation->getId()]);
 //            }
 
-            $conversation->addUser($this->getUser());
+            $conversation->addPerson($this->getUser());
             $conversation->setTitle($conversation->getUsersFirstNamesAsCommaSeperatedString());
             $this->conversationRepository->add($conversation);
 
-
-            return $this->redirectToRoute('conversation', ['id' => $conversation->getId()]);
+            return $this->redirectToRoute('conversation', [
+                'id' => $conversation->getId(),
+            ]);
         }
 
         return $this->render('conversation/new.html.twig', [
@@ -110,22 +111,28 @@ class ConversationController extends AbstractController
             $this->messageRepository->add($message);
             $this->hub->publish(
                 update: new Update(
-                    'chat', $this->renderView(
-                    '/conversation/message/message.stream.html.twig',
-                    ['conversation' => $conversation, 'messages' => $messages ],
-                ), private: true
+                    'chat',
+                    $this->renderView(
+                        '/conversation/message/message.stream.html.twig',
+                        [
+                            'conversation' => $conversation,
+                            'messages' => $messages,
+                        ],
+                    ),
+                    private: true
                 )
             );
             $messageForm = $emptyForm;
 
-            return $this->redirectToRoute('conversation', ['id'=> $conversation->getId()]);
+            return $this->redirectToRoute('conversation', [
+                'id' => $conversation->getId(),
+            ]);
         }
 
         return $this->render('conversation/chat.html.twig', [
             'messages' => $messages,
             'conversation' => $conversation,
-            'messageForm' => $messageForm->createView()
+            'messageForm' => $messageForm->createView(),
         ]);
     }
-
 }

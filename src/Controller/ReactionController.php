@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller;
 
 use App\Entity\Asset;
@@ -50,7 +52,10 @@ class ReactionController extends AbstractController
         $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
         $this->hub->publish(
             new Update(
-                'reaction', $this->renderView('/reaction/react.stream.html.twig', ['asset' => $asset])
+                'reaction',
+                $this->renderView('/reaction/react.stream.html.twig', [
+                    'asset' => $asset,
+                ])
             )
         );
 
@@ -60,7 +65,7 @@ class ReactionController extends AbstractController
 
     private function assetSwitchUserReaction(Reaction $reaction): void
     {
-        $switchType = $reaction->getType() == 'like' ? 'dislike' : 'like';
+        $switchType = $reaction->getType() === 'like' ? 'dislike' : 'like';
         $reaction->setType($switchType);
         $this->reactionRepository->add($reaction, true);
     }
@@ -69,8 +74,7 @@ class ReactionController extends AbstractController
     {
         return $this->reactionRepository->findOneBy([
             'owner' => $this->getUser(),
-            'asset' => $asset
+            'asset' => $asset,
         ]);
     }
-
 }

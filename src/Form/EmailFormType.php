@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -10,8 +12,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EmailFormType extends AbstractType
 {
-
-
     public function __construct(
         private TranslatorInterface $translator
     )
@@ -25,8 +25,8 @@ class EmailFormType extends AbstractType
                 'attr' => [
                     'autocomplete' => false,
                     'autofocus' => true,
-                    'placeholder' => $this->translator->trans('email-address')
-                ]
+                    'placeholder' => $this->translator->trans('email-address'),
+                ],
             ]);
     }
 

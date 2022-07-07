@@ -13,74 +13,85 @@
         <div id="map"></div>
     </div>
 
-    <div class="col-md-12">
-        {{ form_start(searchForm) }}
-        <div class="card shadow-sm mb-3">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3 mb-2">
-                        {{ form_widget(searchForm.minPrice) }}
-                        {{ form_widget(searchForm.maxPrice) }}
-                    </div>
-
-                    <div class="col-md-3 mb-2">
-                        <div class="input-group">
-                            {{ form_widget(searchForm.minSqm) }}
-                            {{ form_widget(searchForm.maxSqm) }}
-                            <span class="input-group-text">
-                                    <i class="mdi mdi-axis-arrow"></i>
-                                </span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 col-12 mb-2">
-                        <div class="input-group">
-                            {{ form_widget(searchForm.term) }}
-                            {{ form_widget(searchForm.userType) }}
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 mb-2">
-                        <div class="input-group">
-                            {{ form_widget(searchForm.type) }}
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-search fs-5"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-end">
-                    <a class="btn btn-link" data-bs-toggle="collapse" href="#advanceSearch" role="button"
-                       aria-expanded="false" aria-controls="advanceSearch">
-                        advanced search
-                    </a>
-                </div>
-
-                <div class="row my-3 justify-content-between collapse" id="advanceSearch">
-                    <div class="col-md-2">
-                        {{ form_widget(searchForm.title) }}
-                    </div>
-                    <div class="col-md-3">
-                        {{ form_widget(searchForm.floor) }}
-                    </div>
-                    <div class="col-md-3">
-                        {{ form_widget(searchForm.address) }}
-                    </div>
-                    <div class="col-md-3">
-                        {{ form_widget(searchForm.agencyFee) }}
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        {{ form_end(searchForm) }}
-    </div>
-
     <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <div class="row g-3 mb-5">
+        <div class="row g-3 my-1 justify-content-center">
+            <div class="col-md-4">
+                <div class="">
+                    {{ form_start(searchForm) }}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row mt-2">
+
+                                <div class="h5">{{ 'search'|trans }}</div>
+
+                                <div class="col-12 mb-2">
+                                    {{ form_widget(searchForm.minPrice) }}
+                                </div>
+                                <div class="col-12 mb-2">
+                                    {{ form_widget(searchForm.maxPrice) }}
+                                </div>
+
+                                <div class="col-12 mb-2">
+                                    <div class="input-group">
+                                        {{ form_widget(searchForm.minSqm, { attr: {
+                                            'class': 'me-2'
+                                        }}) }}
+                                        {{ form_widget(searchForm.maxSqm) }}
+                                        <span class="input-group-text">
+                                    <span class="mdi mdi-axis-arrow"></span>
+                                </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mb-2">
+                                    <div class="input-group">
+                                        {{ form_widget(searchForm.term, { attr: {
+                                            'class': 'me-2'
+                                        }}) }}
+                                        {{ form_widget(searchForm.userType) }}
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mb-2">
+                                    {{ form_widget(searchForm.type) }}
+                                </div>
+
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        {{ 'search'|trans }}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="text-end">
+                                <a class="btn btn-link" data-bs-toggle="collapse" href="#advanceSearch" role="button"
+                                   aria-expanded="false" aria-controls="advanceSearch">
+                                    advanced search
+                                </a>
+                            </div>
+
+                            <div class="row my-3 justify-content-between collapse" id="advanceSearch">
+                                <div class="col-12 mb-3">
+                                    {{ form_widget(searchForm.title) }}
+                                </div>
+                                <div class="col-12 mb-3">
+                                    {{ form_widget(searchForm.floor) }}
+                                </div>
+                                <div class="col-12 mb-3">
+                                    {{ form_widget(searchForm.address) }}
+                                </div>
+                                <div class="col-12 mb-3">
+                                    {{ form_widget(searchForm.agencyFee) }}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    {{ form_end(searchForm) }}
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="row g-3">
                     {% for asset in assets %}
                         <div class="col-md-4">
                             {{ asset.card(

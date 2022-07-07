@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Entity;
 
-use Stringable;
 use App\Repository\ReactionRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Stringable;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
@@ -34,6 +36,11 @@ class Reaction implements Stringable
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
+    }
+
+    public function __toString(): string
+    {
+        return $this->owner->getFullName() . 'likes' . $this->asset->getTitle();
     }
 
     public function getId(): ?Uuid
@@ -89,18 +96,13 @@ class Reaction implements Stringable
         return $this;
     }
 
-    public function isLike() : bool
+    public function isLike(): bool
     {
-        return $this->type == 'like';
+        return $this->type === 'like';
     }
 
-    public function isDislike() : bool
+    public function isDislike(): bool
     {
-        return $this->type == 'dislike';
-    }
-
-    public function __toString() : string
-    {
-        return $this->owner->getFullName() . 'likes' . $this->asset->getTitle();
+        return $this->type === 'dislike';
     }
 }

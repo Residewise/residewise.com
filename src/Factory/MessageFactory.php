@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Factory;
 
 use App\Entity\Message;
@@ -8,13 +10,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class MessageFactory
 {
-
-    public function create(string $content, null|User|UserInterface $owner) : Message
+    public function create(string $content, null|User|UserInterface $owner): Message
     {
          $message = new Message();
          $message->setContent($content);
          $message->setOwner($owner);
+
          return $message;
     }
-
 }

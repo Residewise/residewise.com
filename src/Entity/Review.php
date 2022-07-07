@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Entity;
 
 use App\Repository\ReviewRepository;
@@ -102,6 +104,7 @@ class Review
     public function setAuthor(null|User|UserInterface $author): self
     {
         $this->author = $author;
+
         return $this;
     }
 
@@ -116,5 +119,4 @@ class Review
 
         return $this;
     }
-
 }

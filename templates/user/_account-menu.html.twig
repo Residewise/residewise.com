@@ -15,15 +15,6 @@
             <div>{{ 'messages'|trans }}</div>
         </a>
     </div>
-    {% if app.user.agency %}
-        <div class="nav-item">
-            <a class="nav-link rounded-pill {% if app.request.attributes.get('_route') == 'user_agency' %}bg-primary text-white{% endif %}"
-               href="{{ path('user_agency') }}">
-                <span class="mdi mdi-sign-real-estate fs-3"></span>
-                <div>{{ 'add-business-details'|trans }}</div>
-            </a>
-        </div>
-    {% endif %}
     <div class="nav-item">
         <a class="nav-link rounded-pill {% if app.request.attributes.get('_route') == 'new_user_asset' %}bg-primary text-white{% endif %}"
            href="{{ path('new_user_asset') }}">

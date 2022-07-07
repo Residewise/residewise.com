@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Factory;
 
 use App\Entity\SocialAuth;
@@ -8,19 +10,14 @@ use App\Service\AvatarService;
 
 class UserFactory
 {
-    public final const PASSWORD_NOT_SET = "PASSWORD_NOT_SET";
+    public final const PASSWORD_NOT_SET = 'PASSWORD_NOT_SET';
 
     public function __construct(
         private readonly AvatarService $avatarService
     ) {
     }
 
-    public function create(
-        string $firstName,
-        string $lastName,
-        string $email,
-        ?SocialAuth $socialAuth
-    ): User {
+    public function create(string $firstName, string $lastName, string $email, ?SocialAuth $socialAuth): User {
         $user = new User();
         $user->setFirstName($firstName);
         $user->setLastName($lastName);

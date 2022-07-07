@@ -1,10 +1,18 @@
 {% import "macro/component.macro.twig" as component %}
 
-<nav class="navbar navbar-expand bg-light">
+<nav class="navbar navbar-expand bg-light border-top-0">
     <div class="container">
-        <a class="navbar-brand" href="{{ path('app_asset_index') }}">
-            <img alt="residewise" height="30" src="{{ asset('images/logo.png') }}" />
-        </a>
+        <div class="d-flex justify-content-start align-items-center">
+            <div>
+                <a class="navbar-brand" href="{{ path('app_asset_index') }}">
+                    <img alt="residewise" height="30" src="{{ asset('images/logo.png') }}"/>
+                </a>
+            </div>
+            <div class="d-none d-md-block">
+                <div>RESIDEWISE</div>
+                <div class="tiny text-muted w-75">{{ 'reside-wise-catch-phrase'|trans }}</div>
+            </div>
+        </div>
         <ul class="navbar-nav ms-auto">
             {% if app.user %}
                 <li class="nav-item">
@@ -15,7 +23,8 @@
             {% endif %}
 
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#regional_settings">
+                <a class="nav-link d-flex align-items-center" data-bs-toggle="modal"
+                   data-bs-target="#regional_settings">
                     <span class="mdi mdi-web fs-3 me-1"></span>
                     <span class="badge bg-primary badge-pill">{{ app.request.locale }} | {{ regional.currency }} </span>
                 </a>
@@ -33,114 +42,99 @@
 
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-    <div class="offcanvas-header">
-        <div></div>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+    <div class="list-group list-group-flush">
 
-            {% if app.user %}
-                <li class="nav-item">
-                    <a class="nav-link d-flex justify-content-between align-items-center"
-                       href="{{ path('user_account') }}">
-                        <div>
-                            <img alt="{{ app.user.fullName }}" class="rounded-circle object-fit-cover shadow-sm mr-3"
-                                 src="{{ app.user.avatar }}" height="35" width="35"/>
-                        </div>
-                        <div>
-                            {{ app.user.fullName|capitalize }}
-                        </div>
-                    </a>
-                </li>
-            {% endif %}
-            <li class="nav-item">
-                <a class="nav-link d-flex justify-content-between align-items-center"
-                   href="{{ path('app_asset_index') }}">
-                    <div>
-                        <span class="mdi mdi-home-city fs-3"></span>
-                    </div>
-                    <div>
-                        {{ 'properties'|trans|capitalize }}
-                    </div>
-                </a>
-            </li>
+        <div class="d-flex align-items-center bg-dark justify-content-between">
+            <div class="nav-link text-white h5 m-0">{{ 'residewise'|trans }}</div>
+            <a type="button" class="btn btn-dark" data-bs-dismiss="offcanvas"
+               aria-label="Close">
+                <span class="mdi mdi-close fs-3"></span>
+            </a>
+        </div>
 
-            {% if app.user %}
-                <li class="nav-item">
-                    <a class="nav-link d-flex justify-content-between align-items-center"
-                       href="{{ path('new_user_asset') }}">
-                        <div>
-                            <i class="mdi mdi mdi-home-plus fs-3"></i>
-                        </div>
-                        <div>
-                            {{ 'add-property'|trans|capitalize }}
-                        </div>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link d-flex justify-content-between align-items-center"
-                       href="{{ path('conversations') }}">
-                        <div>
-                            <i class="mdi mdi-forum fs-3"></i>
-                        </div>
-                        <div>
-                            {{ 'messages'|trans|capitalize }}
-                        </div>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link d-flex justify-content-between align-items-center"
-                       href="{{ path('user_bookmarks') }}">
-                        <div>
-                            <i class="mdi mdi-bookmark fs-3"></i>
-                        </div>
-                        <div>
-                            {{ 'saved'|trans|capitalize }}
-                        </div>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link d-flex justify-content-between align-items-center"
-                       aria-current="page"
-                       href="{{ path('app_logout') }}">
-                        <div>
-                            <i class="mdi mdi-logout-variant fs-3"></i>
-                        </div>
-                        <div>
-                            {{ 'logout'|trans|capitalize }}
-                        </div>
-                    </a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link d-flex justify-content-between align-items-center"
-                       aria-current="page"
-                       href="{{ path('app_login') }}">
-                        <div>
-                            <i class="mdi mdi-login-variant fs-3"></i>
-                        </div>
-                        <div>
-                            {{ "login"|trans|capitalize }}
-                        </div>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link d-flex justify-content-between align-items-center"
-                       aria-current="page"
-                       href="{{ path('app_register') }}"
-                    >
-                        <div>
-                            <i class="mdi mdi-account-plus fs-3"></i>
-                        </div>
-                        <div>
-                            {{ 'register'|trans|capitalize }}
-                        </div>
-                    </a>
-                </li>
-            {% endif %}
-        </ul>
+        {% if app.user %}
+            <a class="nav-link list-group-item-action d-flex justify-content-between align-items-center"
+               href="{{ path('user_account') }}">
+                <div>
+                    {{ app.user.fullName|capitalize }}
+                </div>
+                <div>
+                    <img alt="{{ app.user.fullName }}" class="rounded-circle object-fit-cover shadow-sm mr-3"
+                         src="{{ app.user.avatar }}" height="35" width="35"/>
+                </div>
+            </a>
+        {% endif %}
+        <a class="nav-link list-group-item-action d-flex justify-content-between align-items-center"
+           href="{{ path('app_asset_index') }}">
+            <div>
+                {{ 'properties'|trans|capitalize }}
+            </div>
+            <div>
+                <span class="mdi mdi-home-city fs-3"></span>
+            </div>
+        </a>
+
+        {% if app.user %}
+            <a class="nav-link list-group-item-action d-flex justify-content-between align-items-center"
+               href="{{ path('new_user_asset') }}">
+                <div>
+                    {{ 'create'|trans|capitalize }}
+                </div>
+                <div>
+                    <i class="mdi mdi mdi-home-plus fs-3"></i>
+                </div>
+            </a>
+            <a class="nav-link list-group-item-action d-flex justify-content-between align-items-center"
+               href="{{ path('conversations') }}">
+                <div>
+                    {{ 'messages'|trans|capitalize }}
+                </div>
+                <div>
+                    <span class="mdi mdi-forum fs-3"></span>
+                </div>
+            </a>
+            <a class="nav-link list-group-item-action d-flex justify-content-between align-items-center"
+               href="{{ path('user_bookmarks') }}">
+                <div>
+                    {{ 'saved'|trans|capitalize }}
+                </div>
+                <div>
+                    <i class="mdi mdi-bookmark fs-3"></i>
+                </div>
+            </a>
+            <a class="nav-link text-danger list-group-item-action d-flex justify-content-between align-items-center"
+               aria-current="page"
+               href="{{ path('app_logout') }}">
+                <div>
+                    {{ 'logout'|trans|capitalize }}
+                </div>
+                <div>
+                    <i class="mdi mdi-logout-variant fs-3"></i>
+                </div>
+            </a>
+        {% else %}
+            <a class="nav-link list-group-item-action d-flex justify-content-between align-items-center"
+               aria-current="page"
+               href="{{ path('app_login') }}">
+                <div>
+                    {{ "login"|trans|capitalize }}
+                </div>
+                <div>
+                    <i class="mdi mdi-login-variant fs-3"></i>
+                </div>
+            </a>
+            <a class="nav-link list-group-item-action d-flex justify-content-between align-items-center"
+               aria-current="page"
+               href="{{ path('app_register') }}"
+            >
+                <div>
+                    {{ 'register'|trans|capitalize }}
+                </div>
+                <div>
+                    <i class="mdi mdi-account-plus fs-3"></i>
+                </div>
+            </a>
+        {% endif %}
     </div>
 </div>
 

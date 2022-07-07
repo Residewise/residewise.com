@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller;
 
 use App\Entity\Asset;
@@ -9,7 +11,6 @@ use App\Form\BidFormType;
 use App\Repository\BidRepository;
 use App\Repository\TenderRepository;
 use App\Service\RegionalSettingsService\RegionalSettingsService;
-use Money\Money;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,13 +40,14 @@ class BidController extends AbstractController
 
         $form = $this->createForm(BidFormType::class, $bid, [
             'suggested_bid_amount' => $suggestedBidAmount,
-            'asset' => $asset
+            'asset' => $asset,
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $price = $form->get('price')->getData();
+            $price = $form->get('price')
+                ->getData();
             $currency = $this->regionalSettingsService->getCurrency();
 
             $bid->setOwner($this->getUser());
@@ -55,16 +57,27 @@ class BidController extends AbstractController
             $this->resolveTenderBidSuggestion($bid, $asset->getTender());
 
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-            $this->hub->publish(new Update('tender', $this->renderView('/asset/bid/bid.stream.html.twig', ['tender' => $asset->getTender()])));
-            $this->hub->publish(new Update('tender-price', $this->renderView('/asset/price.stream.html.twig', ['asset' => $asset])));
+            $this->hub->publish(new Update('tender', $this->renderView('/asset/bid/bid.stream.html.twig', [
+                'tender' => $asset->getTender(),
+            ])));
+            $this->hub->publish(new Update('tender-price', $this->renderView('/asset/price.stream.html.twig', [
+                'asset' => $asset,
+            ])));
 
-            return $this->redirectToRoute('_new_bid', ['id' => $asset->getId()]);
+            return $this->redirectToRoute('_new_bid', [
+                'id' => $asset->getId(),
+            ]);
         }
 
         return $this->render('asset/bid/_form.html.twig', [
             'asset' => $asset,
             'bidForm' => $form->createView(),
         ]);
+    }
+
+    protected function addPercentageToNumber(float $number, float $percentage): float
+    {
+        return (($number / 100) * $percentage) + $number;
     }
 
     private function resolveTenderBidSuggestion(Bid $bid, Tender $tender): void
@@ -99,11 +112,4 @@ class BidController extends AbstractController
             default => $this->addPercentageToNumber($asset->getTender()->getBid()->getPrice(), 0.5),
         };
     }
-
-    protected function addPercentageToNumber(float $number, float $percentage): float
-    {
-        return (($number / 100) * $percentage) + $number;
-    }
-
-
 }

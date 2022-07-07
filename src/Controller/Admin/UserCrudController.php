@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller\Admin;
 
 use App\Entity\User;
@@ -21,7 +23,7 @@ class UserCrudController extends AbstractCrudController
             TextField::new('lastName'),
             EmailField::new('email'),
             TextField::new('password'),
-            TextField::new('token')
+            TextField::new('token'),
         ];
     }
 }

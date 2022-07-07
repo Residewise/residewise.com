@@ -6,11 +6,11 @@
     {% import "macro/component.macro.twig" as component %}
 
     <div class="card h-100 position-relative mb-3 shadow-sm">
-        {% if asset.owner.agency %}
-            <div class="asset-card-agent-logo" style="z-index: 50;">
-                <img src="{{ asset.owner.agency.logo }}" alt="{{ asset.owner.agency.title }}" class="object-fit-cover"  height="30" width="30"/>
-            </div>
-        {% endif %}
+        {#        {% if asset.owner %} #}
+        {#            <div class="asset-card-agent-logo" style="z-index: 50;"> #}
+        {#                Agency #}
+        {#            </div> #}
+        {#        {% endif %} #}
         {% if carousel %}
             <turbo-frame id="asset-images" src="{{ path('asset_images', {id: asset.id}) }}" loading="lazy">
                 <div class="d-flex justify-content-center align-items-center img-loading-placeholder">
@@ -28,9 +28,13 @@
         <div class="card-body pb-0 pt-2 position-relative">
             <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
                 <div class="me-2">
-                    {{ include('profile/_avatar-profile-link.html.twig', {
-                        user: asset.owner
-                    }) }}
+                    {% if asset.isAgent %}
+                        Agent
+                    {% else %}
+                        {{ include('profile/_avatar-profile-link.html.twig', {
+                            user: asset.owner
+                        }) }}
+                    {% endif %}
                 </div>
                 <div>
                     <a href="{{ path('app_asset_show', {id: asset.id}) }}" class="custom-link" target="_blank">
@@ -46,9 +50,9 @@
                       class="h5 letter-spacing-1 mb-0 badge badge-pill bg-white text-black">{{ asset.term|trans|capitalize }}</span>
                 {% if  asset.tender and asset.tender.isActive and asset.tender.bid %}
                     <div id="tender-price-{{ asset.tender.id }}" {{ turbo_stream_listen('tender-price') }}>
-                    {{ include('asset/_price.html.twig', {
-                        bid: asset.tender.bid
-                    }) }}
+                        {{ include('asset/_price.html.twig', {
+                            bid: asset.tender.bid
+                        }) }}
                     </div>
                 {% elseif asset.tender and asset.tender.isComplete %}
                     <span {{ component.tooltip('top', 'closing-bid'|trans ) }}
@@ -57,11 +61,11 @@
                     <span {{ component.tooltip('top', 'price'|trans ) }}
                       class="h5 letter-spacing-1 mb-0 badge badge-pill bg-white text-black">{{ asset.price|format_currency(regional.currency) }} Kč</span>
                 {% endif %}
-                {% if asset.owner.agency %}
-                    <span {{ component.tooltip('top', 'agency-fee'|trans ) }}
-                          class="h5 letter-spacing-1 mb-0 badge badge-pill bg-white text-black">
-                        {{ asset.agencyFee }} Kč</span>
-                {% endif %}
+                {#                {% if asset.owner.agency %} #}
+                {#                    <span {{ component.tooltip('top', 'agency-fee'|trans ) }} #}
+                {#                          class="h5 letter-spacing-1 mb-0 badge badge-pill bg-white text-black"> #}
+                {#                        {{ asset.agencyFee }} Kč</span> #}
+                {#                {% endif %} #}
             </div>
             {% if detailed %}
                 <div class="mt-2">{{ asset.description|raw }}</div>
@@ -111,10 +115,10 @@
                 </div>
                 <div>
                     {% if not asset.tender %}
-                    <a href="{{ path('app_asset_edit', {id: asset.id}) }}"
-                       class="btn btn-secondary">
-                        <i class="mdi mdi-pencil-outline fs-3"></i>
-                    </a>
+                        <a href="{{ path('app_asset_edit', {id: asset.id}) }}"
+                           class="btn btn-secondary">
+                            <i class="mdi mdi-pencil-outline fs-3"></i>
+                        </a>
                     {% endif %}
                 </div>
             </div>
@@ -132,5 +136,5 @@
         <div class="card-footer bg-white text-center">
             {{ asset.createdAt|format_date }}
         </div>
-        </div>
+    </div>
 {% endmacro %}

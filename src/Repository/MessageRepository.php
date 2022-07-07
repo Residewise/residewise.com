@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Repository;
 
 use App\Entity\Conversation;
 use App\Entity\Message;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -23,10 +23,6 @@ class MessageRepository extends ServiceEntityRepository
         parent::__construct($registry, Message::class);
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function add(Message $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
@@ -35,10 +31,6 @@ class MessageRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function remove(Message $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
@@ -84,14 +76,16 @@ class MessageRepository extends ServiceEntityRepository
         $qb->addGroupBy('m.conversation');
 
         $qb->andWhere(
-            $qb->expr()->eq('m.conversation', ':conversation')
+            $qb->expr()
+                ->eq('m.conversation', ':conversation')
         )->setParameter('conversation', $conversation);
 
         $result = $qb->getQuery()
             ->setMaxResults(10)
             ->setFirstResult(0)
             ->getResult();
-        $reversed  = array_reverse($result);
+        $reversed = array_reverse($result);
+
         return $reversed;
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Factory;
 
 use App\Entity\SocialAuth;
@@ -8,12 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class SocialAuthFactory
 {
-
-    public function create(
-        string $token,
-        string $provider,
-        null|User|UserInterface $owner
-    ): SocialAuth {
+    public function create(string $token, string $provider, null|User|UserInterface $owner): SocialAuth {
         $socialAuth = new SocialAuth();
         $socialAuth->setToken($token);
         $socialAuth->setProvider($provider);
@@ -24,5 +21,4 @@ class SocialAuthFactory
 
         return $socialAuth;
     }
-
 }

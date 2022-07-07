@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -7,8 +9,6 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PasswordFormType extends AbstractType
@@ -24,15 +24,24 @@ class PasswordFormType extends AbstractType
             'type' => PasswordType::class,
             'error_bubbling' => true,
             'invalid_message' => $this->translator->trans('confirm-password-invalid-message'),
-            'options' => ['trim' => true, 'attr' => ['class' => 'password-field input-group']],
+            'options' => [
+                'trim' => true,
+                'attr' => [
+                    'class' => 'password-field input-group',
+                ],
+            ],
             'required' => true,
-            'first_options' => ['label' => $this->translator->trans('password')],
-            'second_options' => ['label' => $this->translator->trans('repeat-password')],
+            'first_options' => [
+                'label' => $this->translator->trans('password'),
+            ],
+            'second_options' => [
+                'label' => $this->translator->
+                trans('repeat-password'),
+            ],
         ]);
 
         if ($options['data']['isOldPasswordRequired']) {
-            $builder->add('oldPassword', PasswordType::class, [
-            ]);
+            $builder->add('oldPassword', PasswordType::class, []);
         }
 
     }

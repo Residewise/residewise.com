@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Entity;
 
 use App\Repository\TenderRepository;
 use Carbon\Carbon;
-use DateInterval;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
@@ -122,32 +123,37 @@ class Tender
     public function getTimeUntilEnd(): float|int
     {
         $end = Carbon::parse($this->endAt);
+
         return $end->diffInMilliseconds();
     }
 
     public function getTimeUntilEndInInterval()
     {
         $end = Carbon::parse($this->endAt);
-        return $end->diffAsCarbonInterval()->toDateInterval();
+
+        return $end->diffAsCarbonInterval()
+            ->toDateInterval();
     }
 
     public function getIsActive(): bool
     {
         $start = Carbon::parse($this->startAt);
         $end = Carbon::parse($this->endAt);
+
         return Carbon::now()->isBetween($start, $end);
     }
 
     public function getIsStartPendding(): bool
     {
         $start = Carbon::parse($this->startAt);
+
         return Carbon::now()->isBefore($start);
     }
 
     public function getIsComplete(): bool
     {
         $end = Carbon::parse($this->endAt);
+
         return Carbon::now()->isAfter($end);
     }
-
 }

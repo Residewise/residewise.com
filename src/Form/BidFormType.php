@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Form;
 
 use App\Entity\Bid;
@@ -23,17 +25,14 @@ class BidFormType extends AbstractType
         $builder
             ->add('price', MoneyType::class, [
                 'currency' => $options['asset']->getCurrency(),
-                'data' => $options['suggested_bid_amount']
+                'data' => $options['suggested_bid_amount'],
             ])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setRequired([
-            'suggested_bid_amount',
-            'asset'
-        ]);
+        $resolver->setRequired(['suggested_bid_amount', 'asset']);
         $resolver->setDefaults([
             'data_class' => Bid::class,
         ]);

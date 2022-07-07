@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Form;
 
 use App\Entity\Asset;
@@ -7,7 +9,6 @@ use App\Entity\Review;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\RangeType;
@@ -34,14 +35,14 @@ class ReviewFormType extends AbstractType
                 'min' => 0,
                 'max' => 5,
                 'value' => 2.5,
-                'oninput' => 'review_form_amount.value=review_form_rating.value'
-            ]
+                'oninput' => 'review_form_amount.value=review_form_rating.value',
+            ],
         ])->add('amount', NumberType::class, [
             'mapped' => false,
             'required' => false,
             'attr' => [
-                'oninput' => 'review_form_rating.value=review_form_amount.value'
-            ]
+                'oninput' => 'review_form_rating.value=review_form_amount.value',
+            ],
         ])->add('notes', TextareaType::class)
             ->add('asset', EntityType::class, [
                 'placeholder' => $this->translator->trans('review-property-lived-in-placeholder'),
@@ -51,10 +52,10 @@ class ReviewFormType extends AbstractType
                 'query_builder' => fn(EntityRepository $er) => $er->createQueryBuilder('a')
                     ->andWhere('a.owner = :user')
                     ->setParameter('user', $data->getUser()),
-                'choice_label' => 'title'
+                'choice_label' => 'title',
             ])->add('acknowledgement', CheckboxType::class, [
                 'required' => true,
-                'mapped' => false
+                'mapped' => false,
             ]);
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller\Admin;
 
 use App\Entity\Amenity;
@@ -15,10 +17,6 @@ class AmenityCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            TextField::new('name'),
-            TextField::new('icon')
-        ];
+        return [TextField::new('name'), TextField::new('icon')];
     }
-
 }

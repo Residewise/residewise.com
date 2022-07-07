@@ -1,8 +1,7 @@
 {% import "macro/user.macro.twig" as userMacro %}
 
 <a href="{{ path('user_public_profile', {id : user.id}) }}">
-    <img alt="{{ user.fullName }}"
-         class="rounded-circle shadow-sm me-2 object-fit-cover"
+    <img alt="{{ user.fullName }}" class="rounded-circle shadow-sm me-2 object-fit-cover"
          src="{{ user.avatar }}"
          height="40"
          width="40"

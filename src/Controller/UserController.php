@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller;
 
-use App\Entity\Image;
 use App\Entity\User;
 use App\Form\UserFormType;
 use App\Repository\ReviewRepository;
@@ -13,16 +14,11 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
-use Symfony\UX\Chartjs\Model\Chart;
-use function dump;
 use function json_decode;
-use function json_encode;
 
 #[Route('/user')]
 class UserController extends AbstractController
 {
-
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly ImageUploadService $imageUploadService,
@@ -39,11 +35,13 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             /** @var UploadedFile $avatar */
-            $avatar = $form->get('avatar')->getData();
+            $avatar = $form->get('avatar')
+                ->getData();
 
             if($avatar){
                 $fileContentBase64 = $this->imageUploadService->process($avatar, 300);
-                $this->getUser()->setAvatar($fileContentBase64);
+                $this->getUser()
+                    ->setAvatar($fileContentBase64);
             }
 
             $this->userRepository->add($this->getUser(), true);
@@ -52,7 +50,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/account.html.twig', [
-            'accountForm' => $form->createView()
+            'accountForm' => $form->createView(),
         ]);
     }
 
@@ -88,7 +86,7 @@ class UserController extends AbstractController
         $users = $this->userRepository->findByInput($keyword, $ids);
 
         return $this->render('user/_autocomplete-list.html.twig', [
-            'users' => $users
+            'users' => $users,
         ]);
     }
 
@@ -96,10 +94,10 @@ class UserController extends AbstractController
     public function _rating(User $user)
     {
         $avgUserRating = $this->reviewRepository->getAverageUserRating($user);
+
        return $this->render('user/_rating.html.twig', [
            'avgUserRating' => $avgUserRating,
-           'user' => $user
+           'user' => $user,
        ]);
     }
-
 }

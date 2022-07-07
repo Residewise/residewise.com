@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Entity;
 
-use Stringable;
 use App\Repository\MessageRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Stringable;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
@@ -22,8 +23,8 @@ class Message implements Stringable
     #[ORM\Column(type: 'text')]
     private string $content;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'messages')]
-    private null|User|UserInterface $owner = null;
+    #[ORM\ManyToOne(targetEntity: Person::class, inversedBy: 'messages')]
+    private null|Person $owner = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
@@ -31,10 +32,14 @@ class Message implements Stringable
     #[ORM\ManyToOne(targetEntity: Conversation::class, cascade: ['persist'], inversedBy: 'messages')]
     private ?Conversation $conversation = null;
 
-    public function __construct(
-    )
+    public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
+    }
+
+    public function __toString(): string
+    {
+        return $this->content;
     }
 
     public function getId(): Uuid
@@ -54,15 +59,12 @@ class Message implements Stringable
         return $this;
     }
 
-    public function getOwner(): null|User|UserInterface
+    public function getOwner(): null|Person
     {
         return $this->owner;
     }
 
-    /**
-     * @param null|User|UserInterface $owner
-     */
-    public function setOwner(null|User|UserInterface $owner): self
+    public function setOwner(null|Person $owner): self
     {
         $this->owner = $owner;
 
@@ -79,11 +81,6 @@ class Message implements Stringable
         $this->createdAt = $createdAt;
 
         return $this;
-    }
-
-    public function __toString() : string
-    {
-        return $this->content;
     }
 
     public function getConversation(): ?Conversation

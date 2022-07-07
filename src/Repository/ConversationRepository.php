@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Repository;
 
 use App\Entity\Conversation;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -29,10 +29,6 @@ class ConversationRepository extends ServiceEntityRepository
         parent::__construct($registry, Conversation::class);
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function add(Conversation $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
@@ -41,10 +37,6 @@ class ConversationRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function remove(Conversation $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
@@ -53,38 +45,32 @@ class ConversationRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @param null|User|UserInterface $user
-     */
     public function findByUserAndKeyword(null|User|UserInterface $user, ?string $keyword, int $page = 1): mixed
     {
         $qb = $this->createQueryBuilder('c');
         $qb->orderBy('c.createdAt', 'ASC');
 
         if ($user) {
-            $qb->join('c.users', 'u');
+            $qb->join('c.people', 'p');
 
-            $qb->andWhere('u.id = :id')->setParameter(
-                'id',
-                $user->getId()->toRfc4122()
-            );
+            $qb->andWhere('p.id = :id')
+                ->setParameter('id', $user->getId(), 'uuid');
         }
 
         if ($keyword) {
             $qb->join('c.messages', 'm');
-            $content = $qb->expr()->like('LOWER(m.content)', ':keyword');
-            $title = $qb->expr()->like('LOWER(c.title)', ':keyword');
+            $content = $qb->expr()
+                ->like('LOWER(m.content)', ':keyword');
+            $title = $qb->expr()
+                ->like('LOWER(c.title)', ':keyword');
 
             $qb->andWhere(
-                $qb->expr()->orX($title, $content)
+                $qb->expr()
+                    ->orX($title, $content)
             )->setParameter('keyword', '%' . strtolower($keyword) . '%');
         }
 
-        return $this->paginator->paginate(
-            $qb->getQuery(),
-            $page,
-            15
-        );
+        return $this->paginator->paginate($qb->getQuery(), $page, 15);
     }
 
     // /**
@@ -116,16 +102,14 @@ class ConversationRepository extends ServiceEntityRepository
     }
     */
 
-    public function findByUsers(ArrayCollection $users)
+    public function findByUsers(ArrayCollection $people)
     {
-        dump($users);
         $qb = $this->createQueryBuilder('c');
-        $qb->andWhere(
-            'c.users IN (:users)'
-        )->setParameter('users', $users);
+        $qb->andWhere('c.people IN (:people)')
+            ->setParameter('people', $people);
 
-       return $qb->getQuery()->getOneOrNullResult();
+       return $qb->getQuery()
+           ->getOneOrNullResult();
 
     }
-
 }

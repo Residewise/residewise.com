@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Entity;
 
 use App\Repository\AssetViewRepository;
@@ -75,6 +77,6 @@ class AssetView
 
     public function hasUser(): bool
     {
-        return $this->owner == User::class;
+        return $this->owner === User::class;
     }
 }

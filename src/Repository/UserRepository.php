@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Repository;
 
 use App\Entity\User;
 use App\Service\NameResolver;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -23,7 +22,6 @@ use function strtolower;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-
     public function __construct(
         ManagerRegistry $registry,
         private readonly NameResolver $nameResolver
@@ -31,10 +29,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function add(User $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
@@ -43,10 +37,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function remove(User $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
@@ -60,7 +50,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
@@ -103,21 +93,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         if ($keyword) {
 
-            $firstNameCondition = $qb->expr()->like('LOWER(u.firstName)', ':keyword');
-            $lastNameCondition = $qb->expr()->like('LOWER(u.lastName)', ':keyword');
+            $firstNameCondition = $qb->expr()
+                ->like('LOWER(u.firstName)', ':keyword');
+            $lastNameCondition = $qb->expr()
+                ->like('LOWER(u.lastName)', ':keyword');
 
-            $qb->andWhere($qb->expr()->orX($firstNameCondition, $lastNameCondition))->setParameter(
-                'keyword',
-                '%' . strtolower($keyword) . '%'
-            );
+            $qb->andWhere($qb->expr()->orX($firstNameCondition, $lastNameCondition))
+                ->setParameter('keyword', '%' . strtolower($keyword) . '%');
 
             if($ids){
-                $qb->andWhere(
-                    $qb->expr()->notIn('u.id', ':ids')
-                )->setParameter('ids', $ids);
+                $qb->andWhere($qb->expr() ->notIn('u.id', ':ids'))
+                    ->setParameter('ids', $ids);
             }
         }
 
-        return $qb->setMaxResults(5)->getQuery()->getResult();
+        return $qb->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
     }
 }
