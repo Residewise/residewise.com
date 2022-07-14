@@ -8,17 +8,15 @@ export default class extends Controller {
 
     connect() {
         let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-        console.log(timezone)
         let tz = getTimezone(timezone)
+        console.log(tz)
         this.regionTarget.value = tz.countries[0]
         this.timezoneTarget.value = tz.name
 
         this.regionTarget.addEventListener('change', (event) => {
-            let newTz = getTimezonesForCountry(this.regionTarget.value)
+            console.log(newTz)
             this.timezoneTarget.value = newTz[0].name
         })
 
     }
-
-
 }

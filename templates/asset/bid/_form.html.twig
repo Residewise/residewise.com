@@ -1,9 +1,17 @@
 <turbo-frame id="bid-form">
-    <hr/>
-{{ form_start(bidForm, {action: path('_new_bid', {id: asset.id}) }) }}
-    {{ form_widget(bidForm.price) }}
-    <button type="submit" {% if asset.tender.bid.owner == app.user %} disabled {% endif %}class="btn btn-primary w-100 {% if asset.tender.bid.owner == app.user %} disabled {% endif %}" >
-        {{ 'bid'|trans }}
-    </button>
-{{ form_end(bidForm) }}
+    {{ form_start(bidForm, {action: path('_new_bid', {id: asset.id}) }) }}
+    <div class="input-group">
+        <span class="input-group-text">{{ asset.currency|currency_symbol }}</span>
+        {{ form_widget(bidForm.price) }}
+        <button type="submit" {% if asset.tender.bid is not null and asset.tender.bid.owner == app.user %} disabled
+                {% endif %}class="btn btn-primary {% if asset.tender.bid is not null and asset.tender.bid.owner == app.user %} disabled {% endif %}">
+            {{ 'bid'|trans }}
+        </button>
+    </div>
+    {{ form_end(bidForm) }}
+    {% if exchangedSuggestedBid %}
+        <div class="small text-muted">{{ 'approximately'|trans }}
+            : {{ exchangedSuggestedBid|format_currency(regional.currency) }}</div>
+    {% endif %}
 </turbo-frame>
+

@@ -25,17 +25,18 @@
                                 <div class="h5">{{ 'search'|trans }}</div>
 
                                 <div class="col-12 mb-2">
-                                    {{ form_widget(searchForm.minPrice) }}
-                                </div>
-                                <div class="col-12 mb-2">
-                                    {{ form_widget(searchForm.maxPrice) }}
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            {{ regional.currency|currency_symbol }}
+                                </span>
+                                        {{ form_widget(searchForm.minPrice) }}
+                                        {{ form_widget(searchForm.maxPrice) }}
+                                    </div>
                                 </div>
 
                                 <div class="col-12 mb-2">
                                     <div class="input-group">
-                                        {{ form_widget(searchForm.minSqm, { attr: {
-                                            'class': 'me-2'
-                                        }}) }}
+                                        {{ form_widget(searchForm.minSqm) }}
                                         {{ form_widget(searchForm.maxSqm) }}
                                         <span class="input-group-text">
                                     <span class="mdi mdi-axis-arrow"></span>
@@ -44,16 +45,14 @@
                                 </div>
 
                                 <div class="col-12 mb-2">
-                                    <div class="input-group">
-                                        {{ form_widget(searchForm.term, { attr: {
-                                            'class': 'me-2'
-                                        }}) }}
-                                        {{ form_widget(searchForm.userType) }}
-                                    </div>
+                                    {{ form_widget(searchForm.term) }}
+                                </div>
+                                <div class="col-12 mb-2">
+                                    {{ form_widget(searchForm.userType) }}
                                 </div>
 
                                 <div class="col-12 mb-2">
-                                    {{ form_widget(searchForm.type) }}
+                                    {{ form_widget(searchForm.types) }}
                                 </div>
 
                                 <div class="col-12">

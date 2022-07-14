@@ -4,12 +4,13 @@ declare(strict_types = 1);
 
 namespace App\Service;
 
+use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class ImageUploadService
 {
-    public function process(UploadedFile $file, int $width = 800, bool $isWatermarked = false): string
+    public function process(UploadedFile $file, int $width = 800, bool $isWatermarked = false): Image
     {
 
         $manager = new ImageManager([
@@ -32,7 +33,6 @@ final class ImageUploadService
             $image->insert($watermark, 'center');
         }
 
-        return $image->encode()
-            ->encode('data-url');
+        return $image->encode('data-url');
     }
 }

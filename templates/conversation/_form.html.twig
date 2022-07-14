@@ -1,8 +1,8 @@
-{{ form_start(conversationForm, {'action' : path|default(path('conversation_new')) }) }}
+{{ form_start(conversationForm) }}
 <div class="card-body">
     {{ form_row(conversationForm.people) }}
     <button type="submit" class="btn btn-primary w-100">
-        {{ 'create'|trans }}
+        {{ 'save'|trans }}
     </button>
 </div>
 {{ form_end(conversationForm) }}

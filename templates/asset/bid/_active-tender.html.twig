@@ -1,38 +1,29 @@
 <div class="card sticky-top">
-    <div class="card-body">
-        <div>
-            <div id="tender-{{ asset.tender.id }}" {{ turbo_stream_listen('tender') }}>
-                {{ include('asset/bid/_bid.html.twig', {
-                    tender: asset.tender
-                }) }}
+    <div class="card-header bg-white">
+        <div class="d-mb-2"
+             id="tender-{{ asset.tender.id }}" {{ turbo_stream_listen('tender') }}>
+            {{ include('asset/bid/_bid.html.twig', {
+                tender: asset.tender
+            }) }}
+        </div>
+    </div>
+    {% if app.user %}
+        {% if  asset.owner != app.user %}
+            <div class="card-body">
+                <turbo-frame id="bid-form" src="{{ path('_new_bid', {id: asset.id}) }}" target="_self">
+                    <div class="d-flex justify-content-center align-items-center min-vh-10">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </turbo-frame>
             </div>
-        </div>
-        <div class="small text-muted">
-            {{ 'starting-bid'|trans }}
-            {{ asset.price|format_currency(asset.currency) }}
-        </div>
-        {% if asset.owner != app.user %}
-            <turbo-frame id="bid-form" src="{{ path('_new_bid', {id: asset.id}) }}" target="_self">
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            </turbo-frame>
-            {% if asset.currency != regional.currency %}
-                <div class="mt-2">
-                    <div>Aproximately 600 EUR</div>
-                    <div class="text-muted tiny">Please note this value may change and is aproximation of the price
-                        conversion from it's original currency
-                    </div>
-                </div>
-            {% endif %}
         {% endif %}
-        <hr/>
-        <div {{ stimulus_controller('countdown', {
-            seconds: asset.tender.timeUntilEnd,
-        }) }} >
-            <div class="text-center fw-bold" data-countdown-target="result"></div>
+    {% endif %}
+    <div class="d-flex justify-content-between card-footer text-end bg-white {% if not app.user or asset.owner == app.user %} border-top-0 {% endif %}">
+        <div class="small text-muted">{{ asset.createdAt|date }}</div>
+        <div {{ stimulus_controller('countdown', { seconds: asset.tender.timeUntilEnd }) }}>
+            <span class="small text-muted" data-countdown-target="result">00:00:00</span>
         </div>
     </div>
 </div>

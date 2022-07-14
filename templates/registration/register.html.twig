@@ -6,22 +6,14 @@
     <div class="container">
         <div class="row justify-content-center g-0 mt-3">
             <div class="col-md-4 d-none d-sm-block">
-                <img class="shadow img-fluid object-fit-cover h-100 rounded-start" alt="register" src="{{ asset('images/register.jpg') }}">
+                <img class="shadow img-fluid object-fit-cover h-100 rounded-start" alt="register"
+                     src="{{ asset('images/register.jpg') }}">
             </div>
             <div class="col-md-4">
                 <div class="card shadow h-100">
-                <div class="card-body">
-                    <div class="h3 mb-3 font-weight-normal">Register</div>
-                    {{ form_start(registrationForm) }}
-                    {{ form_row(registrationForm.firstName) }}
-                    {{ form_row(registrationForm.lastName) }}
-                    {{ form_row(registrationForm.email) }}
-                    {{ form_row(registrationForm.account) }}
-                    {{ form_row(registrationForm.plainPassword) }}
-                    {{ form_row(registrationForm.agreeTerms) }}
-                    <button type="submit" class="btn btn-primary w-100">Register</button>
-                    {{ form_end(registrationForm) }}
-                </div>
+                    <div class="card-body">
+                        {{ include('registration/_form.html.twig') }}
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,16 +1,21 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Agent;
 use App\Entity\Asset;
 use App\Entity\Image;
+use App\Entity\User;
 use App\Form\AssetSearchFormType;
 use App\Form\AssetType;
 use App\Repository\AssetRepository;
 use App\Repository\ImageRepository;
+use App\Security\Voter\OwnerVoter;
+use App\Service\ExchangeRateService\ExchangeRateService;
 use App\Service\ImageUploadService;
+use App\Service\RegionalSettingsService\RegionalSettingsService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -25,11 +30,14 @@ use Symfony\Component\Serializer\SerializerInterface;
 class AssetController extends AbstractController
 {
     public function __construct(
-        private readonly AssetRepository $assetRepository,
-        private readonly ImageRepository $imageRepository,
+        private readonly AssetRepository     $assetRepository,
+        private readonly ImageRepository     $imageRepository,
         private readonly SerializerInterface $serializer,
-        private readonly ImageUploadService $imageUploadService,
-    ) {
+        private readonly ImageUploadService  $imageUploadService,
+        private readonly RegionalSettingsService $regionalSettingsService,
+        private readonly ExchangeRateService     $exchangeRateService
+    )
+    {
     }
 
     #[Route(path: '/', name: 'app_asset_index', methods: ['GET'])]
@@ -37,7 +45,9 @@ class AssetController extends AbstractController
     {
         $searchForm = $this->createForm(AssetSearchFormType::class);
         $searchForm->handleRequest($request);
-        $assets = $this->assetRepository->findAll();
+        $assets = $this->assetRepository->findBySearch(
+            minSqm: null,maxSqm: null,minPrice: null,maxPrice: null,types: ['apartment'],term: 'rent',userType: null,title: null,floor: null,agencyFee: null,address: null
+        );
 
         $json = new JsonResponse($this->serializer->serialize($assets, 'json', [
             'groups' => 'asset_map',
@@ -80,14 +90,12 @@ class AssetController extends AbstractController
             $files = $form->get('images')
                 ->getData();
 
+            /** @var UploadedFile $file */
             foreach ($files as $file) {
-                $info = getimagesize($file);
-                [$x, $y] = $info;
-
-                $fileContentBase64 = $this->imageUploadService->process($file, 800, true);
-                $image = new Image($fileContentBase64, $asset);
-                $image->setHeight($y);
-                $image->setWidth($x);
+                $img = $this->imageUploadService->process(file: $file, isWatermarked: true);
+                $image = new Image($img->getEncoded(), $asset);
+                $image->setHeight($img->getHeight());
+                $image->setWidth($img->getWidth());
                 $this->imageRepository->add($image);
             }
 
@@ -114,8 +122,31 @@ class AssetController extends AbstractController
     public function show(Asset $asset): Response
     {
 
+        $exchangedCurrentBid = null;
+        if ($asset->getTender() && $asset->getTender()->getBid()) {
+            if ($this->regionalSettingsService->getCurrency() != $asset->getCurrency()) {
+                $xe = $this->exchangeRateService->exchange(
+                    from: $asset->getCurrency(),
+                    to: $this->regionalSettingsService->getCurrency(),
+                    amount: $asset->getTender()->getBid()->getPrice()
+            );
+                $exchangedCurrentBid = $xe['to'][0]['mid'];
+            }
+        }
+
         return $this->render('asset/show.html.twig', [
+            'exchangedCurrentBid' => $exchangedCurrentBid,
             'asset' => $asset,
+        ]);
+    }
+
+    #[Route('/view/{id}', name: 'app_owner_asset_show', methods: ['GET'])]
+    public function ownerShow(Asset $asset): Response
+    {
+        $this->denyAccessUnlessGranted(OwnerVoter::VIEW, $asset);
+
+        return $this->render('asset/view.html.twig', [
+            'asset' => $asset
         ]);
     }
 
@@ -159,7 +190,7 @@ class AssetController extends AbstractController
                 ->getData(),
             maxPrice: $searchForm->get('maxPrice')
                 ->getData(),
-            type: $searchForm->get('type')
+            types: $searchForm->get('types')
                 ->getData(),
             term: $searchForm->get('term')
                 ->getData(),

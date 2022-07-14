@@ -1,3 +1,5 @@
+{% import "macro/component.macro.twig" as component %}
+
 <div class="ps-3 d-flex justify-content-between border-bottom align-items-center">
     <div>
         <div>{{ conversation.title }}</div>
@@ -7,11 +9,20 @@
             <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                 <span class="mdi mdi-dots-vertical fs-3"></span>
             </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <ul class="dropdown-menu z-index-50" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                       data-bs-target="#edit_conversation">{{ 'edit-memebers' }}</a></li>
+                <li class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="#">{{ 'leave-chat'|trans }}</a></li>
             </ul>
         </div>
     </div>
 </div>
+
+{{ component.modal(
+    'edit_conversation',
+    'edit_conversation',
+    path('conversation_edit', {id: conversation.id}),
+    'edit-conversation'|trans,
+    '_top'
+) }}

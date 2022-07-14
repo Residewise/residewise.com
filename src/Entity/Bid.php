@@ -27,8 +27,8 @@ class Bid implements PriceableEntityInterface
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'integer')]
-    private int $price;
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: false)]
+    private string $price;
 
     #[ORM\Column(type: 'string', length: 3)]
     private string $currency;
@@ -67,12 +67,12 @@ class Bid implements PriceableEntityInterface
         return $this;
     }
 
-    public function getPrice(): ?int
+    public function getPrice(): ?string
     {
        return $this->price;
     }
 
-    public function setPrice(int $price): self
+    public function setPrice(string $price): self
     {
         $this->price = $price;
 

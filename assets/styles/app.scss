@@ -3,11 +3,13 @@
 @import "~bootstrap-icons";
 @import "~@mdi/font";
 @import '@kanety/stimulus-multi-select';
-@import "lightpick/css/lightpick.css";
-
 
 .tiny{
   font-size: 9px;
+}
+
+.min-vh-10{
+  min-height: 10vh;
 }
 
 .resize-none{
@@ -46,7 +48,7 @@
 }
 
 .card-btn-sm:hover{
-  background-color: $gray-300;
+  //background-color: $gray-300;
   cursor: pointer;
 }
 
@@ -102,11 +104,11 @@
     margin-left: -20px;
     z-index: 0;
     box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .045) !important;
-    border: 5px solid $white;
+    //border: 5px solid $white;
   }
 
   .avatars__item:hover {
-    border: 5px solid $white;
+    //border: 5px solid $white;
     z-index: 5;
     box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
   }
@@ -132,12 +134,6 @@ body {
   border: none !important;
 }
 
-.form-control:focus {
-  outline: 0 !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
 .btn-secondary:hover {
   background-color: #f5f5f5;
 }
@@ -159,6 +155,7 @@ body {
   overflow-x: hidden;
   overflow-y: scroll;
   padding: 10px;
+  z-index: 10;
 }
 
 .custom-popover {
@@ -198,6 +195,10 @@ body {
 
 .z-index-10{
   z-index: 10;
+}
+
+.z-index-50{
+  z-index: 500;
 }
 
 .residewise-marker {
@@ -272,4 +273,3 @@ body {
 }
 
 @import "./bootswatch";
-

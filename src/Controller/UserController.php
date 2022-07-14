@@ -4,7 +4,9 @@ declare(strict_types = 1);
 
 namespace App\Controller;
 
+use App\Entity\Person;
 use App\Entity\User;
+use App\Form\AccountFormType;
 use App\Form\UserFormType;
 use App\Repository\ReviewRepository;
 use App\Repository\UserRepository;
@@ -44,7 +46,7 @@ class UserController extends AbstractController
                     ->setAvatar($fileContentBase64);
             }
 
-            $this->userRepository->add($this->getUser(), true);
+            $this->userRepository->add($this->getUser());
 
             return $this->redirectToRoute('user_account');
         }
@@ -91,13 +93,29 @@ class UserController extends AbstractController
     }
 
     #[Route('/avg/rating/{id}', name: '_user_avg_rating')]
-    public function _rating(User $user)
+    public function _rating(Person $person)
     {
-        $avgUserRating = $this->reviewRepository->getAverageUserRating($user);
+        $avgUserRating = $this->reviewRepository->getAverageUserRating($person);
 
        return $this->render('user/_rating.html.twig', [
            'avgUserRating' => $avgUserRating,
-           'user' => $user,
+           'user' => $person,
        ]);
     }
+
+    #[Route('/set/empty/account', name: 'user_set_empty_account')]
+    public function setAccount()
+    {
+        $accountTypeForm = $this->createForm(AccountFormType::class);
+
+        if($accountTypeForm->isSubmitted() && $accountTypeForm->isValid()){
+        }
+
+        return $this->render('user/set-account.html.twig', [
+            'accountTypeForm' => $accountTypeForm->createView()
+        ]);
+    }
+
+
+
 }

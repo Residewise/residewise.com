@@ -47,16 +47,16 @@ class TenderController extends AbstractController
 
             $asset->setTender($tender);
 
-            $minimumBid = $form->get('minimumBid')
-                ->getData();
+            $minimumBid = (string) $form->get('minimumBid')->getData();
             if ($minimumBid) {
                 $asset->setPrice($minimumBid);
             }
 
-            $startAt = Carbon::createFromFormat('d/m/Y', $form->get('startAt')->getData())->toDateTimeImmutable();
-            $endAt = Carbon::createFromFormat('d/m/Y', $form->get('endAt')->getData())->toDateTimeImmutable();
-            $tender->setStartAt($startAt);
-            $tender->setEndAt($endAt);
+            $dates = explode('-', $form->get('range')->getData());
+            $start = Carbon::createFromFormat('d.m.y', trim($dates[0]))->toDateTimeImmutable();
+            $end = Carbon::createFromFormat('d.m.y', trim($dates[1]))->toDateTimeImmutable();
+            $tender->setStartAt($start);
+            $tender->setEndAt($end);
             $tender->setAsset($asset);
             $tender->setBid(null);
 

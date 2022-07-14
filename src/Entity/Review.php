@@ -32,11 +32,11 @@ class Review
     #[ORM\ManyToOne(targetEntity: Asset::class, inversedBy: 'reviews')]
     private ?Asset $asset = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ownedReviews')]
-    private null|User|UserInterface $author = null;
+    #[ORM\ManyToOne(targetEntity: Person::class, inversedBy: 'ownedReviews')]
+    private null|Person $author = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reviews')]
-    private null|User|UserInterface $user = null;
+    #[ORM\ManyToOne(targetEntity: Person::class, inversedBy: 'reviews')]
+    private null|Person $person = null;
 
     public function __construct()
     {
@@ -96,26 +96,26 @@ class Review
         return $this;
     }
 
-    public function getAuthor(): null|User|UserInterface
+    public function getAuthor(): null|Person
     {
         return $this->author;
     }
 
-    public function setAuthor(null|User|UserInterface $author): self
+    public function setAuthor(null|Person $author): self
     {
         $this->author = $author;
 
         return $this;
     }
 
-    public function getUser(): null|User|UserInterface
+    public function getPerson(): null|Person
     {
-        return $this->user;
+        return $this->person;
     }
 
-    public function setUser(null|User|UserInterface $user): self
+    public function setPerson(null|Person $person): self
     {
-        $this->user = $user;
+        $this->person = $person;
 
         return $this;
     }

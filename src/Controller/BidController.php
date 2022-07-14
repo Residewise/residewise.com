@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -8,8 +8,10 @@ use App\Entity\Asset;
 use App\Entity\Bid;
 use App\Entity\Tender;
 use App\Form\BidFormType;
+use App\Model\Rate;
 use App\Repository\BidRepository;
 use App\Repository\TenderRepository;
+use App\Service\ExchangeRateService\ExchangeRateService;
 use App\Service\RegionalSettingsService\RegionalSettingsService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,11 +26,13 @@ use Symfony\UX\Turbo\TurboBundle;
 class BidController extends AbstractController
 {
     public function __construct(
-        private readonly BidRepository $bidRepository,
-        private readonly TenderRepository $tenderRepository,
-        private readonly HubInterface $hub,
+        private readonly BidRepository           $bidRepository,
+        private readonly TenderRepository        $tenderRepository,
+        private readonly HubInterface            $hub,
         private readonly RegionalSettingsService $regionalSettingsService,
-    ) {
+        private readonly ExchangeRateService     $exchangeRateService
+    )
+    {
     }
 
     #[Route(path: '/new/{id}', name: '_new_bid', methods: ['GET', 'POST'])]
@@ -36,8 +40,18 @@ class BidController extends AbstractController
     public function _create(Asset $asset, Request $request): Response
     {
         $suggestedBidAmount = $this->resolveBidSuggestion($asset);
-        $bid = new Bid();
 
+        $exchangedSuggestedBid = null;
+        if ($this->regionalSettingsService->getCurrency() != $asset->getCurrency()) {
+            $xe = $this->exchangeRateService->exchange(
+                from: $asset->getCurrency(),
+                to: $this->regionalSettingsService->getCurrency(),
+                amount: $suggestedBidAmount
+            );
+            $exchangedSuggestedBid = $xe['to'][0]['mid'];
+        }
+
+        $bid = new Bid();
         $form = $this->createForm(BidFormType::class, $bid, [
             'suggested_bid_amount' => $suggestedBidAmount,
             'asset' => $asset,
@@ -51,7 +65,7 @@ class BidController extends AbstractController
             $currency = $this->regionalSettingsService->getCurrency();
 
             $bid->setOwner($this->getUser());
-            $bid->setPrice($price);
+            $bid->setPrice((string)$price);
             $bid->setCurrency($asset->getCurrency());
             $this->bidRepository->add($bid, true);
             $this->resolveTenderBidSuggestion($bid, $asset->getTender());
@@ -72,12 +86,14 @@ class BidController extends AbstractController
         return $this->render('asset/bid/_form.html.twig', [
             'asset' => $asset,
             'bidForm' => $form->createView(),
+            'exchangedSuggestedBid' => $exchangedSuggestedBid
         ]);
     }
 
-    protected function addPercentageToNumber(float $number, float $percentage): float
+    protected function addPercentageToNumber(string $number, float $percentage): float
     {
-        return (($number / 100) * $percentage) + $number;
+        $amount = (float)$number;
+        return (($amount / 100) * $percentage) + $amount;
     }
 
     private function resolveTenderBidSuggestion(Bid $bid, Tender $tender): void

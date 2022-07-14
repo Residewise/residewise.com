@@ -9,6 +9,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Stringable;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
@@ -59,12 +60,12 @@ class Message implements Stringable
         return $this;
     }
 
-    public function getOwner(): null|Person
+    public function getOwner(): null|UserInterface
     {
         return $this->owner;
     }
 
-    public function setOwner(null|Person $owner): self
+    public function setOwner(null|UserInterface $owner): self
     {
         $this->owner = $owner;
 

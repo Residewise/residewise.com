@@ -6,9 +6,10 @@ namespace App\Entity\Contract;
 
 interface PriceableEntityInterface
 {
-    public function getPrice(): ?int;
 
-    public function setPrice(int $price): self;
+    public function getPrice(): ?string;
+
+    public function setPrice(string $price): self;
 
     public function getCurrency(): ?string;
 

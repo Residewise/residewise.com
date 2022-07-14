@@ -4,7 +4,9 @@ declare(strict_types = 1);
 
 namespace App\Form;
 
+use App\Entity\Agent;
 use App\Entity\Asset;
+use App\Entity\User;
 use App\Service\RegionalSettingsService\RegionalSettingsService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -51,20 +53,21 @@ class AssetSearchFormType extends AbstractType
                     'placeholder' => $this->translator->trans('max-sqm'),
                 ],
             ])->add('minPrice', MoneyType::class, [
-                'currency' => $this->regionalSettingsService->getCurrency(),
+                'currency' => false,
                 'required' => false,
                 'mapped' => false,
                 'attr' => [
                     'placeholder' => $this->translator->trans('min-price'),
                 ],
             ])->add('maxPrice', MoneyType::class, [
-                'currency' => $this->regionalSettingsService->getCurrency(),
+                'currency' => false,
                 'required' => false,
                 'mapped' => false,
                 'attr' => [
                     'placeholder' => $this->translator->trans('max-price'),
                 ],
-            ])->add('type', ChoiceType::class, [
+            ])->add('types', ChoiceType::class, [
+                'mapped' => false,
                 'required' => false,
                 'placeholder' => false,
                 'choices' => [
@@ -74,6 +77,11 @@ class AssetSearchFormType extends AbstractType
                     'industrial' => $this->translator->trans('industrial'),
                     'land' => $this->translator->trans('land'),
                 ],
+                'autocomplete' => true,
+                'multiple' => true,
+                'data' => [
+                    'apartment' => $this->translator->trans('apartment')
+                ],
             ])->add('term', ChoiceType::class, [
                 'required' => false,
                 'placeholder' => false,
@@ -81,6 +89,7 @@ class AssetSearchFormType extends AbstractType
                     'rent' => $this->translator->trans('rent'),
                     'sale' => $this->translator->trans('sale'),
                 ],
+                'data' => 'rent'
             ])->add('address', TextType::class, [
                 'required' => false,
                 'attr' => [
@@ -90,13 +99,13 @@ class AssetSearchFormType extends AbstractType
                 'required' => false,
                 'currency' => 'CZK',
             ])->add('userType', ChoiceType::class, [
+                'mapped' =>false,
                 'required' => false,
-                'mapped' => false,
                 'placeholder' => false,
                 'choices' => [
-                    'all' => null,
-                    'agent' => $this->translator->trans('agent'),
-                    'owner' => $this->translator->trans('owner'),
+                    $this->translator->trans('all') => null,
+                    $this->translator->trans('agent') => Agent::class,
+                    $this->translator->trans('owner') => User::class,
                 ],
             ]);
     }

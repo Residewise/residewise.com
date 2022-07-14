@@ -24,7 +24,7 @@ class BidFormType extends AbstractType
 
         $builder
             ->add('price', MoneyType::class, [
-                'currency' => $options['asset']->getCurrency(),
+                'currency' => false,
                 'data' => $options['suggested_bid_amount'],
             ])
         ;

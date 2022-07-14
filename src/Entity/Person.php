@@ -4,25 +4,25 @@ declare(strict_types = 1);
 
 namespace App\Entity;
 
-use App\Repository\PersonRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Stringable;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
-#[ORM\Entity(repositoryClass: PersonRepository::class)]
+#[ORM\Entity]
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
 #[ORM\DiscriminatorMap([
-    'person' => Person::class,
     'User' => User::class,
     'Agent' => Agent::class,
 ])]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class Person implements UserInterface, PasswordAuthenticatedUserInterface, Stringable
 {
     #[ORM\Id]
@@ -79,6 +79,12 @@ class Person implements UserInterface, PasswordAuthenticatedUserInterface, Strin
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
 
+    /**
+     * @var ArrayCollection<int, AssetView>
+     */
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: AssetView::class)]
+    private Collection $assetViews;
+
     public function __construct()
     {
         $this->token = Uuid::v4();
@@ -86,7 +92,13 @@ class Person implements UserInterface, PasswordAuthenticatedUserInterface, Strin
         $this->assets = new ArrayCollection();
         $this->conversations = new ArrayCollection();
         $this->messages = new ArrayCollection();
+        $this->assetViews = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
+    }
+
+    public function getId(): ?Uuid
+    {
+        return $this->id;
     }
 
     public function __toString(): string
@@ -116,11 +128,6 @@ class Person implements UserInterface, PasswordAuthenticatedUserInterface, Strin
         $this->isEnabled = $isEnabled;
 
         return $this;
-    }
-
-    public function getId(): ?Uuid
-    {
-        return $this->id;
     }
 
     public function getFullName(): string
@@ -356,5 +363,40 @@ class Person implements UserInterface, PasswordAuthenticatedUserInterface, Strin
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, AssetView>
+     */
+    public function getAssetViews(): Collection
+    {
+        return $this->assetViews;
+    }
+
+    public function addAssetView(AssetView $assetView): self
+    {
+        if (! $this->assetViews->contains($assetView)) {
+            $this->assetViews[] = $assetView;
+            $assetView->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssetView(AssetView $assetView): self
+    {
+        if ($this->assetViews->removeElement($assetView)) {
+            // set the owning side to null (unless already changed)
+            if ($assetView->getOwner() === $this) {
+                $assetView->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isAgent() : bool
+    {
+        return $this instanceof Agent;
     }
 }

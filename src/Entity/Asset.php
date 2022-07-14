@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Entity;
 
+use App\Entity\Contract\PersonOwnedEntityInterface;
 use App\Entity\Contract\PriceableEntityInterface;
 use App\Repository\AssetRepository;
 use Carbon\Carbon;
@@ -17,7 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: AssetRepository::class)]
-class Asset implements Stringable, PriceableEntityInterface
+class Asset implements Stringable, PriceableEntityInterface, PersonOwnedEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -53,7 +54,7 @@ class Asset implements Stringable, PriceableEntityInterface
     #[Groups(['asset_map'])]
     private string $term;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'assets')]
+    #[ORM\ManyToOne(targetEntity: Person::class, inversedBy: 'assets')]
     private null|Person $owner = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -65,10 +66,6 @@ class Asset implements Stringable, PriceableEntityInterface
      */
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: Image::class, cascade: ['persist'])]
     private Collection $images;
-
-    #[ORM\Column(type: 'integer')]
-    #[Groups(['asset_map'])]
-    private ?int $price;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['asset_map'])]
@@ -90,8 +87,8 @@ class Asset implements Stringable, PriceableEntityInterface
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: AssetView::class)]
     private Collection $views;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $agencyFee;
+    #[ORM\Column(type: 'decimal', precision: 50, scale: 2, nullable: true)]
+    private ?string $agencyFee;
 
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: Bookmark::class)]
     private Collection $bookmarks;
@@ -109,8 +106,8 @@ class Asset implements Stringable, PriceableEntityInterface
     #[ORM\ManyToMany(targetEntity: Amenity::class, inversedBy: 'assets')]
     private Collection $amenities;
 
-    #[ORM\ManyToOne(targetEntity: Agency::class, inversedBy: 'assests')]
-    private $agency;
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: false)]
+    private string $price;
 
     public function __construct() {
         $this->createdAt = new DateTimeImmutable();
@@ -269,18 +266,6 @@ class Asset implements Stringable, PriceableEntityInterface
         return $this;
     }
 
-    public function getPrice(): int
-    {
-        return $this->price / 100;
-    }
-
-    public function setPrice(int $price): self
-    {
-        $this->price = $price * 100;
-
-        return $this;
-    }
-
     public function getAddress(): string
     {
         return $this->address;
@@ -400,11 +385,11 @@ class Asset implements Stringable, PriceableEntityInterface
         return Carbon::now()->isBefore($week);
     }
 
-    public function isLikedByUser(User $user): bool
+    public function isLikedByUser(Person $person): bool
     {
         /** @var Reaction $reaction */
         foreach ($this->reactions as $reaction) {
-            if ($reaction->getType() === 'like' && $reaction->getOwner() === $user) {
+            if ($reaction->getType() === 'like' && $reaction->getOwner() === $person) {
                 return true;
             }
         }
@@ -412,11 +397,11 @@ class Asset implements Stringable, PriceableEntityInterface
         return false;
     }
 
-    public function isDislikedByUser(User $user): bool
+    public function isDislikedByUser(Person $person): bool
     {
         /** @var Reaction $reaction */
         foreach ($this->reactions as $reaction) {
-            if ($reaction->getType() === 'dislike' && $reaction->getOwner() === $user) {
+            if ($reaction->getType() === 'dislike' && $reaction->getOwner() === $person) {
                 return true;
             }
         }
@@ -467,18 +452,6 @@ class Asset implements Stringable, PriceableEntityInterface
         return $views;
     }
 
-    public function getAgencyFee(): ?int
-    {
-        return $this->agencyFee;
-    }
-
-    public function setAgencyFee(?int $agencyFee): self
-    {
-        $this->agencyFee = $agencyFee;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Bookmark>
      */
@@ -509,11 +482,11 @@ class Asset implements Stringable, PriceableEntityInterface
         return $this;
     }
 
-    public function isBookmarkedByUser(User $user): bool
+    public function isBookmarkedByUser(Person $person): bool
     {
         /** @var Bookmark $bookmark */
         foreach ($this->getBookmarks() as $bookmark) {
-            if ($bookmark->getOwner() === $user ) {
+            if ($bookmark->getOwner() === $person ) {
                 return true;
             }
         }
@@ -599,8 +572,32 @@ class Asset implements Stringable, PriceableEntityInterface
         return $this;
     }
 
-    public function isAgent(): bool
+    public function getPrice(): ?string
     {
-        return $this->owner instanceof Agency;
+        return $this->price;
+    }
+
+    public function setPrice(string $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getAgencyFee(): ?string
+    {
+        return $this->agencyFee;
+    }
+
+    public function setAgencyFee(string $agencyFee): self
+    {
+        $this->agencyFee = $agencyFee;
+
+        return $this;
+    }
+
+    public function isAgent() : bool
+    {
+        return $this->getOwner() instanceof Agent;
     }
 }

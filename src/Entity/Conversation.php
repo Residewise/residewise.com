@@ -30,7 +30,7 @@ class Conversation implements Stringable
     private Collection $messages;
 
     /**
-     * @var ArrayCollection<int, Person>
+     * @var ArrayCollection<int, UserInterface>
      */
     #[ORM\ManyToMany(targetEntity: Person::class, inversedBy: 'conversations', cascade: ['persist'])]
     private Collection $people;
@@ -50,7 +50,7 @@ class Conversation implements Stringable
 
     public function __toString(): string
     {
-        return $this->id;
+        return $this->getTitle();
     }
 
     public function getId(): Uuid
@@ -87,25 +87,25 @@ class Conversation implements Stringable
     }
 
     /**
-     * @return Collection<int, Person|UserInterface>
+     * @return Collection<int, UserInterface>
      */
     public function getPeople(): Collection
     {
         return $this->people;
     }
 
-    public function addPerson(null|Person|UserInterface $person): self
+    public function addPerson(null|UserInterface $user): self
     {
-        if (! $this->people->contains($person)) {
-            $this->people[] = $person;
+        if (! $this->people->contains($user)) {
+            $this->people[] = $user;
         }
 
         return $this;
     }
 
-    public function removePerson(Person|UserInterface $person): self
+    public function removePerson(UserInterface $user): self
     {
-        $this->people->removeElement($person);
+        $this->people->removeElement($user);
 
         return $this;
     }

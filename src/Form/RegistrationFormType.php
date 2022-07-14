@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Form;
 
+use App\Entity\Agent;
 use App\Entity\Person;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
@@ -17,18 +18,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationFormType extends AbstractType
 {
-
-
-    public function __construct(
-        private readonly TranslatorInterface $translator,
-    )
-    {
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -62,11 +54,12 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('account', ChoiceType::class, [
+            ->add('account', ChoiceType::class,
+            [
                 'mapped' => false,
                 'choices' => [
-                    $this->translator->trans('owner-or-tenant') => 'user',
-                    $this->translator->trans('agent') => 'agent'
+                    'user' => User::class,
+                    'agent ' => Agent::class
                 ]
             ])
         ;
@@ -75,7 +68,7 @@ class RegistrationFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Person::class,
+            'data_class' => Person::class
         ]);
     }
 }

@@ -5,14 +5,13 @@ declare(strict_types = 1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User extends Person
 {
     /**
@@ -40,12 +39,6 @@ class User extends Person
     private Collection $reactions;
 
     /**
-     * @var ArrayCollection<int, AssetView>
-     */
-    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: AssetView::class)]
-    private Collection $assetViews;
-
-    /**
      * @var ArrayCollection<int, Bookmark>
      */
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Bookmark::class)]
@@ -64,7 +57,6 @@ class User extends Person
         $this->ownedReviews = new ArrayCollection();
         $this->reviews = new ArrayCollection();
         $this->reactions = new ArrayCollection();
-        $this->assetViews = new ArrayCollection();
         $this->bookmarks = new ArrayCollection();
         $this->bids = new ArrayCollection();
     }
@@ -137,7 +129,7 @@ class User extends Person
     {
         if (! $this->reviews->contains($review)) {
             $this->reviews[] = $review;
-            $review->setUser($this);
+            $review->setPerson($this);
         }
 
         return $this;
@@ -146,8 +138,8 @@ class User extends Person
     public function removeReview(Review $review): self
     {
         // set the owning side to null (unless already changed)
-        if ($this->reviews->removeElement($review) && $review->getUser() === $this) {
-            $review->setUser(null);
+        if ($this->reviews->removeElement($review) && $review->getPerson() === $this) {
+            $review->setPerson(null);
         }
 
         return $this;
@@ -177,36 +169,6 @@ class User extends Person
             // set the owning side to null (unless already changed)
             if ($reaction->getOwner() === $this) {
                 $reaction->setOwner(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, AssetView>
-     */
-    public function getAssetViews(): Collection
-    {
-        return $this->assetViews;
-    }
-
-    public function addAssetView(AssetView $assetView): self
-    {
-        if (! $this->assetViews->contains($assetView)) {
-            $this->assetViews[] = $assetView;
-            $assetView->setOwner($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAssetView(AssetView $assetView): self
-    {
-        if ($this->assetViews->removeElement($assetView)) {
-            // set the owning side to null (unless already changed)
-            if ($assetView->getOwner() === $this) {
-                $assetView->setOwner(null);
             }
         }
 
@@ -272,4 +234,10 @@ class User extends Person
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->getFullName();
+    }
+
 }

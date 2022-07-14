@@ -44,7 +44,7 @@ $min-contrast-ratio:   2.3 !default;
 
 // Options
 
-$enable-rounded:            false !default;
+$enable-rounded:            true !default;
 
 // Body
 
@@ -69,8 +69,6 @@ $table-border-color:          rgba(0, 0, 0, .05) !default;
 
 // Buttons + Forms
 
-$input-btn-border-width:      0 !default;
-
 // Buttons
 $btn-border-radius:           .25rem !default;
 $btn-line-height:             1.5rem !default;
@@ -85,9 +83,12 @@ $btn-font-weight:             600 !default;
 // Forms
 
 $input-line-height:                     1.5 !default;
-$input-bg:                              $gray-200 !default;
+$input-border-radius:                   .2rem !default;
+$input-border-radius-sm:                .375rem !default;
+$input-border-radius-lg:                .375rem !default;
+$input-bg:                              $white !default;
 $input-disabled-bg:                     $gray-300 !default;
-$input-group-addon-bg:                  $gray-300 !default;
+$input-group-addon-bg:                  $gray-200 !default;
 
 // Navbar
 

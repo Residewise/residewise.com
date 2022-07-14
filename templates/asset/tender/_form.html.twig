@@ -1,7 +1,11 @@
 {{ form_start(tenderForm) }}
-    {{ form_row(tenderForm.startAt) }}
-    {{ form_row(tenderForm.endAt) }}
-    {{ form_row(tenderForm.minimumBid) }}
+<div class="input-group" {{ stimulus_controller('date-range-picker')}} >
+    <div class="input-group-text">
+        <span class="mdi mdi-calendar"></span>
+    </div>
+    {{ form_widget(tenderForm.range) }}
+</div>
+{{ form_row(tenderForm.minimumBid) }}
 <div class="text-end">
     <button type="submit" class="btn btn-primary">
         {{ 'save'|trans }}

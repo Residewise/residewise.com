@@ -3,7 +3,8 @@
     frameId,
     path,
     title,
-    target = '_top'
+    target = '_top',
+    isBody = true
     ) %}
 
     <div class="modal fade" id="{{ modalId }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -14,7 +15,7 @@
                     <h5 class="modal-title" id="staticBackdropLabel">{{ title }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <turbo-frame class="" id="{{ frameId }}" src="{{ path }}" target="{{ target }}" loading="lazy">
+                <turbo-frame class="{% if isBody %} modal-body {% endif %}" id="{{ frameId }}" src="{{ path }}" target="{{ target }}" loading="lazy">
                     <div class="d-flex min-vh-50 justify-content-center align-items-center">
                         <div class="spinner-border" role="status">
                             <span class="visually-hidden">Loading...</span>

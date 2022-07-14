@@ -1,36 +1,34 @@
-{% import "macro/component.macro.twig" as component %}
-
 <div class="nav nav-pills nav-justified my-3">
     <div class="nav-item">
-        <a class="nav-link rounded-pill {% if app.request.attributes.get('_route') == 'user_assets' %} bg-primary text-white {% endif %}"
+        <a class="nav-link {% if app.request.attributes.get('_route') == 'user_assets' %} active {% endif %}"
            href="{{ path('user_assets') }}">
             <span class="mdi mdi-home-city fs-3"></span>
             <div>{{ 'properties'|trans }}</div>
         </a>
     </div>
     <div class="nav-item">
-        <a class="nav-link rounded-pill {% if app.request.attributes.get('_route') == 'conversations' or app.request.attributes.get('_route') == 'conversation' %}bg-primary text-white{% endif %}"
+        <a class="nav-link {% if app.request.attributes.get('_route') == 'conversations' or app.request.attributes.get('_route') == 'conversation' %}active{% endif %}"
            href="{{ path('conversations') }}">
             <span class="mdi mdi-forum fs-3"></span>
             <div>{{ 'messages'|trans }}</div>
         </a>
     </div>
     <div class="nav-item">
-        <a class="nav-link rounded-pill {% if app.request.attributes.get('_route') == 'new_user_asset' %}bg-primary text-white{% endif %}"
+        <a class="nav-link {% if app.request.attributes.get('_route') == 'new_user_asset' %}active{% endif %}"
            href="{{ path('new_user_asset') }}">
             <span class="mdi mdi-home-plus fs-3"></span>
             <div>{{ 'create'|trans }}</div>
         </a>
     </div>
     <div class="nav-item">
-        <a class="nav-link rounded-pill {% if app.request.attributes.get('_route') == 'user_bookmarks' %}bg-primary text-white{% endif %}"
+        <a class="nav-link {% if app.request.attributes.get('_route') == 'user_bookmarks' %}active{% endif %}"
            href="{{ path('user_bookmarks') }}">
             <span class="mdi mdi-bookmark fs-3"></span>
             <div>{{ 'saved'|trans }}</div>
         </a>
     </div>
     <div class="nav-item">
-        <a class="nav-link rounded-pill {% if app.request.attributes.get('_route') == 'user_account' %}bg-primary text-white{% endif %}"
+        <a class="nav-link {% if app.request.attributes.get('_route') == 'user_account' %}active{% endif %}"
            href="{{ path('user_account') }}">
             <span class="mdi mdi-account-circle fs-3"></span>
             <div>{{ 'account'|trans }}</div>

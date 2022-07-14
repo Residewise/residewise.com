@@ -1,4 +1,7 @@
 twig:
+    date:
+        format: d.m.Y
+        interval_format: '%%d days'
     globals:
         regional: '@App\Service\RegionalSettingsService\RegionalSettingsService'
     form_themes:

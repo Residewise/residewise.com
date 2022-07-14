@@ -1,38 +1,46 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Form;
 
 use App\Entity\Tender;
+use App\Service\RegionalSettingsService\RegionalSettingsService;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TenderFormType extends AbstractType
 {
+
+    public function __construct(
+        private readonly RegionalSettingsService $regionalSettingsService,
+        private readonly TranslatorInterface     $translator,
+
+    )
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('startAt', TextType::class, [
+        $builder->add('range', TextType::class, [
             'mapped' => false,
             'attr' => [
-                'class' => 'pl-datepicker',
+                'data-date-range-picker-target' => 'picker',
             ],
-        ])->add('endAt', TextType::class, [
-            'mapped' => false,
-            'attr' => [
-                'class' => 'pl-datepicker-second-input',
-            ],
-        ])->add('minimumBid', MoneyType::class, [
-            'required' => false,
-            'mapped' => false,
-            'currency' => 'CZK',
-            'attr' => [
-                'value' => $options['asset']->getPrice(),
-            ],
-        ]);
+        ])
+            ->add('minimumBid', MoneyType::class, [
+                'required' => false,
+                'mapped' => false,
+                'currency' => $this->regionalSettingsService->getCurrency(),
+                'attr' => [
+                    'value' => $options['asset']->getPrice(),
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -1,19 +1,31 @@
-{% if tender.bid %}
-    <div class="d-flex align-items-center">
-        <div class="me-2">{{ 'current-bid'|trans }}</div>
-        {% if tender.bid.owner == app.user %}
-            <img src="{{ app.user.avatar }}" height="20" width="20" class="rounded-circle object-fit-cover me-2"/>
+<div class="d-flex justify-content-between align-items-center">
+    <div>
+        {% if tender.bid %}
+            <div class="d-flex align-items-center">
+                <div class="me-2 small">{{ 'current-bid'|trans }}</div>
+                {% if tender.bid.owner == app.user %}
+                    <img src="{{ app.user.avatar }}" height="20" width="20"
+                         class="rounded-circle object-fit-cover me-2"/>
+                {% endif %}
+            </div>
         {% endif %}
+        <div class="">
+            {% if tender.bid %}
+                <div class="h4 mb-0" {% if isNew|default(false) %}
+                    {{ stimulus_controller('bid-style') }}
+                {% endif %} >{{ tender.bid.price|format_currency(tender.asset.currency) }}</div>
+                {% if tender.asset.currency != regional.currency %}
+                    <div class="small text-muted">{{ 'approximately'|trans }}
+                        : {{ exchangedCurrentBid|format_currency(regional.currency) }}</div>
+                {% endif %}
+            {% else %}
+                <div class="h4 mb-0">{{ 'no-bids-yet'|trans }}</div>
+            {% endif %}
+        </div>
     </div>
-{% endif %}
-<div class="h3 my-1"
-        {% if isNew|default(false) %}
-            {{ stimulus_controller('bid-style') }}
-        {% endif %} >
-    {% if tender.bid %}
-        {{ tender.bid.price|format_currency(tender.asset.currency) }}
-    {% else %}
-        {{ 'no-bids-yet'|trans }}
-    {% endif %}
+    <div>
+        <span class="mdi mdi-information-outline fs-3" data-bs-toggle="tooltip"  data-bs-html="true" data-bs-placement="left"
+              title="<div>{{ 'starting-bid'|trans }}</div><div>{{ tender.asset.price|format_currency(tender.asset.currency) }}</div>"></span>
+    </div>
 </div>
 

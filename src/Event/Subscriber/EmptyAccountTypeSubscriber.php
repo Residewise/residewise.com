@@ -1,0 +1,51 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace App\Event\Subscriber;
+
+use App\Entity\Agent;
+use App\Entity\Person;
+use App\Entity\User;
+use App\Factory\UserFactory;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+class EmptyAccountTypeSubscriber implements EventSubscriberInterface
+{
+    public function __construct(
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly Security $security
+    ) {
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            RequestEvent::class => 'resolveAccount',
+        ];
+    }
+
+    public function resolveAccount(RequestEvent $event)
+    {
+        /** @var User $user */
+        $user = $this->security->getUser();
+        if ($user instanceof UserInterface && $event->isMainRequest()) {
+
+            $request = $event->getRequest();
+            $route = $request->attributes->get('_route');
+
+            if ($user instanceof Person && !$user instanceof User && !$user instanceof Agent) {
+                if ($route !== 'user_set_empty_account') {
+                    $url = $this->urlGenerator->generate('user_set_empty_account');
+                    $event->setResponse(new RedirectResponse($url));
+                }
+            }
+        }
+
+    }
+}

@@ -51,7 +51,7 @@ class ReviewFormType extends AbstractType
                 'empty_data' => null,
                 'query_builder' => fn(EntityRepository $er) => $er->createQueryBuilder('a')
                     ->andWhere('a.owner = :user')
-                    ->setParameter('user', $data->getUser()),
+                    ->setParameter('user', $data->getPerson()),
                 'choice_label' => 'title',
             ])->add('acknowledgement', CheckboxType::class, [
                 'required' => true,

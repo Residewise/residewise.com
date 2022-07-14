@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[Route('/im')]
 class ConversationController extends AbstractController
@@ -25,6 +26,7 @@ class ConversationController extends AbstractController
         private readonly MessageRepository $messageRepository,
         private readonly ConversationRepository $conversationRepository,
         private readonly HubInterface $hub,
+        private readonly UrlGeneratorInterface $urlGenerator
     ) {
     }
 
@@ -63,11 +65,32 @@ class ConversationController extends AbstractController
         ]);
     }
 
+
+    #[Route(path: '/edit/{id}', name: 'conversation_edit', methods: [Request::METHOD_GET, Request::METHOD_POST])]
+    public function edit(Conversation $conversation, Request $request)
+    {
+        $conversationForm = $this->createForm(ConversationFormType::class, $conversation, [
+            'action' => $this->urlGenerator->generate('conversation_edit',['id'=> $conversation->getId()])
+        ]);
+        $conversationForm->handleRequest($request);
+
+        if ($conversationForm->isSubmitted() && $conversationForm->isValid()) {
+            $this->conversationRepository->add($conversation);
+            return $this->redirectToRoute('conversation', ['id'=> $conversation->getId()]);
+        }
+
+        return $this->render('conversation/edit.html.twig', [
+            'conversationForm' => $conversationForm->createView(),
+        ]);
+    }
+
     #[Route(path: '/new', name: 'conversation_new')]
     public function new(Request $request): Response
     {
         $conversation = new Conversation();
-        $conversationForm = $this->createForm(ConversationFormType::class, $conversation);
+        $conversationForm = $this->createForm(ConversationFormType::class, $conversation, [
+            'action' => $this->urlGenerator->generate('conversation_new')
+        ]);
         $conversationForm->handleRequest($request);
 
         if ($conversationForm->isSubmitted() && $conversationForm->isValid()) {

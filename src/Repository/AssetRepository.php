@@ -1,10 +1,12 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Agent;
 use App\Entity\Asset;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -38,24 +40,44 @@ class AssetRepository extends ServiceEntityRepository
         }
     }
 
+    public function findByTitle(string $title)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->andWhere('a.title LIKE :title')
+            ->setParameter('title', '%' . $title . '%');
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
     public function findBySearch(
-        ?int $minSqm,
-        ?int $maxSqm,
-        ?int $minPrice,
-        ?int $maxPrice,
-        ?string $type,
+        ?float  $minSqm,
+        ?float  $maxSqm,
+        ?float  $minPrice,
+        ?float  $maxPrice,
+        array   $types,
         ?string $term,
         ?string $userType,
         ?string $title,
-        ?int $floor,
-        ?int $agencyFee,
+        ?int    $floor,
+        ?int    $agencyFee,
         ?string $address
-    ): mixed {
+    ): mixed
+    {
         $qb = $this->createQueryBuilder('a');
         $qb->orderBy('a.createdAt', 'ASC');
 
+
+        $qb->leftJoin('a.tender', 't');
+        $qb->andWhere(
+            $qb->expr()->isNotNull('t')
+        );
+        $qb->andWhere(
+            $qb->expr()->between('CURRENT_DATE()', 't.startAt', 't.endAt')
+        );
+
         if ($floor) {
-            $qb->andWhere($qb->expr() ->lte('a.floor', ':floor'))
+            $qb->andWhere($qb->expr()->lte('a.floor', ':floor'))
                 ->setParameter('floor', $floor);
         }
 
@@ -74,33 +96,33 @@ class AssetRepository extends ServiceEntityRepository
         }
 
         if ($agencyFee) {
-            $qb->andWhere($qb->expr() ->lte('a.agencyFee', ':agencyFee'))
+            $qb->andWhere($qb->expr()->lte('a.agencyFee', ':agencyFee'))
                 ->setParameter('agencyFee', $agencyFee);
         }
 
-        if ($minSqm && ! $maxSqm) {
-            $qb->andWhere($qb->expr() ->gte('a.sqm', ':minSqm'))
+        if ($minSqm && !$maxSqm) {
+            $qb->andWhere($qb->expr()->gte('a.sqm', ':minSqm'))
                 ->setParameter('minSqm', $minSqm);
         }
 
-        if ($maxSqm && ! $minSqm) {
-            $qb->andWhere($qb->expr() ->lte('a.sqm', ':maxSqm'))
+        if ($maxSqm && !$minSqm) {
+            $qb->andWhere($qb->expr()->lte('a.sqm', ':maxSqm'))
                 ->setParameter('maxSqm', $maxSqm);
         }
 
         if ($maxSqm && $minSqm) {
-            $qb->andWhere($qb->expr() ->between('a.sqm', ':minSqm', ':maxSqm'))
+            $qb->andWhere($qb->expr()->between('a.sqm', ':minSqm', ':maxSqm'))
                 ->setParameter('minSqm', $minSqm)
                 ->setParameter('maxSqm', $maxSqm);
         }
 
-        if ($minPrice && ! $maxPrice) {
-            $qb->andWhere($qb->expr() ->gte('a.price', ':minPrice'))
+        if ($minPrice && !$maxPrice) {
+            $qb->andWhere($qb->expr()->gte('a.price', ':minPrice'))
                 ->setParameter('minPrice', $minPrice);
         }
 
-        if ($maxPrice && ! $minPrice) {
-            $qb->andWhere($qb->expr() ->lte('a.price', ':maxPrice'))
+        if ($maxPrice && !$minPrice) {
+            $qb->andWhere($qb->expr()->lte('a.price', ':maxPrice'))
                 ->setParameter('maxPrice', $maxPrice);
         }
 
@@ -112,38 +134,29 @@ class AssetRepository extends ServiceEntityRepository
                 ->setParameter('maxPrice', $maxPrice);
         }
 
-        if ($type) {
-            $qb->andWhere($qb->expr() ->eq('a.type', ':type'))
-                ->setParameter('type', $type);
+
+        if ($types) {
+            $qb->andWhere(
+                $qb->expr()->in('a.type', ':types')
+            )->setParameter('types', $types);
         }
 
         if ($term) {
-            $qb->andWhere($qb->expr() ->eq('a.term', ':term'))
+            $qb->andWhere($qb->expr()->eq('a.term', ':term'))
                 ->setParameter('term', $term);
         }
 
-//        if ($userType) {
-//            $qb->leftJoin('a.owner', 'o');
-//            match ($userType) {
-//                'owner' => $qb->andHaving('COUNT(ag.id) = 0')
-//                    ->groupBy('a.id'),
-//                'agent' => $qb->andHaving('COUNT(ag.id) = 1')
-//                    ->groupBy('a.id'),
-//                'default' => null
-//            };
-//        }
+        if ($userType) {
+            $qb->leftJoin('a.owner', 'p');
+            match ($userType) {
+                User::class => $qb->andWhere($qb->expr()->isInstanceOf('p', User::class)),
+                Agent::class => $qb->andWhere($qb->expr()->isInstanceOf('p', Agent::class)),
+                default => null
+            };
+        }
 
         return $qb->getQuery()
             ->getResult();
     }
 
-    public function findByTitle(string $title)
-    {
-        $qb = $this->createQueryBuilder('a');
-        $qb->andWhere('a.title LIKE :title')
-            ->setParameter('title', '%' . $title . '%');
-
-        return $qb->getQuery()
-            ->getResult();
-    }
 }

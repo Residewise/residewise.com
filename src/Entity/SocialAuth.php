@@ -26,8 +26,8 @@ class SocialAuth
     #[ORM\Column(type: 'string', length: 255)]
     private string $provider;
 
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'socialAuths')]
-    private null|User|UserInterface $owner = null;
+    #[ORM\ManyToOne(targetEntity: Person::class, cascade: ['persist'], inversedBy: 'socialAuths')]
+    private null|Person $owner = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
@@ -66,12 +66,12 @@ class SocialAuth
         return $this;
     }
 
-    public function getOwner(): null|User|UserInterface
+    public function getOwner(): null|Person
     {
         return $this->owner;
     }
 
-    public function setOwner(null|User|UserInterface $owner): self
+    public function setOwner(null|Person $owner): self
     {
         $this->owner = $owner;
 
