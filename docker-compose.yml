@@ -5,10 +5,6 @@ services:
     build:
       context: .
       target: symfony_php
-      args:
-        SYMFONY_VERSION: ${SYMFONY_VERSION:-}
-        SKELETON: ${SKELETON:-symfony/skeleton}
-        STABILITY: ${STABILITY:-stable}
     restart: unless-stopped
     volumes:
       - php_socket:/var/run/php
@@ -60,17 +56,15 @@ services:
 
   ###> doctrine/doctrine-bundle ###
   database:
-    image: postgres:${POSTGRES_VERSION:-13}-alpine
+    image: postgres:13
     environment:
       POSTGRES_HOST: ${POSTGRES_HOST:-app}
       POSTGRES_DB: ${POSTGRES_DB:-app}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeMe}
       POSTGRES_USER: ${POSTGRES_USER:-symfony}
     volumes:
-      - db-data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+      - ./docker/db/data:/var/lib/postgresql/data:rw
+  ###< doctrine/doctrine-bundle ###
 
 volumes:
   php_socket:
@@ -80,5 +74,4 @@ volumes:
   ###< symfony/mercure-bundle ###
 
   ###> doctrine/doctrine-bundle ###
-  db-data:
-###< doctrine/doctrine-bundle ###
+  ###< doctrine/doctrine-bundle ###
