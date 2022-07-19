@@ -2,10 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Agent;
-use App\Entity\Person;
 use App\Entity\User;
-use App\Form\AgentRegistrationFormType;
 use App\Form\RegistrationFormType;
 use App\Security\AppCustomAuthenticator;
 use App\Service\AvatarService;
@@ -52,25 +49,23 @@ class RegistrationController extends AbstractController
     ): ?Response
     {
         if($request->get('isSocial')){
-            /** @var Person $person */
-            $person = $this->cache->get('social_registration', function (){});
+            /** @var UserInterface $user */
+            $user = $this->cache->get('social_registration', function (){});
         }
 
-        $form = $this->createForm(RegistrationFormType::class, $person);
+        $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $account = $form->get('account')->getData();
-            $person = match ($account) {
-                User::class => $this->createUserAccount($form),
-                Agent::class => $this->createAgentAccount($form),
+            $user = match ($account) {
                 'default' => null
             };
 
             $this->entityManager->flush();
 
             return $userAuthenticator->authenticateUser(
-                $person,
+                $user,
                 $authenticator,
                 $request
             );
@@ -81,7 +76,7 @@ class RegistrationController extends AbstractController
     }
 
     private function sendUserConfirmationEmail(
-        Person $user
+        UserInterface $user
     ): void
     {
         $email = new TemplatedEmail();
@@ -107,37 +102,10 @@ class RegistrationController extends AbstractController
     private function createUserAccount(FormInterface $form): User
     {
         $user = new User();
-        $this->configureAccount($user, $form);
-        $this->sendUserConfirmationEmail($user);
-
         $this->entityManager->persist($user);
 
         return $user;
     }
 
-    private function createAgentAccount(FormInterface $form): Agent
-    {
-        $agent = new Agent();
-        $this->configureAccount($agent, $form);
-        $this->sendUserConfirmationEmail($agent);
-
-        $this->entityManager->persist($agent);
-        return $agent;
-    }
-
-    private function configureAccount(User|Agent $person, FormInterface $form): void
-    {
-        $person->setFirstName($form->get('firstName')->getData());
-        $person->setLastName($form->get('lastName')->getData());
-        $person->setEmail($form->get('email')->getData());
-        $person->setAvatar($this->avatarService->createAvatar($person->getEmail()));
-
-        $person->setPassword(
-            $this->userPasswordHasher->hashPassword(
-                $person,
-                $form->get('plainPassword')->getData()
-            )
-        );
-    }
 
 }

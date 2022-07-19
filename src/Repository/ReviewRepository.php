@@ -4,11 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Repository;
 
-use App\Entity\Person;
 use App\Entity\Review;
-use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -42,13 +39,13 @@ class ReviewRepository extends ServiceEntityRepository
         }
     }
 
-    public function getAverageUserRating(null|Person $person)
+    public function getAverageUserRating(null|UserInterface $user)
     {
         $qb = $this->createQueryBuilder('r');
-        $qb->leftJoin('r.person', 'p');
+        $qb->leftJoin('r.user', 'u');
         $qb->select('AVG(r.rating) as AVG_RATING, COUNT(r.id) as TOTAL_COUNT')
-            ->where('p.id = :id')
-            ->setParameter('id', $person->getId(), 'uuid');
+            ->where('u.id = :id')
+            ->setParameter('id', $user->getId(), 'uuid');
 
         return $qb->getQuery()
             ->getScalarResult();

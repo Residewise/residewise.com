@@ -32,8 +32,8 @@ class Conversation implements Stringable
     /**
      * @var ArrayCollection<int, UserInterface>
      */
-    #[ORM\ManyToMany(targetEntity: Person::class, inversedBy: 'conversations', cascade: ['persist'])]
-    private Collection $people;
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'conversations', cascade: ['persist'])]
+    private Collection $users;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
@@ -44,7 +44,7 @@ class Conversation implements Stringable
     public function __construct()
     {
         $this->messages = new ArrayCollection();
-        $this->people = new ArrayCollection();
+        $this->users = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
     }
 
@@ -89,23 +89,23 @@ class Conversation implements Stringable
     /**
      * @return Collection<int, UserInterface>
      */
-    public function getPeople(): Collection
+    public function getUsers(): Collection
     {
-        return $this->people;
+        return $this->users;
     }
 
-    public function addPerson(null|UserInterface $user): self
+    public function addUser(null|UserInterface $user): self
     {
-        if (! $this->people->contains($user)) {
-            $this->people[] = $user;
+        if (! $this->users->contains($user)) {
+            $this->users[] = $user;
         }
 
         return $this;
     }
 
-    public function removePerson(UserInterface $user): self
+    public function removeUser(UserInterface $user): self
     {
-        $this->people->removeElement($user);
+        $this->users->removeElement($user);
 
         return $this;
     }
@@ -138,7 +138,7 @@ class Conversation implements Stringable
     {
         $names = [];
         /** @var User $user */
-        foreach ($this->people as $user){
+        foreach ($this->users as $user){
             $names[] = $user->getFirstName();
         }
 

@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Agent;
 use App\Entity\Asset;
 use App\Entity\Image;
-use App\Entity\User;
 use App\Form\AssetSearchFormType;
 use App\Form\AssetType;
 use App\Repository\AssetRepository;

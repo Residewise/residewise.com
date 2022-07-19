@@ -2,8 +2,7 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Contract\PersonOwnedEntityInterface;
-use App\Entity\Person;
+use App\Entity\Contract\UserOwnedEntityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -16,7 +15,7 @@ class OwnerVoter extends Voter
     protected function supports(string $attribute, $subject): bool
     {
         return in_array($attribute, [self::EDIT, self::VIEW])
-            && $subject instanceof PersonOwnedEntityInterface;
+            && $subject instanceof UserOwnedEntityInterface;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool

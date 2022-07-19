@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace App\Form;
 
-use App\Entity\Agent;
 use App\Entity\Amenity;
 use App\Entity\Asset;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -91,7 +90,7 @@ class AssetType extends AbstractType
             'autocomplete' => true,
         ]);
 
-        if ($this->security->getUser() instanceof Agent) {
+        if ($s) {
             $builder->add('agencyFee', MoneyType::class, [
                 'currency' => 'CZK',
                 'label' => $this->translator->trans('agency-fee'),

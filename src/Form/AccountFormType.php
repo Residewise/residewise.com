@@ -2,8 +2,8 @@
 
 namespace App\Form;
 
-use App\Entity\Agent;
 use App\Entity\User;
+use App\Enum\Role;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,9 +24,12 @@ class AccountFormType extends AbstractType
         $builder
             ->add('account',ChoiceType::class ,[
                 'choices' => [
-                    $this->translator->trans('user-or-owner') => User::class,
-                    $this->translator->trans('agent') => Agent::class
-                ]
+                    $this->translator->trans('tenent') => Role::Tenant,
+                    $this->translator->trans('owner') => Role::Owner,
+                    $this->translator->trans('agent') => Role::Agent
+                ],
+                'multiple' => true,
+                'expanded' => true
             ])
         ;
     }

@@ -25,7 +25,7 @@ class ReviewController extends AbstractController
     {
         $review = new Review();
         $review->setAuthor($this->getUser());
-        $review->setPerson($user);
+        $review->setUser($user);
 
         $reviewForm = $this->createForm(ReviewFormType::class, $review);
         $reviewForm->handleRequest($request);

@@ -24,8 +24,8 @@ class Message implements Stringable
     #[ORM\Column(type: 'text')]
     private string $content;
 
-    #[ORM\ManyToOne(targetEntity: Person::class, inversedBy: 'messages')]
-    private null|Person $owner = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'messages')]
+    private null|UserInterface $owner = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;

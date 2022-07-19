@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace App\Security;
 
-use App\Entity\User;
 use App\Factory\SocialAuthFactory;
 use App\Factory\UserFactory;
 use App\Repository\SocialAuthRepository;

@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace App\Controller;
 
-use App\Entity\Person;
-use App\Entity\User;
 use App\Form\AccountFormType;
 use App\Form\UserFormType;
 use App\Repository\ReviewRepository;
@@ -16,6 +14,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 use function json_decode;
 
 #[Route('/user')]
@@ -93,13 +92,13 @@ class UserController extends AbstractController
     }
 
     #[Route('/avg/rating/{id}', name: '_user_avg_rating')]
-    public function _rating(Person $person)
+    public function _rating(UserInterface $user)
     {
-        $avgUserRating = $this->reviewRepository->getAverageUserRating($person);
+        $avgUserRating = $this->reviewRepository->getAverageUserRating($user);
 
        return $this->render('user/_rating.html.twig', [
            'avgUserRating' => $avgUserRating,
-           'user' => $person,
+           'user' => $user,
        ]);
     }
 

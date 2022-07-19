@@ -23,8 +23,8 @@ class AssetView
     #[ORM\ManyToOne(targetEntity: Asset::class, inversedBy: 'views')]
     private ?Asset $asset = null;
 
-    #[ORM\ManyToOne(targetEntity: Person::class, inversedBy: 'assetViews')]
-    private null|Person $owner = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'assetViews')]
+    private null|UserInterface $owner = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
@@ -51,12 +51,12 @@ class AssetView
         return $this;
     }
 
-    public function getOwner(): null|Person
+    public function getOwner(): null|UserInterface
     {
         return $this->owner;
     }
 
-    public function setOwner(null|Person $owner): self
+    public function setOwner(null|UserInterface $owner): self
     {
         $this->owner = $owner;
 
@@ -77,6 +77,6 @@ class AssetView
 
     public function hasUser(): bool
     {
-        return $this->owner instanceof Person;
+        return $this->owner instanceof UserInterface;
     }
 }

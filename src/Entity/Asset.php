@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Entity;
 
-use App\Entity\Contract\PersonOwnedEntityInterface;
+use App\Entity\Contract\UserOwnedEntityInterface;
 use App\Entity\Contract\PriceableEntityInterface;
 use App\Repository\AssetRepository;
 use Carbon\Carbon;
@@ -14,11 +14,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Stringable;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: AssetRepository::class)]
-class Asset implements Stringable, PriceableEntityInterface, PersonOwnedEntityInterface
+class Asset implements Stringable, PriceableEntityInterface, UserOwnedEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -54,8 +55,8 @@ class Asset implements Stringable, PriceableEntityInterface, PersonOwnedEntityIn
     #[Groups(['asset_map'])]
     private string $term;
 
-    #[ORM\ManyToOne(targetEntity: Person::class, inversedBy: 'assets')]
-    private null|Person $owner = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'assets')]
+    private null|UserInterface $owner = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     #[Groups(['asset_map'])]
@@ -214,12 +215,12 @@ class Asset implements Stringable, PriceableEntityInterface, PersonOwnedEntityIn
         return $this;
     }
 
-    public function getOwner(): null|Person
+    public function getOwner(): null|UserInterface
     {
         return $this->owner;
     }
 
-    public function setOwner(null|Person $owner): self
+    public function setOwner(null|UserInterface $owner): self
     {
         $this->owner = $owner;
 
@@ -385,11 +386,11 @@ class Asset implements Stringable, PriceableEntityInterface, PersonOwnedEntityIn
         return Carbon::now()->isBefore($week);
     }
 
-    public function isLikedByUser(Person $person): bool
+    public function isLikedByUser(UserInterface $user): bool
     {
         /** @var Reaction $reaction */
         foreach ($this->reactions as $reaction) {
-            if ($reaction->getType() === 'like' && $reaction->getOwner() === $person) {
+            if ($reaction->getType() === 'like' && $reaction->getOwner() === $user) {
                 return true;
             }
         }
@@ -397,11 +398,11 @@ class Asset implements Stringable, PriceableEntityInterface, PersonOwnedEntityIn
         return false;
     }
 
-    public function isDislikedByUser(Person $person): bool
+    public function isDislikedByUser(UserInterface $user): bool
     {
         /** @var Reaction $reaction */
         foreach ($this->reactions as $reaction) {
-            if ($reaction->getType() === 'dislike' && $reaction->getOwner() === $person) {
+            if ($reaction->getType() === 'dislike' && $reaction->getOwner() === $user) {
                 return true;
             }
         }
@@ -482,11 +483,11 @@ class Asset implements Stringable, PriceableEntityInterface, PersonOwnedEntityIn
         return $this;
     }
 
-    public function isBookmarkedByUser(Person $person): bool
+    public function isBookmarkedByUser(UserInterface $user): bool
     {
         /** @var Bookmark $bookmark */
         foreach ($this->getBookmarks() as $bookmark) {
-            if ($bookmark->getOwner() === $person ) {
+            if ($bookmark->getOwner() === $user ) {
                 return true;
             }
         }

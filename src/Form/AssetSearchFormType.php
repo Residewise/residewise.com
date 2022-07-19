@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace App\Form;
 
-use App\Entity\Agent;
 use App\Entity\Asset;
 use App\Entity\User;
+use App\Enum\Role;
 use App\Service\RegionalSettingsService\RegionalSettingsService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -104,8 +104,8 @@ class AssetSearchFormType extends AbstractType
                 'placeholder' => false,
                 'choices' => [
                     $this->translator->trans('all') => null,
-                    $this->translator->trans('agent') => Agent::class,
-                    $this->translator->trans('owner') => User::class,
+                    $this->translator->trans('agent') => Role::Agent,
+                    $this->translator->trans('owner') => Role::Owner,
                 ],
             ]);
     }

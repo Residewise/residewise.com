@@ -36,9 +36,9 @@ class Agency
     private string $logo;
 
     /**
-     * @var ArrayCollection<int, Agent>
+     * @var ArrayCollection<int, User>
      */
-    #[ORM\OneToMany(mappedBy: 'agency', targetEntity: Agent::class)]
+    #[ORM\OneToMany(mappedBy: 'agency', targetEntity: User::class)]
     private Collection $agents;
 
     public function __construct()
@@ -173,22 +173,22 @@ class Agency
         return $this->agents;
     }
 
-    public function addAgent(Agent $agent): self
+    public function addAgent(UserInterface $user): self
     {
-        if (! $this->agents->contains($agent)) {
-            $this->agents[] = $agent;
-            $agent->setAgency($this);
+        if (! $this->agents->contains($user)) {
+            $this->agents[] = $user;
+            $user->setAgency($this);
         }
 
         return $this;
     }
 
-    public function removeAgent(Agent $agent): self
+    public function removeAgent(UserInterface $user): self
     {
-        if ($this->agents->removeElement($agent)) {
+        if ($this->agents->removeElement($user)) {
             // set the owning side to null (unless already changed)
-            if ($agent->getAgency() === $this) {
-                $agent->setAgency(null);
+            if ($user->getAgency() === $this) {
+                $user->setAgency(null);
             }
         }
 

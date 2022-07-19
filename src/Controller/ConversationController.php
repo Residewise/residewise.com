@@ -103,7 +103,7 @@ class ConversationController extends AbstractController
 //                return $this->redirectToRoute('conversation', ['id' => $findPreviousConversation->getId()]);
 //            }
 
-            $conversation->addPerson($this->getUser());
+            $conversation->addUser($this->getUser());
             $conversation->setTitle($conversation->getUsersFirstNamesAsCommaSeperatedString());
             $this->conversationRepository->add($conversation);
 

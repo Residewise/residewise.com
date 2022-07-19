@@ -4,9 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Form;
 
-use App\Entity\Agent;
-use App\Entity\Person;
 use App\Entity\User;
+use App\Enum\Role;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -58,8 +57,8 @@ class RegistrationFormType extends AbstractType
             [
                 'mapped' => false,
                 'choices' => [
-                    'user' => User::class,
-                    'agent ' => Agent::class
+                    'user' => Role::User,
+                    'agent' => Role::Agent,
                 ]
             ])
         ;
@@ -68,7 +67,7 @@ class RegistrationFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Person::class
+            'data_class' => User::class
         ]);
     }
 }
