@@ -1,67 +1,52 @@
-FROM php:8.1-fpm AS symfony_php
+FROM ghcr.io/residewise/php:main AS composer
 
-# persistent / runtime deps
-RUN apt-get update && apt-get install -y \
-		git \
-        zip
+ENV APP_ENV="prod" \
+    APP_DEBUG=0 \
+    PHP_OPCACHE_PRELOAD="/app/config/preload.php" \
+    PHP_EXPOSE_PHP="off" \
+    PHP_OPCACHE_VALIDATE_TIMESTAMPS=0
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-COPY --from=mlocati/php-extension-installer:1.5.16 /usr/bin/install-php-extensions /usr/local/bin/
+RUN rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-RUN install-php-extensions \
-    intl \
-    zip \
-    apcu \
-    pdo_pgsql \
-    imagick
+RUN mkdir -p var/cache var/log
 
-COPY docker/php/docker-healthcheck.sh /usr/local/bin/docker-healthcheck
-RUN chmod +x /usr/local/bin/docker-healthcheck
+# Intentionally split into multiple steps to leverage docker layer caching
+COPY composer.json composer.lock symfony.lock ./
 
-HEALTHCHECK --interval=10s --timeout=3s --retries=3 CMD ["docker-healthcheck"]
+RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts
 
-RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
-COPY docker/php/conf.d/symfony.prod.ini $PHP_INI_DIR/conf.d/symfony.ini
 
-COPY docker/php/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 
-COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-RUN chmod +x /usr/local/bin/docker-entrypoint
+FROM node:14 as js-builder
 
-# https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
-ENV COMPOSER_ALLOW_SUPERUSER=1
+WORKDIR /build
 
-ENV PATH="${PATH}:/root/.composer/vendor/bin"
+# We need /vendor here
+COPY --from=composer /app .
 
-WORKDIR /srv/app
+# Install npm packages
+COPY package.json yarn.lock webpack.config.js ./
+RUN yarn install
 
+# Production yarn build
+COPY ./assets ./assets
+
+RUN yarn run build
+
+
+
+FROM composer as php
+
+COPY --from=js-builder /build .
 COPY . .
 
-RUN set -eux; \
-	mkdir -p var/cache var/log; \
-	composer install --prefer-dist --no-dev --no-progress --no-scripts --no-interaction; \
-	composer dump-autoload --classmap-authoritative --no-dev; \
-	composer symfony:dump-env prod; \
-	composer run-script --no-dev post-install-cmd; \
-	chmod +x bin/console; sync
-
-ENTRYPOINT ["docker-entrypoint"]
-CMD ["php-fpm"]
+# Need to run again to trigger scripts with application code present
+RUN composer install --no-dev --no-interaction --classmap-authoritative
+RUN composer symfony:dump-env prod
+RUN chmod -R 777 var
 
 
-FROM caddy:${CADDY_VERSION}-builder-alpine AS symfony_caddy_builder
 
-RUN xcaddy build \
-	--with github.com/dunglas/mercure \
-	--with github.com/dunglas/mercure/caddy \
-	--with github.com/dunglas/vulcain \
-	--with github.com/dunglas/vulcain/caddy
+FROM ghcr.io/residewise/caddy:main AS caddy
 
-FROM caddy:2 AS symfony_caddy
-
-WORKDIR /srv/app
-
-COPY --from=dunglas/mercure:v0.11 /srv/public /srv/mercure-assets/
-COPY --from=symfony_caddy_builder /usr/bin/caddy /usr/bin/caddy
-COPY --from=symfony_php /srv/app/public public/
-COPY docker/caddy/Caddyfile /etc/caddy/Caddyfile
+COPY --from=php /app/public public/
