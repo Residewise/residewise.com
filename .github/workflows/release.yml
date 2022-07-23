@@ -3,12 +3,8 @@
 name: Release
 
 on:
-    workflow_run:
-        workflows: [Tests]
-        types:
-            - completed
-        branches:
-            - main
+    push:
+    pull_request:
 
 jobs:
     docker:
