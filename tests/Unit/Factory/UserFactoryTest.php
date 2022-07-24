@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Tests\Factory\Unit;
+namespace App\Tests\Unit\Factory;
 
 use App\Entity\User;
 use App\Factory\UserFactory;

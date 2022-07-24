@@ -1,0 +1,72 @@
+name: Tests
+
+on:
+    push:
+    pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    env:
+        DATABASE_URL: postgresql://residewise:residewise@127.0.0.1:5432/residewise?serverVersion=13&charset=utf8
+
+    services:
+      db:
+          image: postgres:13
+          env:
+              POSTGRES_USER: residewise
+              POSTGRES_PASSWORD: residewise
+          options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+          ports:
+              - 5432:5432
+
+    steps:
+      -   uses: actions/checkout@v2
+      -   uses: shivammathur/setup-php@v2
+          with:
+            php-version: 8.1
+            coverage: none # default is xdebug
+            extensions: mbstring, uuid # needed by phpunit
+
+      -   run: composer install --dev --no-progress
+      -   run: yarn install
+      -   run: yarn run dev
+      -   run: vendor/bin/phpunit
+
+
+  ecs:
+      runs-on: ubuntu-latest
+      steps:
+        -   uses: actions/checkout@v2
+        -   uses: shivammathur/setup-php@v2
+            with:
+              php-version: 8.1
+              coverage: none # default is xdebug
+
+        -   run: composer install --dev --no-progress
+        -   run: composer run-script check-cs
+
+
+  rector:
+      runs-on: ubuntu-latest
+      steps:
+        -   uses: actions/checkout@v2
+        -   uses: shivammathur/setup-php@v2
+            with:
+              php-version: 8.1
+              coverage: none # default is xdebug
+
+        -   run: composer install --dev --no-progress
+        -   run: composer run-script rector-dry
+
+  phpstan:
+      runs-on: ubuntu-latest
+      steps:
+        -   uses: actions/checkout@v2
+        -   uses: shivammathur/setup-php@v2
+            with:
+              php-version: 8.1
+              coverage: none # default is xdebug
+
+        -   run: composer install --dev --no-progress
+        -   run: composer run-script phpstan
