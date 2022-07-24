@@ -17,12 +17,12 @@ use function PHPUnit\Framework\throwException;
 
 class AccountConfirmationEmail implements EmailInterface
 {
-    public const EMAIL_TEMPLATE = '/emails/confirm-email-address.html.twig';
+    public final const EMAIL_TEMPLATE = '/emails/confirm-email-address.html.twig';
 
     public function __construct(
         private readonly MailerInterface $mailer,
         private readonly TranslatorInterface $translator,
-        private UrlGeneratorInterface $generator,
+        private readonly UrlGeneratorInterface $generator,
     ) {
     }
 

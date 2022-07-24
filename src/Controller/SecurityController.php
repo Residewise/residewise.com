@@ -28,7 +28,7 @@ class SecurityController extends AbstractController
         private readonly TranslatorInterface $translator,
         private readonly UserPasswordHasherInterface $userPasswordHasher,
         private readonly AuthenticationUtils $authenticationUtils,
-        private AccountConfirmationEmail $accountConfirmationEmail
+        private readonly AccountConfirmationEmail $accountConfirmationEmail
     )
     {
     }

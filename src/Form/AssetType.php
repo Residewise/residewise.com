@@ -30,6 +30,7 @@ class AssetType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $s = null;
         $builder->add('address', TextType::class)->add('floor', NumberType::class, [
             'label' => $this->translator->trans('floor'),
         ])->add('images', FileType::class, [

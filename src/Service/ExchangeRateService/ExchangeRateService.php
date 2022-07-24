@@ -15,7 +15,7 @@ class ExchangeRateService
     private const XE_BASE_PATH = 'https://xecdapi.xe.com/v1/convert_from.json';
 
     public function __construct(
-        private HttpClientInterface $xeApiClient,
+        private readonly HttpClientInterface $xeApiClient,
     )
     {
     }

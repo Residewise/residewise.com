@@ -89,7 +89,7 @@ class Asset implements Stringable, PriceableEntityInterface, UserOwnedEntityInte
     private Collection $views;
 
     #[ORM\Column(type: 'decimal', precision: 50, scale: 2, nullable: true)]
-    private ?string $agencyFee;
+    private ?string $agencyFee = null;
 
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: Bookmark::class)]
     private Collection $bookmarks;

@@ -11,9 +11,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class OwnerVoter extends Voter
 {
-    public const EDIT = 'EDIT';
+    public final const EDIT = 'EDIT';
 
-    public const VIEW = 'VIEW';
+    public final const VIEW = 'VIEW';
 
     protected function supports(string $attribute, $subject): bool
     {
