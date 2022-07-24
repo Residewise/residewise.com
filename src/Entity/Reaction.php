@@ -24,7 +24,7 @@ class Reaction implements Stringable
     private ?string $type = null;
 
     #[ORM\ManyToOne(targetEntity: Asset::class, cascade: ['persist'], inversedBy: 'reactions')]
-    private null|Asset $asset;
+    private null|Asset $asset = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'reactions')]
     private null|User $owner = null;

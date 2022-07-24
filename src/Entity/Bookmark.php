@@ -20,10 +20,10 @@ class Bookmark
     private Uuid $id;
 
     #[ORM\ManyToOne(targetEntity: Asset::class, inversedBy: 'bookmarks')]
-    private null|Asset $asset;
+    private null|Asset $asset = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'bookmarks')]
-    private null|User $owner;
+    private null|User $owner = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;

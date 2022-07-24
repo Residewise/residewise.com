@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Controller;
 
@@ -15,16 +15,15 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 use function json_decode;
 
 #[Route('/user')]
 class UserController extends AbstractController
 {
     public function __construct(
-        private readonly UserRepository     $userRepository,
+        private readonly UserRepository $userRepository,
         private readonly ImageUploadService $imageUploadService,
-        private readonly ReviewRepository   $reviewRepository,
+        private readonly ReviewRepository $reviewRepository,
     )
     {
     }
@@ -49,6 +48,7 @@ class UserController extends AbstractController
             }
 
             $this->userRepository->add($user);
+
             return $this->redirectToRoute('user_account');
         }
 
@@ -85,7 +85,7 @@ class UserController extends AbstractController
     public function search(Request $request): Response
     {
         $keyword = $request->get('q');
-        $ids = (array) json_decode($request->get('i'), null, 512, JSON_THROW_ON_ERROR);
+        $ids = (array)json_decode($request->get('i'), null, 512, JSON_THROW_ON_ERROR);
         $users = $this->userRepository->findByInput($keyword, $ids);
 
         return $this->render('user/_autocomplete-list.html.twig', [

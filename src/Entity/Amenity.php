@@ -29,7 +29,7 @@ class Amenity implements Stringable
     private Collection $assets;
 
     #[ORM\Column(type: 'string', length: 30, nullable: true)]
-    private null|string $icon;
+    private null|string $icon = null;
 
     public function __construct()
     {

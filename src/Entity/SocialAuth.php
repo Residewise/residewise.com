@@ -21,7 +21,7 @@ class SocialAuth
     private Uuid $id;
 
     #[ORM\Column(type: 'string', length: 500)]
-    private null|string $token;
+    private null|string $token = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $provider;

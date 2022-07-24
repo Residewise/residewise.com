@@ -24,10 +24,10 @@ class Image implements Stringable
     private DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    private null|int $height;
+    private null|int $height = null;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    private null|int $width;
+    private null|int $width = null;
 
     public function __construct(
         #[ORM\Column(type: 'text')] private string $base64,

@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Uid\Uuid;
@@ -145,10 +144,10 @@ class SecurityController extends AbstractController
     public function setNewPassword(?User $user, Request $request): Response
     {
 
-        if($user == null){
+        if($user === null){
             return $this->redirectToRoute('app_login');
         }
-        assert($user instanceof  PasswordAuthenticatedUserInterface);
+        assert($user instanceof PasswordAuthenticatedUserInterface);
 
         $passwordForm = $this->createForm(PasswordFormType::class, null, [
             'isOldPasswordRequired' => true,
@@ -159,7 +158,8 @@ class SecurityController extends AbstractController
 
         if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
 
-            $oldPlainPassword = $passwordForm->get('oldPassword')->getData();
+            $oldPlainPassword = $passwordForm->get('oldPassword')
+                ->getData();
             $oldHashedPassword = $this->userPasswordHasher->hashPassword($user, $oldPlainPassword);
 
             if (! $this->userPasswordHasher->isPasswordValid($user, $oldPlainPassword))
