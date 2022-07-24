@@ -92,7 +92,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/avg/rating/{id}', name: '_user_avg_rating')]
-    public function _rating(UserInterface $user)
+    public function _rating(UserInterface $user): Response
     {
         $avgUserRating = $this->reviewRepository->getAverageUserRating($user);
 
@@ -103,7 +103,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/set/empty/account', name: 'user_set_empty_account')]
-    public function setAccount()
+    public function setAccount(): Response
     {
         $accountTypeForm = $this->createForm(AccountFormType::class);
 

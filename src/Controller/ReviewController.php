@@ -10,6 +10,7 @@ use App\Form\ReviewFormType;
 use App\Repository\ReviewRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/review')]
@@ -21,7 +22,7 @@ class ReviewController extends AbstractController
     }
 
     #[Route('/new/{id}', name: 'new_review')]
-    public function create(User $user, Request $request)
+    public function create(User $user, Request $request) : Response
     {
         $review = new Review();
         $review->setAuthor($this->getUser());

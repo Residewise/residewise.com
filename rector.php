@@ -18,7 +18,7 @@ return static function (RectorConfig $rectorConfig) {
     $rectorConfig->phpstanConfig(__DIR__ . '/phpstan.neon');
     $rectorConfig->phpVersion(PhpVersion::PHP_81);
 
-    $rectorConfig->import(SymfonySetList::SYMFONY_60);
+    $rectorConfig->import(SymfonySetList::SYMFONY_CODE_QUALITY);
 //     $rectorConfig->import(DoctrineSetList::DOCTRINE_REPOSITORY_AS_SERVICE);
     // $rectorConfig->import(SetList::CODE_QUALITY);
     // $rectorConfig->import(SetList::PHP_81);

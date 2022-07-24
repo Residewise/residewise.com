@@ -66,7 +66,7 @@ class ConversationController extends AbstractController
     }
 
     #[Route(path: '/edit/{id}', name: 'conversation_edit', methods: [Request::METHOD_GET, Request::METHOD_POST])]
-    public function edit(Conversation $conversation, Request $request)
+    public function edit(Conversation $conversation, Request $request): Response
     {
         $conversationForm = $this->createForm(ConversationFormType::class, $conversation, [
             'action' => $this->urlGenerator->generate('conversation_edit', [
