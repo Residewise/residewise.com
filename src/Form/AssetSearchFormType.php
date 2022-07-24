@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace App\Form;
 
 use App\Entity\Asset;
-use App\Entity\User;
 use App\Enum\Role;
 use App\Service\RegionalSettingsService\RegionalSettingsService;
 use Symfony\Component\Form\AbstractType;
@@ -80,7 +79,7 @@ class AssetSearchFormType extends AbstractType
                 'autocomplete' => true,
                 'multiple' => true,
                 'data' => [
-                    'apartment' => $this->translator->trans('apartment')
+                    'apartment' => $this->translator->trans('apartment'),
                 ],
             ])->add('term', ChoiceType::class, [
                 'required' => false,
@@ -89,7 +88,7 @@ class AssetSearchFormType extends AbstractType
                     'rent' => $this->translator->trans('rent'),
                     'sale' => $this->translator->trans('sale'),
                 ],
-                'data' => 'rent'
+                'data' => 'rent',
             ])->add('address', TextType::class, [
                 'required' => false,
                 'attr' => [
@@ -99,7 +98,7 @@ class AssetSearchFormType extends AbstractType
                 'required' => false,
                 'currency' => 'CZK',
             ])->add('userType', ChoiceType::class, [
-                'mapped' =>false,
+                'mapped' => false,
                 'required' => false,
                 'placeholder' => false,
                 'choices' => [

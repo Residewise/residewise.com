@@ -53,21 +53,24 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('account', ChoiceType::class,
-            [
-                'mapped' => false,
-                'choices' => [
-                    'user' => Role::User,
-                    'agent' => Role::Agent,
+            ->add(
+                'account',
+                ChoiceType::class,
+                [
+                    'mapped' => false,
+                    'choices' => [
+                        'user' => Role::User,
+                        'agent' => Role::Agent,
+                    ],
                 ]
-            ])
+            )
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class
+            'data_class' => User::class,
         ]);
     }
 }

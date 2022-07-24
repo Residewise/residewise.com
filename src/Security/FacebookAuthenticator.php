@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Security;
 
 use App\Factory\SocialAuthFactory;
@@ -55,7 +57,7 @@ class FacebookAuthenticator extends OAuth2Authenticator
 
                 // 1) have they logged in with Facebook before? Easy!
                 $socialAuth = $this->socialAuthRepository->findOneBy([
-                    'token' => $facebookUser->getId()
+                    'token' => $facebookUser->getId(),
                 ]);
 
                 if ($socialAuth) {
@@ -63,9 +65,11 @@ class FacebookAuthenticator extends OAuth2Authenticator
                 }
 
                 // 2) do we have a matching user by email?
-                $user = $this->userRepository->findOneBy(['email' => $email]);
+                $user = $this->userRepository->findOneBy([
+                    'email' => $email,
+                ]);
 
-                if (!$user) {
+                if (! $user) {
                     // 3) Maybe you just want to "register" them
                     $user = $this->userFactory->create(
                         firstName: $facebookUser->getFirstName(),
@@ -102,5 +106,4 @@ class FacebookAuthenticator extends OAuth2Authenticator
 
         return new Response($message, Response::HTTP_FORBIDDEN);
     }
-
 }

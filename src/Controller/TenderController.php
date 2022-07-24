@@ -47,7 +47,8 @@ class TenderController extends AbstractController
 
             $asset->setTender($tender);
 
-            $minimumBid = (string) $form->get('minimumBid')->getData();
+            $minimumBid = (string)$form->get('minimumBid')
+                ->getData();
             if ($minimumBid) {
                 $asset->setPrice($minimumBid);
             }

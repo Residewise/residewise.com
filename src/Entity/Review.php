@@ -32,7 +32,7 @@ class Review
     #[ORM\ManyToOne(targetEntity: Asset::class, inversedBy: 'reviews')]
     private ?Asset $asset = null;
 
-    #[ORM\ManyToOne(targetEntity: UserInterface::class, inversedBy: 'ownedReviews')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ownedReviews')]
     private null|UserInterface $author = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reviews')]

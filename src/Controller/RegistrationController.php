@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller;
 
 use App\Entity\User;
@@ -28,24 +30,23 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class RegistrationController extends AbstractController
 {
     public function __construct(
-        private readonly AvatarService               $avatarService,
-        private readonly TranslatorInterface         $translator,
-        private readonly UrlGeneratorInterface       $urlGenerator,
-        private readonly MailerInterface             $mailer,
-        private readonly LoggerInterface             $logger,
+        private readonly AvatarService $avatarService,
+        private readonly TranslatorInterface $translator,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly MailerInterface $mailer,
+        private readonly LoggerInterface $logger,
         private readonly UserPasswordHasherInterface $userPasswordHasher,
-        private readonly EntityManagerInterface      $entityManager,
+        private readonly EntityManagerInterface $entityManager,
         private readonly CacheInterface $cache
-
     )
     {
     }
 
     #[Route('/register', name: 'app_register')]
     public function register(
-        Request                    $request,
+        Request $request,
         UserAuthenticatorInterface $userAuthenticator,
-        AppCustomAuthenticator     $authenticator,
+        AppCustomAuthenticator $authenticator,
     ): ?Response
     {
         if($request->get('isSocial')){
@@ -57,38 +58,34 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $account = $form->get('account')->getData();
+            $account = $form->get('account')
+                ->getData();
             $user = match ($account) {
                 'default' => null
             };
 
             $this->entityManager->flush();
 
-            return $userAuthenticator->authenticateUser(
-                $user,
-                $authenticator,
-                $request
-            );
+            return $userAuthenticator->authenticateUser($user, $authenticator, $request);
         }
+
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }
 
-    private function sendUserConfirmationEmail(
-        UserInterface $user
-    ): void
+    private function sendUserConfirmationEmail(UserInterface $user): void
     {
         $email = new TemplatedEmail();
         $email->from('fabien@example.com');
         $email->to(new Address($user->getEmail()));
-        $email->subject(
-            $this->translator->trans('email.confirmation.subject')
-        );
+        $email->subject($this->translator->trans('email.confirmation.subject'));
         $email->htmlTemplate('emails/confirm-email-address.html.twig');
         $email->context([
             'user' => $user,
-            'path' => $this->urlGenerator->generate('app_account_confirm', ['token' => $user->getToken()]),
+            'path' => $this->urlGenerator->generate('app_account_confirm', [
+                'token' => $user->getToken(),
+            ]),
         ]);
 
         try {
@@ -106,6 +103,4 @@ class RegistrationController extends AbstractController
 
         return $user;
     }
-
-
 }

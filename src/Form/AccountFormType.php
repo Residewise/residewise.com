@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Form;
 
-use App\Entity\User;
 use App\Enum\Role;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -12,7 +13,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AccountFormType extends AbstractType
 {
-
     public function __construct(
         private readonly TranslatorInterface $translator,
     )
@@ -22,14 +22,14 @@ class AccountFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('account',ChoiceType::class ,[
+            ->add('account', ChoiceType::class, [
                 'choices' => [
                     $this->translator->trans('tenent') => Role::Tenant,
                     $this->translator->trans('owner') => Role::Owner,
-                    $this->translator->trans('agent') => Role::Agent
+                    $this->translator->trans('agent') => Role::Agent,
                 ],
                 'multiple' => true,
-                'expanded' => true
+                'expanded' => true,
             ])
         ;
     }

@@ -65,18 +65,22 @@ class ConversationController extends AbstractController
         ]);
     }
 
-
     #[Route(path: '/edit/{id}', name: 'conversation_edit', methods: [Request::METHOD_GET, Request::METHOD_POST])]
     public function edit(Conversation $conversation, Request $request)
     {
         $conversationForm = $this->createForm(ConversationFormType::class, $conversation, [
-            'action' => $this->urlGenerator->generate('conversation_edit',['id'=> $conversation->getId()])
+            'action' => $this->urlGenerator->generate('conversation_edit', [
+                'id' => $conversation->getId(),
+            ]),
         ]);
         $conversationForm->handleRequest($request);
 
         if ($conversationForm->isSubmitted() && $conversationForm->isValid()) {
             $this->conversationRepository->add($conversation);
-            return $this->redirectToRoute('conversation', ['id'=> $conversation->getId()]);
+
+            return $this->redirectToRoute('conversation', [
+                'id' => $conversation->getId(),
+            ]);
         }
 
         return $this->render('conversation/edit.html.twig', [
@@ -89,7 +93,7 @@ class ConversationController extends AbstractController
     {
         $conversation = new Conversation();
         $conversationForm = $this->createForm(ConversationFormType::class, $conversation, [
-            'action' => $this->urlGenerator->generate('conversation_new')
+            'action' => $this->urlGenerator->generate('conversation_new'),
         ]);
         $conversationForm->handleRequest($request);
 

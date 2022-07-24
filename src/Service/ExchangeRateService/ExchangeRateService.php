@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Service\ExchangeRateService;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -18,20 +20,16 @@ class ExchangeRateService
     {
     }
 
-    public function exchange(
-        string $from,
-        string $to,
-        mixed $amount
-    ) : mixed
+    public function exchange(string $from, string $to, mixed $amount): mixed
     {
        $response = $this->xeApiClient->request(Request::METHOD_GET, self::XE_BASE_PATH, [
-            'query' => [
-                'from' => $from,
-                'to' => $to,
-                'amount' => $amount,
-                'decimal_places' => 2
-            ],
-        ]);
+        'query' => [
+            'from' => $from,
+               'to' => $to,
+               'amount' => $amount,
+               'decimal_places' => 2,
+        ],
+    ]);
 
         $encoders = [new JsonEncoder()];
         $normalizers = [new ObjectNormalizer()];
@@ -40,5 +38,4 @@ class ExchangeRateService
 
         return $serializer->decode($response->getContent(), 'json');
     }
-
 }

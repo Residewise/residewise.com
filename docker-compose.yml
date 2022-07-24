@@ -54,7 +54,7 @@ services:
     environment:
       POSTGRES_DB: residewise
       POSTGRES_PASSWORD: residewise
-      POSTGRES_USER: residewise
+      POSTGRES_USER: root
     volumes:
       - ./docker/db/data:/var/lib/postgresql/data:rw
 

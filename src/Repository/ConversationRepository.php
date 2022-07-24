@@ -11,7 +11,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use function dump;
 
 /**
  * @method Conversation|null find($id, $lockMode = null, $lockVersion = null)

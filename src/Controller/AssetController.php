@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Controller;
 
@@ -28,12 +28,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 class AssetController extends AbstractController
 {
     public function __construct(
-        private readonly AssetRepository     $assetRepository,
-        private readonly ImageRepository     $imageRepository,
+        private readonly AssetRepository $assetRepository,
+        private readonly ImageRepository $imageRepository,
         private readonly SerializerInterface $serializer,
-        private readonly ImageUploadService  $imageUploadService,
+        private readonly ImageUploadService $imageUploadService,
         private readonly RegionalSettingsService $regionalSettingsService,
-        private readonly ExchangeRateService     $exchangeRateService
+        private readonly ExchangeRateService $exchangeRateService
     )
     {
     }
@@ -44,7 +44,17 @@ class AssetController extends AbstractController
         $searchForm = $this->createForm(AssetSearchFormType::class);
         $searchForm->handleRequest($request);
         $assets = $this->assetRepository->findBySearch(
-            minSqm: null,maxSqm: null,minPrice: null,maxPrice: null,types: ['apartment'],term: 'rent',userType: null,title: null,floor: null,agencyFee: null,address: null
+            minSqm: null,
+            maxSqm: null,
+            minPrice: null,
+            maxPrice: null,
+            types: ['apartment'],
+            term: 'rent',
+            userType: null,
+            title: null,
+            floor: null,
+            agencyFee: null,
+            address: null
         );
 
         $json = new JsonResponse($this->serializer->serialize($assets, 'json', [
@@ -122,12 +132,14 @@ class AssetController extends AbstractController
 
         $exchangedCurrentBid = null;
         if ($asset->getTender() && $asset->getTender()->getBid()) {
-            if ($this->regionalSettingsService->getCurrency() != $asset->getCurrency()) {
+            if ($this->regionalSettingsService->getCurrency() !== $asset->getCurrency()) {
                 $xe = $this->exchangeRateService->exchange(
                     from: $asset->getCurrency(),
                     to: $this->regionalSettingsService->getCurrency(),
-                    amount: $asset->getTender()->getBid()->getPrice()
-            );
+                    amount: $asset->getTender()
+                        ->getBid()
+                        ->getPrice()
+                );
                 $exchangedCurrentBid = $xe['to'][0]['mid'];
             }
         }
@@ -144,7 +156,7 @@ class AssetController extends AbstractController
         $this->denyAccessUnlessGranted(OwnerVoter::VIEW, $asset);
 
         return $this->render('asset/view.html.twig', [
-            'asset' => $asset
+            'asset' => $asset,
         ]);
     }
 

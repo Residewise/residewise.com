@@ -111,10 +111,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/set-account.html.twig', [
-            'accountTypeForm' => $accountTypeForm->createView()
+            'accountTypeForm' => $accountTypeForm->createView(),
         ]);
     }
-
-
-
 }

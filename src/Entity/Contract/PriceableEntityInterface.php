@@ -6,7 +6,6 @@ namespace App\Entity\Contract;
 
 interface PriceableEntityInterface
 {
-
     public function getPrice(): ?string;
 
     public function setPrice(string $price): self;

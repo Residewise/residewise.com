@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Controller;
 
@@ -8,7 +8,6 @@ use App\Entity\Asset;
 use App\Entity\Bid;
 use App\Entity\Tender;
 use App\Form\BidFormType;
-use App\Model\Rate;
 use App\Repository\BidRepository;
 use App\Repository\TenderRepository;
 use App\Service\ExchangeRateService\ExchangeRateService;
@@ -26,11 +25,11 @@ use Symfony\UX\Turbo\TurboBundle;
 class BidController extends AbstractController
 {
     public function __construct(
-        private readonly BidRepository           $bidRepository,
-        private readonly TenderRepository        $tenderRepository,
-        private readonly HubInterface            $hub,
+        private readonly BidRepository $bidRepository,
+        private readonly TenderRepository $tenderRepository,
+        private readonly HubInterface $hub,
         private readonly RegionalSettingsService $regionalSettingsService,
-        private readonly ExchangeRateService     $exchangeRateService
+        private readonly ExchangeRateService $exchangeRateService
     )
     {
     }
@@ -42,7 +41,7 @@ class BidController extends AbstractController
         $suggestedBidAmount = $this->resolveBidSuggestion($asset);
 
         $exchangedSuggestedBid = null;
-        if ($this->regionalSettingsService->getCurrency() != $asset->getCurrency()) {
+        if ($this->regionalSettingsService->getCurrency() !== $asset->getCurrency()) {
             $xe = $this->exchangeRateService->exchange(
                 from: $asset->getCurrency(),
                 to: $this->regionalSettingsService->getCurrency(),
@@ -86,13 +85,14 @@ class BidController extends AbstractController
         return $this->render('asset/bid/_form.html.twig', [
             'asset' => $asset,
             'bidForm' => $form->createView(),
-            'exchangedSuggestedBid' => $exchangedSuggestedBid
+            'exchangedSuggestedBid' => $exchangedSuggestedBid,
         ]);
     }
 
     protected function addPercentageToNumber(string $number, float $percentage): float
     {
         $amount = (float)$number;
+
         return (($amount / 100) * $percentage) + $amount;
     }
 

@@ -21,7 +21,6 @@ use Symfony\Component\Uid\Uuid;
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringable
 {
-
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -81,6 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringa
      */
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: AssetView::class)]
     private Collection $assetViews;
+
     /**
      * @var ArrayCollection<int, Insight>
      */
@@ -132,6 +132,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringa
         $this->messages = new ArrayCollection();
         $this->assetViews = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getFullName();
     }
 
     /**
@@ -306,11 +311,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringa
         }
 
         return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->getFullName();
     }
 
     public function getId(): ?Uuid
@@ -607,9 +607,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringa
         return $this;
     }
 
-    public function isAgent() : bool
+    public function isAgent(): bool
     {
         return $this instanceof Agent;
     }
-
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Repository;
 
@@ -49,30 +49,25 @@ class AssetRepository extends ServiceEntityRepository
     }
 
     public function findBySearch(
-        ?float  $minSqm,
-        ?float  $maxSqm,
-        ?float  $minPrice,
-        ?float  $maxPrice,
-        array   $types,
+        ?float $minSqm,
+        ?float $maxSqm,
+        ?float $minPrice,
+        ?float $maxPrice,
+        array $types,
         ?string $term,
         ?string $userType,
         ?string $title,
-        ?int    $floor,
-        ?int    $agencyFee,
+        ?int $floor,
+        ?int $agencyFee,
         ?string $address
     ): mixed
     {
         $qb = $this->createQueryBuilder('a');
         $qb->orderBy('a.createdAt', 'ASC');
 
-
         $qb->leftJoin('a.tender', 't');
-        $qb->andWhere(
-            $qb->expr()->isNotNull('t')
-        );
-        $qb->andWhere(
-            $qb->expr()->between('CURRENT_DATE()', 't.startAt', 't.endAt')
-        );
+        $qb->andWhere($qb->expr() ->isNotNull('t'));
+        $qb->andWhere($qb->expr() ->between('CURRENT_DATE()', 't.startAt', 't.endAt'));
 
         if ($floor) {
             $qb->andWhere($qb->expr()->lte('a.floor', ':floor'))
@@ -98,12 +93,12 @@ class AssetRepository extends ServiceEntityRepository
                 ->setParameter('agencyFee', $agencyFee);
         }
 
-        if ($minSqm && !$maxSqm) {
+        if ($minSqm && ! $maxSqm) {
             $qb->andWhere($qb->expr()->gte('a.sqm', ':minSqm'))
                 ->setParameter('minSqm', $minSqm);
         }
 
-        if ($maxSqm && !$minSqm) {
+        if ($maxSqm && ! $minSqm) {
             $qb->andWhere($qb->expr()->lte('a.sqm', ':maxSqm'))
                 ->setParameter('maxSqm', $maxSqm);
         }
@@ -114,12 +109,12 @@ class AssetRepository extends ServiceEntityRepository
                 ->setParameter('maxSqm', $maxSqm);
         }
 
-        if ($minPrice && !$maxPrice) {
+        if ($minPrice && ! $maxPrice) {
             $qb->andWhere($qb->expr()->gte('a.price', ':minPrice'))
                 ->setParameter('minPrice', $minPrice);
         }
 
-        if ($maxPrice && !$minPrice) {
+        if ($maxPrice && ! $minPrice) {
             $qb->andWhere($qb->expr()->lte('a.price', ':maxPrice'))
                 ->setParameter('maxPrice', $maxPrice);
         }
@@ -132,11 +127,9 @@ class AssetRepository extends ServiceEntityRepository
                 ->setParameter('maxPrice', $maxPrice);
         }
 
-
         if ($types) {
-            $qb->andWhere(
-                $qb->expr()->in('a.type', ':types')
-            )->setParameter('types', $types);
+            $qb->andWhere($qb->expr() ->in('a.type', ':types'))
+                ->setParameter('types', $types);
         }
 
         if ($term) {
@@ -152,5 +145,4 @@ class AssetRepository extends ServiceEntityRepository
         return $qb->getQuery()
             ->getResult();
     }
-
 }

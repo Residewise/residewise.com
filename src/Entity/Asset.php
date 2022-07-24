@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Entity;
 
-use App\Entity\Contract\UserOwnedEntityInterface;
 use App\Entity\Contract\PriceableEntityInterface;
+use App\Entity\Contract\UserOwnedEntityInterface;
 use App\Repository\AssetRepository;
 use Carbon\Carbon;
 use DateTimeImmutable;
@@ -597,7 +597,7 @@ class Asset implements Stringable, PriceableEntityInterface, UserOwnedEntityInte
         return $this;
     }
 
-    public function isAgent() : bool
+    public function isAgent(): bool
     {
         return $this->getOwner() instanceof Agent;
     }
