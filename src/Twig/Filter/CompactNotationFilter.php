@@ -12,7 +12,9 @@ class CompactNotationFilter extends AbstractExtension
 {
     public function getFilters()
     {
-        return [new TwigFilter('compact_notation', [$this, 'formatInt'])];
+        return [new TwigFilter('compact_notation', function (int $number) : string {
+            return $this->formatInt($number);
+        })];
     }
 
     // output short int notation: 1,000 = 1.0k / 100,500 = 100.5k

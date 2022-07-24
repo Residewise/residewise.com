@@ -15,7 +15,7 @@ class SocialAuthFactory
         $socialAuth->setToken($token);
         $socialAuth->setProvider($provider);
 
-        if ($owner) {
+        if ($owner !== null) {
             $socialAuth->setOwner($owner);
         }
 

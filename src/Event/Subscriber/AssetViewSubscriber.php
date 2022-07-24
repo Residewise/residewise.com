@@ -42,7 +42,7 @@ class AssetViewSubscriber implements EventSubscriberInterface
                 'id' => $params['id'],
             ]);
 
-            if($asset){
+            if($asset !== null){
                 $assetView = $this->assetViewFactory->create($asset, $this->security->getUser());
                 $this->assetViewRepository->add($assetView, true);
             }

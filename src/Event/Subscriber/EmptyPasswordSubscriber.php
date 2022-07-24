@@ -37,11 +37,9 @@ class EmptyPasswordSubscriber implements EventSubscriberInterface
             $request = $event->getRequest();
             $route = $request->attributes->get('_route');
 
-            if ($user->getPassword() === UserFactory::PASSWORD_NOT_SET) {
-                if ($route !== 'user_set_empty_password') {
-                    $url = $this->urlGenerator->generate('user_set_empty_password');
-                    $event->setResponse(new RedirectResponse($url));
-                }
+            if ($user->getPassword() === UserFactory::PASSWORD_NOT_SET && $route !== 'user_set_empty_password') {
+                $url = $this->urlGenerator->generate('user_set_empty_password');
+                $event->setResponse(new RedirectResponse($url));
             }
         }
 

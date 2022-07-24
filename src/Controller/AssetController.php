@@ -131,17 +131,15 @@ class AssetController extends AbstractController
     {
 
         $exchangedCurrentBid = null;
-        if ($asset->getTender() && $asset->getTender()->getBid()) {
-            if ($this->regionalSettingsService->getCurrency() !== $asset->getCurrency()) {
-                $xe = $this->exchangeRateService->exchange(
-                    from: $asset->getCurrency(),
-                    to: $this->regionalSettingsService->getCurrency(),
-                    amount: $asset->getTender()
-                        ->getBid()
-                        ->getPrice()
-                );
-                $exchangedCurrentBid = $xe['to'][0]['mid'];
-            }
+        if ($asset->getTender() && $asset->getTender()->getBid() && $this->regionalSettingsService->getCurrency() !== $asset->getCurrency()) {
+            $xe = $this->exchangeRateService->exchange(
+                from: $asset->getCurrency(),
+                to: $this->regionalSettingsService->getCurrency(),
+                amount: $asset->getTender()
+                    ->getBid()
+                    ->getPrice()
+            );
+            $exchangedCurrentBid = $xe['to'][0]['mid'];
         }
 
         return $this->render('asset/show.html.twig', [

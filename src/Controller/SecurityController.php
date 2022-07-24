@@ -36,7 +36,7 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(): Response
     {
-         if ($this->getUser()) {
+         if ($this->getUser() !== null) {
              return $this->redirectToRoute('user_account');
          }
 
@@ -124,7 +124,7 @@ class SecurityController extends AbstractController
                 'email' => $email,
             ]);
 
-            if($user){
+            if($user !== null){
                 $this->accountConfirmationEmail->send($user, []);
             }
 

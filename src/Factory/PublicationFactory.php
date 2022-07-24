@@ -15,7 +15,7 @@ class PublicationFactory
         $publication = new Publication();
         $publication->setAsset($asset);
         $publication->setIsApproved($isApproved);
-        if ($startsAt) {
+        if ($startsAt !== null) {
             $publication->setStartsAt($startsAt);
         }
         $publication->setEndsAt($this->calculateEndDate($publication));

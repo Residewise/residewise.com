@@ -84,8 +84,7 @@ class MessageRepository extends ServiceEntityRepository
             ->setMaxResults(10)
             ->setFirstResult(0)
             ->getResult();
-        $reversed = array_reverse($result);
 
-        return $reversed;
+        return array_reverse($result);
     }
 }

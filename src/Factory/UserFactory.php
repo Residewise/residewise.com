@@ -25,7 +25,7 @@ class UserFactory
         $user->setAvatar($this->avatarService->createAvatar($email));
         $user->setPassword(self::PASSWORD_NOT_SET);
 
-        if ($socialAuth) {
+        if ($socialAuth !== null) {
             $user->addSocialAuth($socialAuth);
         }
 

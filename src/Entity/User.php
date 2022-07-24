@@ -243,11 +243,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringa
 
     public function removeReaction(Reaction $reaction): self
     {
-        if ($this->reactions->removeElement($reaction)) {
-            // set the owning side to null (unless already changed)
-            if ($reaction->getOwner() === $this) {
-                $reaction->setOwner(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->reactions->removeElement($reaction) && $reaction->getOwner() === $this) {
+            $reaction->setOwner(null);
         }
 
         return $this;
@@ -273,11 +271,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringa
 
     public function removeBookmark(Bookmark $bookmark): self
     {
-        if ($this->bookmarks->removeElement($bookmark)) {
-            // set the owning side to null (unless already changed)
-            if ($bookmark->getOwner() === $this) {
-                $bookmark->setOwner(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->bookmarks->removeElement($bookmark) && $bookmark->getOwner() === $this) {
+            $bookmark->setOwner(null);
         }
 
         return $this;
@@ -303,11 +299,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringa
 
     public function removeBid(Bid $bid): self
     {
-        if ($this->bids->removeElement($bid)) {
-            // set the owning side to null (unless already changed)
-            if ($bid->getOwner() === $this) {
-                $bid->setOwner(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->bids->removeElement($bid) && $bid->getOwner() === $this) {
+            $bid->setOwner(null);
         }
 
         return $this;
@@ -431,11 +425,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringa
 
     public function removeSocialAuth(SocialAuth $socialAuth): self
     {
-        if ($this->socialAuths->removeElement($socialAuth)) {
-            // set the owning side to null (unless already changed)
-            if ($socialAuth->getOwner() === $this) {
-                $socialAuth->setOwner(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->socialAuths->removeElement($socialAuth) && $socialAuth->getOwner() === $this) {
+            $socialAuth->setOwner(null);
         }
 
         return $this;
@@ -597,11 +589,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringa
 
     public function removeAssetView(AssetView $assetView): self
     {
-        if ($this->assetViews->removeElement($assetView)) {
-            // set the owning side to null (unless already changed)
-            if ($assetView->getOwner() === $this) {
-                $assetView->setOwner(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->assetViews->removeElement($assetView) && $assetView->getOwner() === $this) {
+            $assetView->setOwner(null);
         }
 
         return $this;

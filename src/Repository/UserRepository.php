@@ -91,7 +91,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $qb = $this->createQueryBuilder('u');
 
-        if ($keyword) {
+        if ($keyword !== '' && $keyword !== '0') {
 
             $firstNameCondition = $qb->expr()
                 ->like('LOWER(u.firstName)', ':keyword');

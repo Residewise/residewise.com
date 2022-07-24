@@ -127,7 +127,7 @@ class AssetRepository extends ServiceEntityRepository
                 ->setParameter('maxPrice', $maxPrice);
         }
 
-        if ($types) {
+        if ($types !== []) {
             $qb->andWhere($qb->expr() ->in('a.type', ':types'))
                 ->setParameter('types', $types);
         }

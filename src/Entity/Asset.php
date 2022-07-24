@@ -339,11 +339,9 @@ class Asset implements Stringable, PriceableEntityInterface, UserOwnedEntityInte
 
     public function removeReaction(Reaction $reaction): self
     {
-        if ($this->reactions->removeElement($reaction)) {
-            // set the owning side to null (unless already changed)
-            if ($reaction->getAsset() === $this) {
-                $reaction->setAsset(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->reactions->removeElement($reaction) && $reaction->getAsset() === $this) {
+            $reaction->setAsset(null);
         }
 
         return $this;
@@ -430,11 +428,9 @@ class Asset implements Stringable, PriceableEntityInterface, UserOwnedEntityInte
 
     public function removeView(AssetView $view): self
     {
-        if ($this->views->removeElement($view)) {
-            // set the owning side to null (unless already changed)
-            if ($view->getAsset() === $this) {
-                $view->setAsset(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->views->removeElement($view) && $view->getAsset() === $this) {
+            $view->setAsset(null);
         }
 
         return $this;
@@ -473,11 +469,9 @@ class Asset implements Stringable, PriceableEntityInterface, UserOwnedEntityInte
 
     public function removeBookmark(Bookmark $bookmark): self
     {
-        if ($this->bookmarks->removeElement($bookmark)) {
-            // set the owning side to null (unless already changed)
-            if ($bookmark->getAsset() === $this) {
-                $bookmark->setAsset(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->bookmarks->removeElement($bookmark) && $bookmark->getAsset() === $this) {
+            $bookmark->setAsset(null);
         }
 
         return $this;
@@ -515,11 +509,9 @@ class Asset implements Stringable, PriceableEntityInterface, UserOwnedEntityInte
 
     public function removeTender(Tender $tender): self
     {
-        if ($this->tenders->removeElement($tender)) {
-            // set the owning side to null (unless already changed)
-            if ($tender->getAsset() === $this) {
-                $tender->setAsset(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->tenders->removeElement($tender) && $tender->getAsset() === $this) {
+            $tender->setAsset(null);
         }
 
         return $this;

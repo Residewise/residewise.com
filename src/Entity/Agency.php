@@ -17,6 +17,18 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: AgencyRepository::class)]
 class Agency
 {
+    /**
+     * @var mixed|mixed[]
+     */
+    public $roles;
+    /**
+     * @var mixed|string
+     */
+    public $password;
+    /**
+     * @var mixed|bool
+     */
+    public $isEnabled;
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -185,11 +197,9 @@ class Agency
 
     public function removeAgent(UserInterface $user): self
     {
-        if ($this->agents->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getAgency() === $this) {
-                $user->setAgency(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->agents->removeElement($user) && $user->getAgency() === $this) {
+            $user->setAgency(null);
         }
 
         return $this;

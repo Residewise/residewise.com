@@ -49,7 +49,7 @@ class ConversationRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('c');
         $qb->orderBy('c.createdAt', 'ASC');
 
-        if ($user) {
+        if ($user !== null) {
             $qb->join('c.people', 'p');
 
             $qb->andWhere('p.id = :id')

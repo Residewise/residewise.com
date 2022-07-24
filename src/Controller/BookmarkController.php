@@ -35,7 +35,7 @@ class BookmarkController extends AbstractController
             'asset' => $asset,
         ]);
 
-        if (! $bookmark) {
+        if ($bookmark === null) {
             $bookmark = $this->bookmarkFactory->create($asset, $this->getUser());
             $this->bookmarkRepository->add($bookmark, true);
         } else {

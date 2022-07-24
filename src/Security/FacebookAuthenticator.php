@@ -60,7 +60,7 @@ class FacebookAuthenticator extends OAuth2Authenticator
                     'token' => $facebookUser->getId(),
                 ]);
 
-                if ($socialAuth) {
+                if ($socialAuth !== null) {
                     return $socialAuth->getOwner();
                 }
 
@@ -69,7 +69,7 @@ class FacebookAuthenticator extends OAuth2Authenticator
                     'email' => $email,
                 ]);
 
-                if (! $user) {
+                if ($user === null) {
                     // 3) Maybe you just want to "register" them
                     $user = $this->userFactory->create(
                         firstName: $facebookUser->getFirstName(),
