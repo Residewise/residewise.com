@@ -28,7 +28,7 @@ class EmptyPasswordSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function redirectToPasswordForm(RequestEvent $event)
+    public function redirectToPasswordForm(RequestEvent $event): void
     {
         /** @var User $user */
         $user = $this->security->getUser();

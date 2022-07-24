@@ -10,7 +10,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Conversation|null find($id, $lockMode = null, $lockVersion = null)
@@ -24,7 +23,8 @@ class ConversationRepository extends ServiceEntityRepository
     public function __construct(
         ManagerRegistry $registry,
         private readonly PaginatorInterface $paginator
-    ) {
+    )
+    {
         parent::__construct($registry, Conversation::class);
     }
 
@@ -44,17 +44,15 @@ class ConversationRepository extends ServiceEntityRepository
         }
     }
 
-    public function findByUserAndKeyword(null|User|UserInterface $user, ?string $keyword, int $page = 1): mixed
+    public function findByUserAndKeyword(User $user, ?string $keyword, int $page = 1): mixed
     {
         $qb = $this->createQueryBuilder('c');
         $qb->orderBy('c.createdAt', 'ASC');
 
-        if ($user !== null) {
-            $qb->join('c.people', 'p');
+        $qb->join('c.people', 'p');
 
-            $qb->andWhere('p.id = :id')
-                ->setParameter('id', $user->getId(), 'uuid');
-        }
+        $qb->andWhere('p.id = :id')
+            ->setParameter('id', $user->getId(), 'uuid');
 
         if ($keyword) {
             $qb->join('c.messages', 'm');
@@ -101,14 +99,17 @@ class ConversationRepository extends ServiceEntityRepository
     }
     */
 
-    public function findByUsers(ArrayCollection $people)
+    /**
+     * @param ArrayCollection<int, User> $people
+     */
+    public function findByUsers(ArrayCollection $people): mixed
     {
         $qb = $this->createQueryBuilder('c');
         $qb->andWhere('c.people IN (:people)')
             ->setParameter('people', $people);
 
-       return $qb->getQuery()
-           ->getOneOrNullResult();
+        return $qb->getQuery()
+            ->getOneOrNullResult();
 
     }
 }

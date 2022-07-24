@@ -5,9 +5,9 @@ declare(strict_types = 1);
 namespace App\Repository;
 
 use App\Entity\Review;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Review|null find($id, $lockMode = null, $lockVersion = null)
@@ -39,7 +39,7 @@ class ReviewRepository extends ServiceEntityRepository
         }
     }
 
-    public function getAverageUserRating(null|UserInterface $user)
+    public function getAverageUserRating(User $user): mixed
     {
         $qb = $this->createQueryBuilder('r');
         $qb->leftJoin('r.user', 'u');

@@ -9,7 +9,6 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Stringable;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ReactionRepository::class)]
@@ -25,10 +24,10 @@ class Reaction implements Stringable
     private ?string $type = null;
 
     #[ORM\ManyToOne(targetEntity: Asset::class, cascade: ['persist'], inversedBy: 'reactions')]
-    private ?Asset $asset = null;
+    private null|Asset $asset;
 
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'reactions')]
-    private null|User|UserInterface $owner = null;
+    private null|User $owner = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
@@ -40,7 +39,7 @@ class Reaction implements Stringable
 
     public function __toString(): string
     {
-        return $this->owner->getFullName() . 'likes' . $this->asset->getTitle();
+        return $this->id->toRfc4122();
     }
 
     public function getId(): ?Uuid
@@ -60,24 +59,24 @@ class Reaction implements Stringable
         return $this;
     }
 
-    public function getAsset(): ?Asset
+    public function getAsset(): null|Asset
     {
         return $this->asset;
     }
 
-    public function setAsset(?Asset $asset): self
+    public function setAsset(null|Asset $asset): self
     {
         $this->asset = $asset;
 
         return $this;
     }
 
-    public function getOwner(): null|User|UserInterface
+    public function getOwner(): null|User
     {
         return $this->owner;
     }
 
-    public function setOwner(null|User|UserInterface $owner): self
+    public function setOwner(null|User $owner): self
     {
         $this->owner = $owner;
 

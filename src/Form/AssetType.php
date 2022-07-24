@@ -6,6 +6,7 @@ namespace App\Form;
 
 use App\Entity\Amenity;
 use App\Entity\Asset;
+use App\Enum\Role;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -24,13 +25,13 @@ class AssetType extends AbstractType
 {
     public function __construct(
         private readonly TranslatorInterface $translator,
-        private readonly Security $security
+        private readonly Security $security,
     ) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $s = null;
+
         $builder->add('address', TextType::class)->add('floor', NumberType::class, [
             'label' => $this->translator->trans('floor'),
         ])->add('images', FileType::class, [
@@ -91,7 +92,7 @@ class AssetType extends AbstractType
             'autocomplete' => true,
         ]);
 
-        if ($s) {
+        if ($this->security->isGranted(Role::Agent)) {
             $builder->add('agencyFee', MoneyType::class, [
                 'currency' => 'CZK',
                 'label' => $this->translator->trans('agency-fee'),

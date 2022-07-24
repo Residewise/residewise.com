@@ -82,18 +82,22 @@ class Asset implements Stringable, PriceableEntityInterface, UserOwnedEntityInte
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: Review::class)]
     private Collection $reviews;
 
+    /** @var ArrayCollection<int, Reaction> $reactions */
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: Reaction::class)]
     private Collection $reactions;
 
+    /** @var ArrayCollection<int, AssetView> $views */
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: AssetView::class)]
     private Collection $views;
 
     #[ORM\Column(type: 'decimal', precision: 50, scale: 2, nullable: true)]
     private ?string $agencyFee = null;
 
+    /** @var ArrayCollection<int, Bookmark> $bookmarks */
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: Bookmark::class)]
     private Collection $bookmarks;
 
+    /** @var ArrayCollection<int, Tender> $tenders */
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: Tender::class)]
     private Collection $tenders;
 
@@ -104,6 +108,7 @@ class Asset implements Stringable, PriceableEntityInterface, UserOwnedEntityInte
     #[ORM\Column(type: 'string', length: 3, nullable: true)]
     private string $currency = 'EUR';
 
+    /** @var ArrayCollection<int, Amenity> $amenities */
     #[ORM\ManyToMany(targetEntity: Amenity::class, inversedBy: 'assets')]
     private Collection $amenities;
 
@@ -587,10 +592,5 @@ class Asset implements Stringable, PriceableEntityInterface, UserOwnedEntityInte
         $this->agencyFee = $agencyFee;
 
         return $this;
-    }
-
-    public function isAgent(): bool
-    {
-        return $this->getOwner() instanceof Agent;
     }
 }

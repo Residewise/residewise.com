@@ -8,7 +8,6 @@ use App\Repository\ReviewRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
@@ -33,7 +32,7 @@ class Review
     private ?Asset $asset = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ownedReviews')]
-    private null|UserInterface $author = null;
+    private null|User $author = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reviews')]
     private null|User $user = null;
@@ -96,24 +95,24 @@ class Review
         return $this;
     }
 
-    public function getAuthor(): null|UserInterface
+    public function getAuthor(): null|User
     {
         return $this->author;
     }
 
-    public function setAuthor(null|UserInterface $author): self
+    public function setAuthor(null|User $author): self
     {
         $this->author = $author;
 
         return $this;
     }
 
-    public function getUser(): null|UserInterface
+    public function getUser(): null|User
     {
         return $this->user;
     }
 
-    public function setUser(null|UserInterface $user): self
+    public function setUser(null|User $user): self
     {
         $this->user = $user;
 

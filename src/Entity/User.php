@@ -51,6 +51,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringa
     #[ORM\Column(type: 'text')]
     private string $avatar;
 
+    /** @var Collection<int, SocialAuth> */
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: SocialAuth::class)]
     private Collection $socialAuths;
 
@@ -317,11 +318,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringa
         return $this->token;
     }
 
-    public function setToken(?Uuid $token): self
+    public function setToken(Uuid $token): void
     {
         $this->token = $token;
-
-        return $this;
     }
 
     public function isIsEnabled(): ?bool
@@ -490,7 +489,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringa
      */
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return $this->email;
     }
 
     /**
@@ -595,10 +594,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringa
         }
 
         return $this;
-    }
-
-    public function isAgent(): bool
-    {
-        return $this instanceof Agent;
     }
 }

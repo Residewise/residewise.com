@@ -30,7 +30,7 @@ class RegionalSettingsSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $locale = $event->getRequest()
             ->getSession()

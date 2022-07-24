@@ -22,10 +22,12 @@ class ReviewController extends AbstractController
     }
 
     #[Route('/new/{id}', name: 'new_review')]
-    public function create(User $user, Request $request) : Response
+    public function create(User $user, Request $request): Response
     {
+        $author = $this->getUser();
+        assert($author instanceof User);
         $review = new Review();
-        $review->setAuthor($this->getUser());
+        $review->setAuthor($author);
         $review->setUser($user);
 
         $reviewForm = $this->createForm(ReviewFormType::class, $review);

@@ -4,11 +4,11 @@ declare(strict_types = 1);
 
 namespace App\Entity;
 
-use Stringable;
 use App\Repository\AmenityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Stringable;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Uid\Uuid;
 
@@ -24,11 +24,12 @@ class Amenity implements Stringable
     #[ORM\Column(type: 'string', length: 255)]
     private string $name;
 
+    /** @var ArrayCollection<int, Asset> */
     #[ORM\ManyToMany(targetEntity: Asset::class, mappedBy: 'amenities')]
-    private $assets;
+    private Collection $assets;
 
     #[ORM\Column(type: 'string', length: 30, nullable: true)]
-    private $icon;
+    private null|string $icon;
 
     public function __construct()
     {
@@ -84,12 +85,12 @@ class Amenity implements Stringable
         return $this;
     }
 
-    public function getIcon(): ?string
+    public function getIcon(): null|string
     {
         return $this->icon;
     }
 
-    public function setIcon(?string $icon): self
+    public function setIcon(null|string $icon): self
     {
         $this->icon = $icon;
 

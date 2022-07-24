@@ -38,7 +38,7 @@ class AssetRepository extends ServiceEntityRepository
         }
     }
 
-    public function findByTitle(string $title)
+    public function findByTitle(string $title): mixed
     {
         $qb = $this->createQueryBuilder('a');
         $qb->andWhere('a.title LIKE :title')

@@ -40,15 +40,10 @@ class PasswordFormType extends AbstractType
             ],
         ]);
 
-        if ($options['data']['isOldPasswordRequired']) {
-            $builder->add('oldPassword', PasswordType::class, []);
-        }
-
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([// Configure your form options here
-        ]);
+        $resolver->setDefaults([]);
     }
 }

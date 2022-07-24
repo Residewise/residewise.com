@@ -29,12 +29,12 @@ class AssetViewSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
 
         $request = $event->getRequest();
         $_route = $request->attributes->get('_route');
-        $params = $request->attributes->get('_route_params');
+        $params = (array)$request->attributes->get('_route_params');
 
         if($_route === 'app_asset_show'){
 

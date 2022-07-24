@@ -21,7 +21,7 @@ class SocialAuth
     private Uuid $id;
 
     #[ORM\Column(type: 'string', length: 500)]
-    private string $token;
+    private null|string $token;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $provider;
@@ -42,12 +42,12 @@ class SocialAuth
         return $this->id;
     }
 
-    public function getToken(): ?string
+    public function getToken(): null|string
     {
         return $this->token;
     }
 
-    public function setToken(string $token): self
+    public function setToken(null|string $token): self
     {
         $this->token = $token;
 

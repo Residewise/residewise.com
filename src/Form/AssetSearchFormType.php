@@ -6,7 +6,6 @@ namespace App\Form;
 
 use App\Entity\Asset;
 use App\Enum\Role;
-use App\Service\RegionalSettingsService\RegionalSettingsService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -21,7 +20,6 @@ class AssetSearchFormType extends AbstractType
 {
     public function __construct(
         private readonly TranslatorInterface $translator,
-        private readonly RegionalSettingsService $regionalSettingsService
     )
     {
     }

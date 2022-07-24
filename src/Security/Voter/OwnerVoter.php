@@ -15,13 +15,13 @@ class OwnerVoter extends Voter
 
     public final const VIEW = 'VIEW';
 
-    protected function supports(string $attribute, $subject): bool
+    protected function supports(string $attribute, mixed $subject): bool
     {
         return in_array($attribute, [self::EDIT, self::VIEW], true)
             && $subject instanceof UserOwnedEntityInterface;
     }
 
-    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
 
@@ -29,6 +29,7 @@ class OwnerVoter extends Voter
             return false;
         }
 
+        /** @var UserOwnedEntityInterface $subject */
         return match ($attribute){
          self::VIEW, self::EDIT => $user === $subject->getOwner(),
          default => false

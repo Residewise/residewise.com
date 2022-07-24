@@ -1,10 +1,12 @@
 parameters:
 	level: max
-
 	paths:
 		- ./src
 		- ./config
 		- ./tests
-
+	ignoreErrors:
+	    - '#expects string, mixed given.#'
+	    - '#\$id is never written, only read#'
+	    - '#Parameter \$token of method App\\Factory\\SocialAuthFactory::create\(\) expects string\|null, mixed given.#'
 	reportUnmatchedIgnoredErrors: false
 	checkMissingIterableValueType: false

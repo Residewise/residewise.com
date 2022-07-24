@@ -12,7 +12,6 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\LanguageType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\LocaleSwitcher;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegionFormType extends AbstractType
@@ -20,7 +19,6 @@ class RegionFormType extends AbstractType
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly RegionalSettingsService $regionalSettingsService,
-        private readonly LocaleSwitcher $localeSwitcher
     ) {
     }
 

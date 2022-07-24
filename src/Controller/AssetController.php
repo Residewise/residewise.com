@@ -33,7 +33,7 @@ class AssetController extends AbstractController
         private readonly SerializerInterface $serializer,
         private readonly ImageUploadService $imageUploadService,
         private readonly RegionalSettingsService $regionalSettingsService,
-        private readonly ExchangeRateService $exchangeRateService
+        private readonly ExchangeRateService $exchangeRateService,
     )
     {
     }

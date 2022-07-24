@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Repository\TenderRepository;
 use Carbon\Carbon;
+use DateInterval;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
@@ -127,7 +128,7 @@ class Tender
         return $end->diffInMilliseconds();
     }
 
-    public function getTimeUntilEndInInterval()
+    public function getTimeUntilEndInInterval(): DateInterval
     {
         $end = Carbon::parse($this->endAt);
 

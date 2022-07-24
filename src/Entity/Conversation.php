@@ -11,7 +11,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Stringable;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ConversationRepository::class)]
@@ -30,7 +29,7 @@ class Conversation implements Stringable
     private Collection $messages;
 
     /**
-     * @var ArrayCollection<int, UserInterface>
+     * @var ArrayCollection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'conversations', cascade: ['persist'])]
     private Collection $users;
@@ -87,14 +86,14 @@ class Conversation implements Stringable
     }
 
     /**
-     * @return Collection<int, UserInterface>
+     * @return Collection<int, User>
      */
     public function getUsers(): Collection
     {
         return $this->users;
     }
 
-    public function addUser(null|UserInterface $user): self
+    public function addUser(User $user): self
     {
         if (! $this->users->contains($user)) {
             $this->users[] = $user;
@@ -103,7 +102,7 @@ class Conversation implements Stringable
         return $this;
     }
 
-    public function removeUser(UserInterface $user): self
+    public function removeUser(User $user): self
     {
         $this->users->removeElement($user);
 
@@ -122,7 +121,7 @@ class Conversation implements Stringable
         return $this;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }

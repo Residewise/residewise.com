@@ -11,7 +11,6 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use function PHPUnit\Framework\throwException;
 
@@ -26,7 +25,7 @@ class AccountConfirmationEmail implements EmailInterface
     ) {
     }
 
-    public function send(User|UserInterface $user, ?array $options): TemplatedEmail|Email
+    public function send(User $user, ?array $options): TemplatedEmail|Email
     {
         $subject = $this->translator->trans('email.confirm.email-address');
 

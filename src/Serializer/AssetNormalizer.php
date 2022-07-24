@@ -20,7 +20,8 @@ class AssetNormalizer implements ContextAwareNormalizerInterface
     /**
      * @param Asset $asset
      */
-    public function normalize(mixed $asset, string $format = null, array $context = []) {
+    public function normalize(mixed $asset, string $format = null, array $context = []): array
+    {
 
         $data = $this->objectNormalizer->normalize($asset, 'json', $context);
 

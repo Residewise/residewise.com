@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace App\Form;
 
 use App\Entity\Bid;
-use App\Service\RegionalSettingsService\RegionalSettingsService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,9 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class BidFormType extends AbstractType
 {
-    public function __construct(
-        private readonly RegionalSettingsService $regionalSettingsService
-    )
+    public function __construct()
     {
     }
 

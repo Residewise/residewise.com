@@ -10,9 +10,11 @@ use Twig\TwigFilter;
 
 class CompactNotationFilter extends AbstractExtension
 {
-    public function getFilters()
+    public function getFilters(): array
     {
-        return [new TwigFilter('compact_notation', fn(int $number): string => $this->formatInt($number))];
+        return [
+            new TwigFilter('compact_notation', fn(int $number): string => $this->formatInt($number)),
+        ];
     }
 
     // output short int notation: 1,000 = 1.0k / 100,500 = 100.5k
@@ -22,6 +24,6 @@ class CompactNotationFilter extends AbstractExtension
         $nf->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, 0);
         $nf->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 1);
 
-        return $nf->format($number);
+        return (string)$nf->format($number);
     }
 }

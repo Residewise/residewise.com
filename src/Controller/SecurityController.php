@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -28,7 +30,7 @@ class SecurityController extends AbstractController
         private readonly TranslatorInterface $translator,
         private readonly UserPasswordHasherInterface $userPasswordHasher,
         private readonly AuthenticationUtils $authenticationUtils,
-        private readonly AccountConfirmationEmail $accountConfirmationEmail
+        private readonly AccountConfirmationEmail $accountConfirmationEmail,
     )
     {
     }
@@ -60,7 +62,7 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path: '/confirm/{token}', name: 'app_account_confirm')]
-    public function confirm(User $user): Response
+    public function confirm(null|User $user): Response
     {
         if(! $user){
            return $this->redirectToRoute('app_login');
@@ -78,26 +80,25 @@ class SecurityController extends AbstractController
     #[Route(path: '/set/password', name: 'user_set_empty_password')]
     public function setEmptyPassword(Request $request): Response
     {
-        if($this->getUser()->getPassword() !== UserFactory::PASSWORD_NOT_SET){
+        $user = $this->getUser();
+        assert($user instanceof User && $user instanceof PasswordAuthenticatedUserInterface);
+        if($user->getPassword() !== UserFactory::PASSWORD_NOT_SET){
             return $this->redirectToRoute('app_login');
         }
 
-        $passwordForm = $this->createForm(PasswordFormType::class, [
-            'isOldPasswordRequired' => false,
-        ]);
+        $passwordForm = $this->createForm(PasswordFormType::class);
 
         $passwordForm->handleRequest($request);
         $errors = $passwordForm->getErrors();
 
         if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
 
-            $user = $this->getUser();
             $plainPassword = $passwordForm->get('password')
                 ->getData();
             $hashedPassword = $this->userPasswordHasher->hashPassword($user, $plainPassword);
 
             $this->userRepository->upgradePassword($user, $hashedPassword);
-            $this->userRepository->add($user, true);
+            $this->userRepository->add($user);
             $this->addFlash('success', 'password updated successfully');
 
             return $this->redirectToRoute('user_account');
@@ -141,12 +142,13 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path:'/password/reset/{token}', name: 'user_reset_password')]
-    public function setNewPassword(User $user, Request $request): Response
+    public function setNewPassword(?User $user, Request $request): Response
     {
 
-        if(! $user){
+        if($user == null){
             return $this->redirectToRoute('app_login');
         }
+        assert($user instanceof  PasswordAuthenticatedUserInterface);
 
         $passwordForm = $this->createForm(PasswordFormType::class, null, [
             'isOldPasswordRequired' => true,
@@ -157,18 +159,14 @@ class SecurityController extends AbstractController
 
         if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
 
-            $oldPlainPassword = $passwordForm->get('oldPassword')
-                ->getData();
+            $oldPlainPassword = $passwordForm->get('oldPassword')->getData();
             $oldHashedPassword = $this->userPasswordHasher->hashPassword($user, $oldPlainPassword);
-
-            $user = $this->userRepository->findOneBy([
-                'password' => $oldHashedPassword,
-            ]);
 
             if (! $this->userPasswordHasher->isPasswordValid($user, $oldPlainPassword))
             {
                 $plainPassword = $passwordForm->get('password')
                     ->getData();
+
                 $hashedPassword = $this->userPasswordHasher->hashPassword($user, $plainPassword);
                 $this->userRepository->upgradePassword($user, $hashedPassword);
                 $this->userRepository->add($user, true);

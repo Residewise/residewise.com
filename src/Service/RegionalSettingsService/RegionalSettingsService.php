@@ -6,7 +6,6 @@ namespace App\Service\RegionalSettingsService;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\LocaleSwitcher;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Twig\Environment;
 use Twig\Extension\CoreExtension;
 
@@ -25,7 +24,6 @@ final class RegionalSettingsService
     public function __construct(
         private readonly Environment $environment,
         private readonly RequestStack $requestStack,
-        private readonly HttpClientInterface $client,
         private readonly LocaleSwitcher $localeSwitcher
     ) {
     }
@@ -55,7 +53,7 @@ final class RegionalSettingsService
         return $this->region;
     }
 
-    public function setRegion(?string $region): void
+    public function setRegion(string $region): void
     {
         $this->region = $region;
     }
@@ -80,19 +78,15 @@ final class RegionalSettingsService
         $this->multiplier = $multiplier;
     }
 
-    public function getExchangeRates(): array
+    public function resolveRegionalSettings(string $locale, string $region, string $currency, string $timezone): void
     {
-        // TODO: add service to get ecb exchange rates and parse the xml
-    }
-
-    public function resolveRegionalSettings(string $locale, string $region, string $currency, string $timezone) {
         $this->configureLocale($locale);
         $this->configureRegion($region);
         $this->configureCurrency($currency);
         $this->configureTimezone($timezone);
     }
 
-    public function configureLocale(string $locale)
+    public function configureLocale(string $locale): void
     {
         $this->setLocale($locale);
         $this->localeSwitcher->setLocale($locale);
@@ -100,14 +94,14 @@ final class RegionalSettingsService
             ->set('_locale', $locale);
     }
 
-    public function configureCurrency(string $currency)
+    public function configureCurrency(string $currency): void
     {
         $this->setCurrency($currency);
         $this->requestStack->getSession()
             ->set('_currency', $currency);
     }
 
-    public function configureTimezone(string $timezone)
+    public function configureTimezone(string $timezone): void
     {
         $this->setTimezone($timezone);
         $this->requestStack->getSession()
@@ -116,7 +110,7 @@ final class RegionalSettingsService
             ->setTimezone($timezone);
     }
 
-    public function configureRegion(string $region)
+    public function configureRegion(string $region): void
     {
         $this->setRegion($region);
         $this->requestStack->getSession()

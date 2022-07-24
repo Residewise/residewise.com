@@ -75,7 +75,6 @@ class FacebookAuthenticator extends OAuth2Authenticator
                         firstName: $facebookUser->getFirstName(),
                         lastName: $facebookUser->getLastName(),
                         email: $facebookUser->getEmail(),
-                        socialAuth: null
                     );
 
                     $socialAuth = $this->socialAuthFactory->create(
