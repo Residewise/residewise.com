@@ -94,7 +94,7 @@ jobs:
             # Iterate over secrets as JSON and replace possible placeholders
             # Save output to the file to be processed
             -   name: Prepare docker-compose file
-                run: echo $SECRETS | jq --raw-output 'keys[]' | while read -r secretKey; do cat .deployment/docker-compose.yml | sed "s#__${secretKey}__#$(echo $SECRETS | jq --raw-output .${secretKey})#" > .deployment/docker-compose.yml; done
+                run: echo $SECRETS | jq --raw-output 'keys[]' | while read -r secretKey; do cat .deployment/docker-compose.yml | sed "s#__${secretKey}__#$(echo $SECRETS | jq --raw-output .${secretKey} | tr -d '\n\t')#" > .deployment/docker-compose.yml; done
                 env:
                     SECRETS: ${{ toJson(secrets) }}
 
