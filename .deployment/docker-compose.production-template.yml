@@ -1,0 +1,80 @@
+version: "3.4"
+
+services:
+  php:
+    image: ghcr.io/residewise/residewise.com-php:main
+    volumes:
+      - php_socket:/var/run/php
+    healthcheck:
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      - database
+    restart: unless-stopped
+    environment:
+      MERCURE_PUBLIC_URL: "https://residewise.com/.well-known/mercure"
+      DATABASE_URL: "postgresql://__RESIDEWISE_POSTGRES_USER__:__RESIDEWISE_POSTGRES_PASSWORD__@database:5432/__RESIDEWISE_POSTGRES_DBNAME__?serverVersion=13&charset=utf8"
+      MERCURE_JWT_SECRET: "__RESIDEWISE_MERCURE_JWT_SECRET__"
+      APP_SECRET: "__RESIDEWISE_APP_SECRET__"
+      MAP_BOX_PUBLIC_KEY: "__RESIDEWISE_MAP_BOX_PUBLIC_KEY__"
+      OAUTH_FACEBOOK_ID: "__RESIDEWISE_OAUTH_FACEBOOK_ID__"
+      OAUTH_FACEBOOK_SECRET: "__RESIDEWISE_OAUTH_FACEBOOK_SECRET__"
+      OAUTH_GOOGLE_ID: "__RESIDEWISE_OAUTH_GOOGLE_ID__"
+      OAUTH_GOOGLE_SECRET: "__RESIDEWISE_OAUTH_GOOGLE_SECRET__"
+      XE_ID: "__RESIDEWISE_XE_ID__"
+      XE_KEY: "__RESIDEWISE_XE_KEY__"
+
+  caddy:
+    image: ghcr.io/residewise/residewise.com-caddy:main
+    depends_on:
+      - php
+    restart: unless-stopped
+    environment:
+      SERVER_NAME: "residewise.com"
+      MERCURE_PUBLISHER_JWT_KEY: "__RESIDEWISE_MERCURE_JWT_SECRET__"
+      MERCURE_SUBSCRIBER_JWT_KEY: "__RESIDEWISE_MERCURE_JWT_SECRET__"
+    volumes:
+      - php_socket:/var/run/php
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    ports:
+      # HTTP
+      - target: 80
+        published: 80
+        protocol: tcp
+      # HTTPS
+      - target: 443
+        published: 443
+        protocol: tcp
+      # HTTP/3
+      - target: 443
+        published: 443
+        protocol: udp
+
+  database:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "__RESIDEWISE_POSTGRES_DBNAME__"
+      POSTGRES_PASSWORD: "__RESIDEWISE_POSTGRES_PASSWORD__"
+      POSTGRES_USER: "__RESIDEWISE_POSTGRES_USER__"
+    volumes:
+      - ./db-data:/var/lib/postgresql/data:rw
+
+  adminer:
+    image: adminer:4.8.0
+    ports:
+      - "8000:8080"
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: database
+    depends_on:
+      - database
+
+volumes:
+  php_socket:
+  caddy_data:
+  caddy_config:
