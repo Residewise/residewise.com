@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Enum\Role;
+use App\Factory\UserFactory;
 use App\Form\RegistrationFormType;
 use App\Security\AppCustomAuthenticator;
 use App\Service\AvatarService;
@@ -30,14 +32,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class RegistrationController extends AbstractController
 {
     public function __construct(
-        private readonly AvatarService $avatarService,
         private readonly TranslatorInterface $translator,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly MailerInterface $mailer,
         private readonly LoggerInterface $logger,
-        private readonly UserPasswordHasherInterface $userPasswordHasher,
         private readonly EntityManagerInterface $entityManager,
-        private readonly CacheInterface $cache
+        private readonly UserFactory $userFactory,
     )
     {
     }
@@ -49,22 +49,13 @@ class RegistrationController extends AbstractController
         AppCustomAuthenticator $authenticator,
     ): ?Response
     {
-        if($request->get('isSocial')){
-            /** @var UserInterface $user */
-            $user = $this->cache->get('social_registration', function (){});
-        }
-
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(RegistrationFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $account = $form->get('account')
-                ->getData();
-            $user = match ($account) {
-                'default' => null
-            };
-
+            $user = $this->createUserAccount($form);
             $this->entityManager->flush();
+            $this->sendUserConfirmationEmail($user);
 
             return $userAuthenticator->authenticateUser($user, $authenticator, $request);
         }
@@ -76,6 +67,8 @@ class RegistrationController extends AbstractController
 
     private function sendUserConfirmationEmail(UserInterface $user): void
     {
+        assert($user instanceof User);
+
         $email = new TemplatedEmail();
         $email->from('fabien@example.com');
         $email->to(new Address($user->getEmail()));
@@ -98,7 +91,13 @@ class RegistrationController extends AbstractController
 
     private function createUserAccount(FormInterface $form): User
     {
-        $user = new User();
+        $user = $this->userFactory->create(
+            firstName: $form->get('firstName')->getData(),
+            lastName: $form->get('lastName')->getData(),
+            email: $form->get('email')->getData(),
+            password: $form->get('plainPassword')->getData(),
+            roles: $form->get('roles')->getData()
+        );
         $this->entityManager->persist($user);
 
         return $user;

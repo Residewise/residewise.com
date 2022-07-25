@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Asset;
 use App\Entity\Image;
+use App\Enum\Role;
 use App\Form\AssetSearchFormType;
 use App\Form\AssetType;
 use App\Repository\AssetRepository;
@@ -15,6 +16,7 @@ use App\Service\ExchangeRateService\ExchangeRateService;
 use App\Service\ImageUploadService;
 use App\Service\RegionalSettingsService\RegionalSettingsService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -84,7 +86,7 @@ class AssetController extends AbstractController
     }
 
     #[Route(path: '/new', name: 'app_asset_new', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_USER')]
+    #[Security("is_granted('ROLE_AGENT') or is_granted('ROLE_OWNER')")]
     public function new(Request $request): Response
     {
         $asset = new Asset();

@@ -78,5 +78,6 @@ create: create
 no-conversations: no conversations found
 create-conversation: create conversation
 amenity:
+    pet-friendly: Pet Friendly
     ac: Air conditioning
     garage: Garage

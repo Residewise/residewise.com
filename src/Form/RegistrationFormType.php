@@ -17,9 +17,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationFormType extends AbstractType
 {
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+    )
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -54,14 +61,17 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add(
-                'account',
+                'roles',
                 ChoiceType::class,
                 [
-                    'mapped' => false,
                     'choices' => [
-                        'user' => Role::User,
-                        'agent' => Role::Agent,
+                        $this->translator->trans('tenant') => Role::Tenant->value,
+                        $this->translator->trans('owner') => Role::Owner->value,
+                        $this->translator->trans('agent') => Role::Agent->value,
+                        $this->translator->trans('service-provider') => Role::Service->value,
                     ],
+                    'autocomplete' => true,
+                    'multiple' => true,
                 ]
             )
         ;

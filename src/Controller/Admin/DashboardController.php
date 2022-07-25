@@ -8,8 +8,8 @@ use App\Entity\Amenity;
 use App\Entity\Asset;
 use App\Entity\Conversation;
 use App\Entity\Message;
-use App\Entity\Publication;
 use App\Entity\Reaction;
+use App\Entity\Tender;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -53,7 +53,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('User', 'fas fa-users', User::class);
         yield MenuItem::linkToCrud('Reactions', 'fas fa-thumbs-up', Reaction::class);
         yield MenuItem::linkToCrud('Asset', 'fas fa-list', Asset::class);
+        yield MenuItem::linkToCrud('Tender', 'fas fa-list', Tender::class);
         yield MenuItem::linkToCrud('Amenity', 'fas fa-tag', Amenity::class);
-        yield MenuItem::linkToCrud('Publication', 'fas fa-list', Publication::class);
     }
 }

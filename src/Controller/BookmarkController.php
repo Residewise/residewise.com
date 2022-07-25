@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Controller;
 
 use App\Entity\Asset;
+use App\Entity\User;
 use App\Factory\BookmarkFactory;
 use App\Repository\BookmarkRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\UX\Turbo\TurboBundle;
 
 #[Route(path: '/bookmark')]
@@ -34,9 +36,11 @@ class BookmarkController extends AbstractController
             'owner' => $this->getUser(),
             'asset' => $asset,
         ]);
+        $currentUser = $this->getUser();
+        assert($currentUser instanceof User && $currentUser instanceof UserInterface);
 
         if ($bookmark === null) {
-            $bookmark = $this->bookmarkFactory->create($asset, $this->getUser());
+            $bookmark = $this->bookmarkFactory->create($asset, $currentUser);
             $this->bookmarkRepository->add($bookmark, true);
         } else {
             $this->bookmarkRepository->remove($bookmark, true);

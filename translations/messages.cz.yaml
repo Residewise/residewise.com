@@ -74,5 +74,6 @@ create: __create
 no-conversations: __no-conversations
 create-conversation: __create-conversation
 amenity:
+    pet-friendly: Přátelský mazlíček
     ac: Klimatizace
     garage: Garáž

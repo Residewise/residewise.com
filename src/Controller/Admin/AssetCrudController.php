@@ -48,7 +48,6 @@ class AssetCrudController extends AbstractCrudController
             AssociationField::new('reactions'),
             TextareaField::new('address'),
             NumberField::new('floor'),
-            AssociationField::new('publications')->renderAsNativeWidget(),
             AssociationField::new('amenities'),
             DateTimeField::new('createdAt'),
         ];

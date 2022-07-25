@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Asset;
 use App\Entity\Reaction;
+use App\Entity\User;
 use App\Factory\ReactionFactory;
 use App\Repository\ReactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\UX\Turbo\TurboBundle;
 use function json_decode;
 
@@ -36,6 +38,8 @@ class ReactionController extends AbstractController
         $content = $request->getContent();
         $jsonContent = json_decode((string)$content, null, 512, JSON_THROW_ON_ERROR);
         $type = $jsonContent->type;
+        $currentUser = $this->getUser();
+        assert($currentUser instanceof User && $currentUser instanceof UserInterface);
 
         if ($reaction) {
             if ($reaction->getType() === $type) {
@@ -44,7 +48,7 @@ class ReactionController extends AbstractController
                 $this->assetSwitchUserReaction($reaction);
             }
         } else {
-            $reaction = $this->reactionFactory->create($type, $this->getUser(), $asset);
+            $reaction = $this->reactionFactory->create($type, $currentUser, $asset);
             $this->entityManager->persist($reaction);
             $this->entityManager->flush();
         }
@@ -70,8 +74,9 @@ class ReactionController extends AbstractController
         $this->reactionRepository->add($reaction, true);
     }
 
-    private function assetAlreadyHasUserReaction(Asset $asset)
+    private function assetAlreadyHasUserReaction(Asset $asset) : null|Reaction
     {
+        assert($this->getUser() instanceof User);
         return $this->reactionRepository->findOneBy([
             'owner' => $this->getUser(),
             'asset' => $asset,

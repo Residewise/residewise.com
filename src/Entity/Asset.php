@@ -105,7 +105,7 @@ class Asset implements Stringable, PriceableEntityInterface, UserOwnedEntityInte
     #[ORM\JoinColumn(nullable: true)]
     private ?Tender $tender = null;
 
-    #[ORM\Column(type: 'string', length: 3, nullable: true)]
+    #[ORM\Column(type: 'string', length: 3)]
     private string $currency = 'EUR';
 
     /** @var ArrayCollection<int, Amenity> $amenities */
@@ -522,7 +522,7 @@ class Asset implements Stringable, PriceableEntityInterface, UserOwnedEntityInte
         return $this;
     }
 
-    public function getTender(): ?Tender
+    public function getTender(): null|Tender
     {
         return $this->tender;
     }
@@ -534,7 +534,7 @@ class Asset implements Stringable, PriceableEntityInterface, UserOwnedEntityInte
         return $this;
     }
 
-    public function getCurrency(): ?string
+    public function getCurrency(): string
     {
         return $this->currency;
     }

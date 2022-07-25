@@ -11,4 +11,20 @@ enum Role : string
     case Owner = 'ROLE_OWNER';
     case Tenant = 'ROLE_TENANT';
     case Service = 'ROLE_SERVICE_PROVIDER';
+
+    public static function getRoles() : array
+    {
+        return [
+            Role::Owner->value,
+            Role::Tenant->value,
+            Role::Agent->value,
+            Role::Service->value,
+        ];
+    }
+
+    public static function sanitizeRoles(array $roles) : array
+    {
+        return array_intersect($roles, Role::getRoles());
+    }
+
 }

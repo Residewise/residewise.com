@@ -44,7 +44,7 @@ class UserController extends AbstractController
 
             if ($avatar !== null) {
                 $fileContentBase64 = $this->imageUploadService->process($avatar, 300);
-                $user->setAvatar($fileContentBase64);
+                $user->setAvatar($fileContentBase64->getEncoded());
             }
 
             $this->userRepository->add($user);

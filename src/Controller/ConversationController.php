@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Conversation;
 use App\Entity\Message;
+use App\Entity\User;
 use App\Form\ConversationFormType;
 use App\Form\KeywordFormType;
 use App\Form\MessageFormType;
@@ -18,6 +19,7 @@ use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Route('/im')]
 class ConversationController extends AbstractController
@@ -36,9 +38,11 @@ class ConversationController extends AbstractController
         $form = $this->createForm(KeywordFormType::class);
         $form->handleRequest($request);
         $page = $request->query->getInt('page', 1);
+        $currentUser = $this->getUser();
+        assert($currentUser instanceof User && $currentUser instanceof UserInterface);
 
         $pagination = $this->conversationRepository->findByUserAndKeyword(
-            user: $this->getUser(),
+            user: $currentUser,
             keyword: null,
             page: $page
         );
@@ -48,7 +52,7 @@ class ConversationController extends AbstractController
             $keyword = $form->get('keyword')
                 ->getData();
             $pagination = $this->conversationRepository->findByUserAndKeyword(
-                user: $this->getUser(),
+                user: $currentUser,
                 keyword: $keyword,
                 page: $page
             );
@@ -92,6 +96,8 @@ class ConversationController extends AbstractController
     public function new(Request $request): Response
     {
         $conversation = new Conversation();
+        $currentUser = $this->getUser();
+        assert($currentUser instanceof User && $currentUser instanceof UserInterface);
         $conversationForm = $this->createForm(ConversationFormType::class, $conversation, [
             'action' => $this->urlGenerator->generate('conversation_new'),
         ]);
@@ -107,7 +113,7 @@ class ConversationController extends AbstractController
 //                return $this->redirectToRoute('conversation', ['id' => $findPreviousConversation->getId()]);
 //            }
 
-            $conversation->addUser($this->getUser());
+            $conversation->addUser($currentUser);
             $conversation->setTitle($conversation->getUsersFirstNamesAsCommaSeperatedString());
             $this->conversationRepository->add($conversation);
 

@@ -67,7 +67,9 @@ class BidController extends AbstractController
             $bid->setPrice((string)$price);
             $bid->setCurrency($asset->getCurrency());
             $this->bidRepository->add($bid, true);
-            $this->resolveTenderBidSuggestion($bid, $asset->getTender());
+            $tender = $asset->getTender();
+            assert($tender instanceof Tender);
+            $this->resolveTenderBidSuggestion($bid, $tender);
 
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
             $this->hub->publish(new Update('tender', $this->renderView('/asset/bid/bid.stream.html.twig', [
@@ -89,11 +91,10 @@ class BidController extends AbstractController
         ]);
     }
 
-    protected function addPercentageToNumber(string $number, float $percentage): float
+    protected function addPercentageToNumber(null|string $number, float $percentage): string
     {
-        $amount = (float)$number;
-
-        return (($amount / 100) * $percentage) + $amount;
+        $amount = floatval($number);
+        return number_format(((($amount / 100) * $percentage) + $amount), 2, ',' );
     }
 
     private function resolveTenderBidSuggestion(Bid $bid, Tender $tender): void
@@ -104,26 +105,26 @@ class BidController extends AbstractController
         }
     }
 
-    private function resolveBidSuggestion(Asset $asset): ?float
+    private function resolveBidSuggestion(Asset $asset): bool|string
     {
         return match ($asset->getTerm()) {
             'rent' => $this->resolveRentalBidSuggestion($asset),
             'sale' => $this->resolveSaleBidSuggestion($asset),
-            default => null,
+            default => false,
         };
     }
 
-    private function resolveSaleBidSuggestion(Asset $asset): float
+    private function resolveSaleBidSuggestion(Asset $asset): string
     {
-        return match ($asset->getTender()->getBid()) {
+        return match ($asset->getTender()?->getBid()) {
             null => $this->addPercentageToNumber($asset->getPrice(), 0.05),
             default => $this->addPercentageToNumber($asset->getTender()->getBid()->getPrice(), 0.05),
         };
     }
 
-    private function resolveRentalBidSuggestion(Asset $asset): float
+    private function resolveRentalBidSuggestion(Asset $asset): string
     {
-        return match ($asset->getTender()->getBid()) {
+        return match ($asset->getTender()?->getBid()) {
             null => $this->addPercentageToNumber($asset->getPrice(), 0.5),
             default => $this->addPercentageToNumber($asset->getTender()->getBid()->getPrice(), 0.5),
         };

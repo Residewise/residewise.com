@@ -8,6 +8,7 @@ use App\Entity\Asset;
 use App\Entity\Tender;
 use App\Service\RegionalSettingsService\RegionalSettingsService;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,11 +26,13 @@ class TenderFormType extends AbstractType
     {
         /** @var Asset $asset */
         $asset = $options['asset'];
-        $builder->add('range', TextType::class, [
-            'mapped' => false,
-            'attr' => [
-                'data-date-range-picker-target' => 'picker',
-            ],
+        $builder->add('startAt', DateType::class, [
+            'widget' => 'single_text',
+            'input' => 'datetime_immutable'
+        ])
+        ->add('endAt', DateType::class, [
+            'widget' => 'single_text',
+            'input' => 'datetime_immutable'
         ])
             ->add('minimumBid', MoneyType::class, [
                 'required' => false,

@@ -22,7 +22,6 @@ class TenderController extends AbstractController
     public function __construct(
         private readonly TenderRepository $tenderRepository,
         private readonly AssetRepository $assetRepository,
-        private readonly HubInterface $hub
     ) {
     }
 
@@ -53,11 +52,8 @@ class TenderController extends AbstractController
                 $asset->setPrice($minimumBid);
             }
 
-            $dates = explode('-', (string)$form->get('range')->getData());
-            $start = Carbon::createFromFormat('d.m.y', trim($dates[0]))->toDateTimeImmutable();
-            $end = Carbon::createFromFormat('d.m.y', trim($dates[1]))->toDateTimeImmutable();
-            $tender->setStartAt($start);
-            $tender->setEndAt($end);
+            $tender->setStartAt($form->get('startAt')->getData());
+            $tender->setEndAt($form->get('startAt')->getData());
             $tender->setAsset($asset);
             $tender->setBid(null);
 
@@ -80,7 +76,7 @@ class TenderController extends AbstractController
     {
         /** @var Tender $tender */
         foreach ($asset->getTenders() as $tender){
-            if($tender->isActive()){
+            if($tender->getIsActive()){
                 return true;
             }
         }
