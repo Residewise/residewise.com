@@ -98,6 +98,8 @@ jobs:
                 env:
                     SECRETS: ${{ toJson(secrets) }}
 
+            -   run: cat .deployment/docker-compose.yml
+
             -   name: Rsync Docker files
                 uses: burnett01/rsync-deployments@5.2
                 with:
