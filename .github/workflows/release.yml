@@ -88,11 +88,12 @@ jobs:
             -   name: Checkout
                 uses: actions/checkout@v2
 
-            -   run: cp .deployment/docker-compose.production.yml .deployment/docker-compose.yml
+            -   name: Copy docker-compose template
+                run: cp .deployment/docker-compose.production-template.yml .deployment/docker-compose.yml
 
             # Iterate over secrets as JSON and replace possible placeholders
             # Save output to the file to be processed
-            -   name: Prepare production docker-compose.yml
+            -   name: Prepare production docker-compose
                 run: echo $SECRETS | jq --raw-output 'keys[]' | while read -r secretKey; do cat .deployment/docker-compose.yml | sed "s/__${secretKey}__/$(echo $SECRETS | jq --raw-output .${secretKey})/" > .deployment/docker-compose.yml; done
                 env:
                     SECRETS: ${{ toJson(secrets) }}
