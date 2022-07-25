@@ -15,16 +15,16 @@ services:
     restart: unless-stopped
     environment:
       MERCURE_PUBLIC_URL: "https://residewise.com/.well-known/mercure"
-      DATABASE_URL: "postgresql://__POSTGRES_USER__:__POSTGRES_PASSWORD__@database:5432/__POSTGRES_DBNAME__?serverVersion=13&charset=utf8"
-      MERCURE_JWT_SECRET: "__MERCURE_JWT_SECRET__"
-      APP_SECRET: "__APP_SECRET__"
-      MAP_BOX_PUBLIC_KEY: "__MAP_BOX_PUBLIC_KEY__"
-      OAUTH_FACEBOOK_ID: "__OAUTH_FACEBOOK_ID__"
-      OAUTH_FACEBOOK_SECRET: "__OAUTH_FACEBOOK_SECRET__"
-      OAUTH_GOOGLE_ID: "__OAUTH_GOOGLE_ID__"
-      OAUTH_GOOGLE_SECRET: "__OAUTH_GOOGLE_SECRET__"
-      XE_ID: "__XE_ID__"
-      XE_KEY: "__XE_KEY__"
+      DATABASE_URL: "postgresql://__RESIDEWISE_POSTGRES_USER__:__RESIDEWISE_POSTGRES_PASSWORD__@database:5432/__RESIDEWISE_POSTGRES_DBNAME__?serverVersion=13&charset=utf8"
+      MERCURE_JWT_SECRET: "__RESIDEWISE_MERCURE_JWT_SECRET__"
+      APP_SECRET: "__RESIDEWISE_APP_SECRET__"
+      MAP_BOX_PUBLIC_KEY: "__RESIDEWISE_MAP_BOX_PUBLIC_KEY__"
+      OAUTH_FACEBOOK_ID: "__RESIDEWISE_OAUTH_FACEBOOK_ID__"
+      OAUTH_FACEBOOK_SECRET: "__RESIDEWISE_OAUTH_FACEBOOK_SECRET__"
+      OAUTH_GOOGLE_ID: "__RESIDEWISE_OAUTH_GOOGLE_ID__"
+      OAUTH_GOOGLE_SECRET: "__RESIDEWISE_OAUTH_GOOGLE_SECRET__"
+      XE_ID: "__RESIDEWISE_XE_ID__"
+      XE_KEY: "__RESIDEWISE_XE_KEY__"
 
   caddy:
     image: ghcr.io/residewise/residewise.com-caddy:main
@@ -33,8 +33,8 @@ services:
     restart: unless-stopped
     environment:
       SERVER_NAME: "residewise.com"
-      MERCURE_PUBLISHER_JWT_KEY: "__MERCURE_JWT_SECRET__"
-      MERCURE_SUBSCRIBER_JWT_KEY: "__MERCURE_JWT_SECRET__"
+      MERCURE_PUBLISHER_JWT_KEY: "__RESIDEWISE_MERCURE_JWT_SECRET__"
+      MERCURE_SUBSCRIBER_JWT_KEY: "__RESIDEWISE_MERCURE_JWT_SECRET__"
     volumes:
       - php_socket:/var/run/php
       - caddy_data:/data
@@ -58,9 +58,9 @@ services:
     image: postgres:13
     restart: unless-stopped
     environment:
-      POSTGRES_DB: "__POSTGRES_DBNAME__"
-      POSTGRES_PASSWORD: "__POSTGRES_PASSWORD__"
-      POSTGRES_USER: "__POSTGRES_USER__"
+      POSTGRES_DB: "__RESIDEWISE_POSTGRES_DBNAME__"
+      POSTGRES_PASSWORD: "__RESIDEWISE_POSTGRES_PASSWORD__"
+      POSTGRES_USER: "__RESIDEWISE_POSTGRES_USER__"
     volumes:
       - ./db-data:/var/lib/postgresql/data:rw
 
