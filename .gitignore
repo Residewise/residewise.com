@@ -30,3 +30,5 @@ yarn-error.log
 docker-compose.override.yml
 .sync
 docker/db/data/
+
+.deployment/docker-compose.yml
