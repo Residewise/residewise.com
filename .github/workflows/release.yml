@@ -103,8 +103,9 @@ jobs:
             -   name: Rsync Docker files
                 uses: burnett01/rsync-deployments@5.2
                 with:
-                    path: .deployment/
-                    remote_path: /app
+                    switches: -azvr --exclude='docker-compose.production-template.yml'
+                    path: ./.deployment/
+                    remote_path: /app/
                     remote_host: ${{ secrets.DEPLOY_HOST }}
                     remote_user: ${{ secrets.DEPLOY_USERNAME }}
                     remote_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
