@@ -85,6 +85,28 @@ jobs:
             name: prod
             url: https://residewise.com
         steps:
+            -   name: Checkout
+                uses: actions/checkout@v2
+
+            -   run: cp .deployment/docker-compose.production.yml .deployment/docker-compose.yml
+
+            # Iterate over secrets as JSON and replace possible placeholders
+            # Save output to the file to be processed
+            -   name: Prepare production docker-compose.yml
+                run: echo $SECRETS | jq --raw-output 'keys[]' | while read -r secretKey; do cat .deployment/docker-compose.yml | sed "s/__${secretKey}__/$(echo $SECRETS | jq --raw-output .${secretKey})/" > .deployment/docker-compose.yml; done
+                env:
+                    SECRETS: ${{ toJson(secrets) }}
+
+            -   name: Rsync Docker files
+                uses: burnett01/rsync-deployments@5.2
+                with:
+                    switches: --exclude 'docker-compose.production-template.yml'
+                    path: .deployment/
+                    remote_path: /app
+                    remote_host: ${{ secrets.DEPLOY_HOST }}
+                    remote_user: ${{ secrets.DEPLOY_USERNAME }}
+                    remote_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+
             -   uses: appleboy/ssh-action@master
                 with:
                     host: ${{ secrets.DEPLOY_HOST }}
