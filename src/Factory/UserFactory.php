@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Factory;
 
@@ -13,13 +13,19 @@ class UserFactory
     public final const PASSWORD_NOT_SET = 'PASSWORD_NOT_SET';
 
     public function __construct(
-        private readonly AvatarService               $avatarService,
+        private readonly AvatarService $avatarService,
         private readonly UserPasswordHasherInterface $userPasswordHasher
     )
     {
     }
 
-    public function create(string $firstName, string $lastName, string $email, null|string $password, array $roles = []): User
+    public function create(
+        string $firstName,
+        string $lastName,
+        string $email,
+        null|string $password,
+        array $roles = []
+    ): User
     {
         $user = new User();
         $user->setFirstName($firstName);
@@ -28,7 +34,7 @@ class UserFactory
         $user->setRoles($roles);
         $user->setAvatar($this->avatarService->createAvatar($email));
 
-        if ($password == null) {
+        if ($password === null) {
             $user->setPassword('PASSWORD_NOT_SET');
         } else {
             $user->setPassword($this->userPasswordHasher->hashPassword($user, $password));

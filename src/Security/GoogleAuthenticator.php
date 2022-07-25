@@ -74,7 +74,7 @@ class GoogleAuthenticator extends OAuth2Authenticator
                     $user = $this->userFactory->create(
                         firstName: $googleUser->getName(),
                         lastName: $googleUser->getName(),
-                        email: $googleUser->getEmail().'',
+                        email: $googleUser->getEmail() . '',
                         password: null,
                     );
 

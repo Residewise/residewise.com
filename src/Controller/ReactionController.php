@@ -74,9 +74,10 @@ class ReactionController extends AbstractController
         $this->reactionRepository->add($reaction, true);
     }
 
-    private function assetAlreadyHasUserReaction(Asset $asset) : null|Reaction
+    private function assetAlreadyHasUserReaction(Asset $asset): null|Reaction
     {
         assert($this->getUser() instanceof User);
+
         return $this->reactionRepository->findOneBy([
             'owner' => $this->getUser(),
             'asset' => $asset,

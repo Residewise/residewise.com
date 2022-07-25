@@ -5,11 +5,9 @@ declare(strict_types = 1);
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Enum\Role;
 use App\Factory\UserFactory;
 use App\Form\RegistrationFormType;
 use App\Security\AppCustomAuthenticator;
-use App\Service\AvatarService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -20,12 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/security')]
@@ -92,11 +88,16 @@ class RegistrationController extends AbstractController
     private function createUserAccount(FormInterface $form): User
     {
         $user = $this->userFactory->create(
-            firstName: $form->get('firstName')->getData(),
-            lastName: $form->get('lastName')->getData(),
-            email: $form->get('email')->getData(),
-            password: $form->get('plainPassword')->getData(),
-            roles: $form->get('roles')->getData()
+            firstName: $form->get('firstName')
+                ->getData(),
+            lastName: $form->get('lastName')
+                ->getData(),
+            email: $form->get('email')
+                ->getData(),
+            password: $form->get('plainPassword')
+                ->getData(),
+            roles: $form->get('roles')
+                ->getData()
         );
         $this->entityManager->persist($user);
 

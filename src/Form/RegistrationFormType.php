@@ -65,10 +65,14 @@ class RegistrationFormType extends AbstractType
                 ChoiceType::class,
                 [
                     'choices' => [
-                        $this->translator->trans('tenant') => Role::Tenant->value,
-                        $this->translator->trans('owner') => Role::Owner->value,
-                        $this->translator->trans('agent') => Role::Agent->value,
-                        $this->translator->trans('service-provider') => Role::Service->value,
+                        $this->translator->trans('tenant') => Role::Tenant
+                            ->value,
+                        $this->translator->trans('owner') => Role::Owner
+                            ->value,
+                        $this->translator->trans('agent') => Role::Agent
+                            ->value,
+                        $this->translator->trans('service-provider') => Role::Service
+                            ->value,
                     ],
                     'autocomplete' => true,
                     'multiple' => true,

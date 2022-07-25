@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace App\Entity;
 
-use App\Enum\Role;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -440,6 +439,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringa
     public function getRoles(): array
     {
         $roles = $this->roles;
+
         return array_unique($roles);
     }
 

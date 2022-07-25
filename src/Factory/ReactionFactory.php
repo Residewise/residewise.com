@@ -7,7 +7,6 @@ namespace App\Factory;
 use App\Entity\Asset;
 use App\Entity\Reaction;
 use App\Entity\User;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class ReactionFactory
 {

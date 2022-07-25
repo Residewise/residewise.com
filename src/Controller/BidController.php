@@ -94,7 +94,8 @@ class BidController extends AbstractController
     protected function addPercentageToNumber(null|string $number, float $percentage): string
     {
         $amount = floatval($number);
-        return number_format(((($amount / 100) * $percentage) + $amount), 2, ',' );
+
+        return number_format(((($amount / 100) * $percentage) + $amount), 2, ',');
     }
 
     private function resolveTenderBidSuggestion(Bid $bid, Tender $tender): void

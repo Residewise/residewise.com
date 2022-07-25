@@ -10,7 +10,6 @@ use App\Service\RegionalSettingsService\RegionalSettingsService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -28,12 +27,12 @@ class TenderFormType extends AbstractType
         $asset = $options['asset'];
         $builder->add('startAt', DateType::class, [
             'widget' => 'single_text',
-            'input' => 'datetime_immutable'
+            'input' => 'datetime_immutable',
         ])
-        ->add('endAt', DateType::class, [
-            'widget' => 'single_text',
-            'input' => 'datetime_immutable'
-        ])
+            ->add('endAt', DateType::class, [
+                'widget' => 'single_text',
+                'input' => 'datetime_immutable',
+            ])
             ->add('minimumBid', MoneyType::class, [
                 'required' => false,
                 'mapped' => false,

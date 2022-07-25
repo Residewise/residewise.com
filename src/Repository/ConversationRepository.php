@@ -10,7 +10,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Conversation|null find($id, $lockMode = null, $lockVersion = null)
